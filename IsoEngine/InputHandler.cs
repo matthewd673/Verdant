@@ -14,6 +14,7 @@ namespace IsoEngine
 
         public static int mX;
         public static int mY;
+        public static Vec2 mouseVec = new Vec2(0, 0);
 
         public static void Update()
         {
@@ -26,12 +27,19 @@ namespace IsoEngine
 
             mX = currentMouseState.X;
             mY = currentMouseState.Y;
+            mouseVec.x = mX;
+            mouseVec.y = mY;
 
         }
 
         public static KeyboardState GetKeyboardState()
         {
             return currentKeyboardState;
+        }
+
+        public static MouseState GetMouseState()
+        {
+            return currentMouseState;
         }
 
     }

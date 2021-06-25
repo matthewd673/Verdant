@@ -33,7 +33,6 @@ namespace IsoEngine
         {
             return new Vec2((x - pos.x) / Renderer.scale, (y - pos.y) / Renderer.scale);
         }
-
         public Vec2 ScreenToWorldPos(Vec2 screenPos)
         {
             return ScreenToWorldPos(screenPos.x, screenPos.y);
@@ -42,6 +41,15 @@ namespace IsoEngine
         public Vec2 MouseToWorldPos()
         {
             return ScreenToWorldPos(InputHandler.mX, InputHandler.mY);
+        }
+
+        public Vec2 WorldToScreenPos(float x, float y)
+        {
+            return new Vec2((x - pos.x) * Renderer.scale, (y - pos.y) * Renderer.scale);
+        }
+        public Vec2 WorldToScreenPos(Vec2 worldPos)
+        {
+            return WorldToScreenPos(worldPos.x, worldPos.y);
         }
 
     }
