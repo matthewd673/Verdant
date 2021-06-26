@@ -14,7 +14,7 @@ namespace IsoEngine
 
         public static int mX;
         public static int mY;
-        public static Vec2 mouseVec = new Vec2(0, 0);
+        public static Vec2 mouseVec = new Vec2();
 
         public static void Update()
         {

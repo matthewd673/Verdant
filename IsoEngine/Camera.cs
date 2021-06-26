@@ -11,7 +11,7 @@ namespace IsoEngine
 
         public Camera(int w, int h)
         {
-            this.pos = new Vec2(0, 0);
+            this.pos = new Vec2();
             this.w = w;
             this.h = h;
         }

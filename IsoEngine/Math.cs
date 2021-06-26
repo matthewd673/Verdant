@@ -20,5 +20,17 @@ namespace IsoEngine
             return (float)System.Math.Sqrt(System.Math.Pow(b.y - a.y, 2) + System.Math.Pow(b.x - a.x, 2));
         }
 
+        public static bool CheckRectIntersection(float x1, float y1, int w1, int h1, float x2, float y2, int w2, int h2)
+        {
+            return (x1 < x2 + w2 &&
+                x1 + w1 > x2 &&
+                y1 < y2 + h2 &&
+                y1 + h1 > y2);
+        }
+        public static bool CheckRectIntersection(Vec2 pos1, int w1, int h1, Vec2 pos2, int w2, int h2)
+        {
+            return CheckRectIntersection(pos1.x, pos1.y, w1, h1, pos2.x, pos2.y, w2, h2);
+        }
+
     }
 }

@@ -7,22 +7,42 @@ namespace IsoEngine
     public static class Renderer
     {
 
-        public static Camera cam = new Camera(new Vec2(0, 0), 800, 600); //default, should be changed based on preferredbackbufferwidth & height
+        public static Camera cam = new Camera(new Vec2(), 800, 600); //default, should be changed based on preferredbackbufferwidth & height
         public static int scale = 2;
 
-        public static void Render(EntityManager entityManager, SpriteBatch spriteBatch)
+        public static Texture2D pixel;
+
+        public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, bool visualizeColliders = false)
         {
-            
+
+            //build pixel texture, if necessary
+            if (pixel == null)
+            {
+                pixel = new Texture2D(graphicsDevice, 1, 1);
+                Color[] data = new Color[1] { Color.White };
+                pixel.SetData(data);
+            }
+
             foreach (Entity e in entityManager.GetEntities())
             {
                 e.Draw(spriteBatch);
+                if (visualizeColliders)
+                    e.DrawColliders(spriteBatch);
             }
 
         }
 
+        public static Rectangle GetRenderBounds(float x, float y, int w, int h)
+        {
+            return new Rectangle((int)((x - cam.pos.x) * scale), (int)((y - cam.pos.y) * scale), w * scale, h * scale);
+        }
+        public static Rectangle GetRenderBounds(Vec2 pos, int w, int h)
+        {
+            return GetRenderBounds(pos.x, pos.y, w, h);
+        }
         public static Rectangle GetRenderBounds(Entity e)
         {
-            return new Rectangle((int)((e.pos.x - cam.pos.x) * scale), (int)((e.pos.y - cam.pos.y) * scale), e.w * scale, e.w * scale);
+            return GetRenderBounds(e.pos, e.w, e.h);
         }
 
     }

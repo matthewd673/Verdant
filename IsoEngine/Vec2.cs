@@ -9,6 +9,11 @@ namespace IsoEngine
 
         public static readonly Vec2 zero = new Vec2(0, 0);
 
+        public Vec2()
+        {
+            x = 0;
+            y = 0;
+        }
         public Vec2(float x, float y)
         {
             this.x = x;
