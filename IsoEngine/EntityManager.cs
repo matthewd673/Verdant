@@ -10,16 +10,30 @@ namespace IsoEngine
         List<Entity> addQueue = new List<Entity>();
         List<Entity> removeQueue = new List<Entity>();
 
+        /// <summary>
+        /// Add an Entity to the list, and mark this instance as its manager.
+        /// </summary>
+        /// <param name="e">The Entity to add.</param>
         public void AddEntity(Entity e)
         {
             addQueue.Add(e);
+            e.SetManager(this);
         }
 
+        /// <summary>
+        /// Remove an Entity from the list, and mark its manager as null.
+        /// </summary>
+        /// <param name="e">The Entity to remove.</param>
         public void RemoveEntity(Entity e)
         {
+            e.SetManager(null);
             removeQueue.Add(e);
         }
 
+        /// <summary>
+        /// Get a list of all Entities currently in the manager.
+        /// </summary>
+        /// <returns>A list of all managed Entities.</returns>
         public List<Entity> GetEntities()
         {
             return entities;
@@ -84,6 +98,56 @@ namespace IsoEngine
 
             return colliding;
 
+        }
+
+        /// <summary>
+        /// Get a list of all Entities intersecting with a given rectangle.
+        /// </summary>
+        /// <param name="x">The x coordinate of the rectangle.</param>
+        /// <param name="y">The y coordinate of the rectangle.</param>
+        /// <param name="w">The width of the rectangle.</param>
+        /// <param name="h">The height of the rectangle.</param>
+        /// <param name="onlyTriggers">If true, only Colliders marked as triggers will be checked.</param>
+        /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
+        /// <param name="onlyType">Exclude all Entities from list that aren't of a specified type.</param>
+        /// <param name="ignoreEntity">Exclude a specified Entity from the list.</param>
+        /// <returns>A list of all colliding Entities.</returns>
+        public List<Entity> CheckRectCollisions(float x, float y, int w, int h, bool onlyTriggers = false, bool onlySolids = false, Type onlyType = null, Entity ignoreEntity = null) //mostly copy & paste from above...
+        {
+            List<Entity> colliding = new List<Entity>();
+
+            foreach (Entity b in entities) //slow, but good enough for now
+            {
+
+                if (ignoreEntity != null)
+                {
+                    if (b == ignoreEntity)
+                        continue;
+                }
+
+                if (onlyType != null)
+                {
+                    if (b.GetType() != onlyType)
+                        continue;
+                }
+
+                foreach (Collider c in b.GetColliders())
+                {
+                    //filter out triggers/solids if necessary
+                    if (onlySolids && c.trigger)
+                        continue;
+                    if (onlyTriggers && !c.trigger)
+                        continue;
+
+                    if (Math.CheckRectIntersection(x, y, w, h, c.pos.x, c.pos.y, c.w, c.h))
+                    {
+                        colliding.Add(b);
+                        break;
+                    }
+                }
+            }
+
+            return colliding;
         }
 
         public void Update()

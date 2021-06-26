@@ -8,6 +8,8 @@ namespace IsoEngine
     public class Entity
     {
 
+        EntityManager manager;
+
         public Vec2 pos;
         public Texture2D sprite;
         public int w;
@@ -44,6 +46,11 @@ namespace IsoEngine
         public void SetAcceleration(Vec2 acceleration)
         {
             this.acceleration = acceleration;
+        }
+
+        public void SetManager(EntityManager manager)
+        {
+            this.manager = manager;
         }
 
         /// <summary>
@@ -85,6 +92,60 @@ namespace IsoEngine
 
             foreach (Collider c in colliders)
                 c.Update();
+
+        }
+
+        /// <summary>
+        /// Move the Entity with the given deltas until it hits a solid Collider. NOTE: The Entity must have at least one Collider (solid or trigger).
+        /// </summary>
+        /// <param name="xDelta">The distance to move on the x axis.</param>
+        /// <param name="yDelta">The distance to move on the y axis.</param>
+        /// <param name="moveCollider">The specific Collider to check against. Otherwise, the first Collider added will be used (whether it is a trigger or solid).</param>
+        /// <param name="discreteSteps">The number of discrete steps to take when checking collisions. Increase for fast objects.</param>
+        public void Move(float xDelta, float yDelta, Collider moveCollider = null, int discreteSteps = 4)
+        {
+
+            if (colliders.Count == 0) //do nothing if there is no collider attached (while it could just move regardless, doing so would break the promise of not colliding imo, easier to debug too).
+                return;
+
+            if (moveCollider == null)
+                moveCollider = colliders[0];
+
+            float newX = moveCollider.pos.x;
+            float newY = moveCollider.pos.y;
+            float xInc = xDelta / discreteSteps;
+            float yInc = yDelta / discreteSteps;
+
+            float xTotalMove = 0f;
+            float yTotalMove = 0f;
+
+            bool collidedOnX = false;
+            bool collidedOnY = false;
+            for (int i = 0; i < discreteSteps; i++)
+            {
+                if (!collidedOnX && manager.CheckRectCollisions(newX + xInc, newY, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this).Count == 0) //all clear on X
+                {
+                    newX += xInc;
+                    xTotalMove += xInc;
+                }
+                else
+                    collidedOnX = true;
+
+                if (!collidedOnY && manager.CheckRectCollisions(newX, newY + yInc, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this).Count == 0) //all clear on Y
+                {
+                    newY += yInc;
+                    yTotalMove += yInc;
+                }
+                else
+                    collidedOnY = true;
+
+                //skip the rest if colliding on both
+                if (collidedOnX && collidedOnY)
+                    break;
+            }
+
+            pos.x += xTotalMove;
+            pos.y += yTotalMove;
 
         }
 
