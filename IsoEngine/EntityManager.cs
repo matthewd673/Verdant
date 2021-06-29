@@ -11,13 +11,26 @@ namespace IsoEngine
         List<Entity> removeQueue = new List<Entity>();
 
         /// <summary>
-        /// Add an Entity to the list, and mark this instance as its manager.
+        /// Add an Entity to the manager, and mark this instance as its manager.
         /// </summary>
         /// <param name="e">The Entity to add.</param>
         public void AddEntity(Entity e)
         {
-            addQueue.Add(e);
             e.SetManager(this);
+            addQueue.Add(e);
+        }
+
+        /// <summary>
+        /// Add a list of Entities to the manager, and mark this instance as the manager of all of the Entities.
+        /// </summary>
+        /// <param name="l">The list of Entities to add.</param>
+        public void AddEntities(List<Entity> l)
+        {
+            foreach (Entity e in l)
+            {
+                e.SetManager(this);
+                addQueue.Add(e);
+            }
         }
 
         /// <summary>
@@ -156,6 +169,9 @@ namespace IsoEngine
             foreach (Entity e in entities)
             {
                 e.Update();
+                //remove marked entities
+                if (e.IsForRemoval())
+                    RemoveEntity(e);
             }
 
             //remove marked

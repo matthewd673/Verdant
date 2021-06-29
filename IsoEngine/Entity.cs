@@ -20,13 +20,12 @@ namespace IsoEngine
         protected Vec2 velocity;
         protected Vec2 acceleration;
 
-        public string type;
-
         List<Collider> colliders = new List<Collider>();
 
-        public Entity(string type, Texture2D sprite, Vec2 pos, int w, int h)
+        bool forRemoval = false;
+
+        public Entity(Texture2D sprite, Vec2 pos, int w, int h)
         {
-            this.type = type;
             this.sprite = sprite;
             this.pos = pos;
             this.w = w;
@@ -51,6 +50,16 @@ namespace IsoEngine
         public void SetManager(EntityManager manager)
         {
             this.manager = manager;
+        }
+
+        public void MarkForRemoval()
+        {
+            forRemoval = true;
+        }
+
+        public bool IsForRemoval()
+        {
+            return forRemoval;
         }
 
         /// <summary>

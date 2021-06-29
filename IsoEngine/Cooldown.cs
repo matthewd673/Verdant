@@ -38,5 +38,10 @@ namespace IsoEngine
             return ready;
         }
 
+        public void Reset()
+        {
+            time = 0;
+        }
+
     }
 }
