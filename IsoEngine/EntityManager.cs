@@ -44,6 +44,23 @@ namespace IsoEngine
         }
 
         /// <summary>
+        /// Force the Entities in the add and remove queues to be added/removed to the manager. DO NOT USE WITHIN UPDATE LOOP.
+        /// </summary>
+        public void ForceApplyQueues()
+        {
+            //remove marked
+            foreach (Entity e in removeQueue)
+            {
+                entities.Remove(e);
+            }
+            //add marked
+            entities.AddRange(addQueue);
+
+            addQueue.Clear();
+            removeQueue.Clear();
+        }
+
+        /// <summary>
         /// Get a list of all Entities currently in the manager.
         /// </summary>
         /// <returns>A list of all managed Entities.</returns>
@@ -161,6 +178,17 @@ namespace IsoEngine
             }
 
             return colliding;
+        }
+
+        public List<T> GetAllEntitiesOfType<T>() where T : Entity
+        {
+            List<T> found = new List<T>();
+            foreach (Entity e in entities)
+            {
+                if (e.GetType() == typeof(T))
+                    found.Add((T)e);
+            }
+            return found;
         }
 
         public void Update()

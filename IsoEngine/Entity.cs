@@ -16,9 +16,10 @@ namespace IsoEngine
         public int h;
 
         protected bool hasPhysics = false;
+        protected bool moveSafelyWithPhysics = false;
         protected float friction = 0.6f;
-        protected Vec2 velocity;
-        protected Vec2 acceleration;
+        protected Vec2 velocity = Vec2.zero;
+        protected Vec2 acceleration = Vec2.zero;
 
         List<Collider> colliders = new List<Collider>();
 
@@ -91,7 +92,11 @@ namespace IsoEngine
         {
             if (hasPhysics && velocity != null)
             {
-                pos += velocity;
+                if (!moveSafelyWithPhysics)
+                    pos += velocity;
+                else
+                    Move(velocity.x, velocity.y);
+                
                 if (acceleration != null)
                 {
                     velocity += acceleration - (velocity * friction);
