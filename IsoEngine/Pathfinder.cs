@@ -9,18 +9,10 @@ namespace IsoEngine
 
         public static bool[,] pathMap;
 
-        //Entity walker;
-        //Entity target;
-
         int cellW;
         int cellH;
 
         int maxSeekDistance;
-
-        //Vec2 lastTargetPos = new Vec2(0, 0);
-        //int targetMoveThreshold = 10;
-
-        //List<PathCell> pathCells = new List<PathCell>();
 
         int maxSearchCells = 100;
 
@@ -33,17 +25,26 @@ namespace IsoEngine
             this.maxSeekDistance = maxSeekDistance;
         }
 
+        /// <summary>
+        /// Generate a new path on the current path map with the specified walker and target Entities.
+        /// </summary>
+        /// <param name="walker">The walker Entity.</param>
+        /// <param name="target">The target Entity.</param>
+        /// <param name="walkerCollider">The specific Collider on the walker Entity to check against.</param>
+        /// <param name="targetCollider">The specific Collider on the target Entity to check against.</param>
+        /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
         public List<Vec2> UpdatePath(Entity walker, Entity target, Collider walkerCollider, Collider targetCollider)
         {
             //ensure that the target is within the appropriate range before finding a path
-            if (GetBasicDistance(walker, target) < maxSeekDistance) //&&
+            //if (GetBasicDistance(walker, target) < maxSeekDistance) //&&
                 //System.Math.Abs(lastTargetPos.x - targetCollider.pos.x) + System.Math.Abs(lastTargetPos.y - targetCollider.pos.y) > targetMoveThreshold)
+            if (Math.GetDistance(walker.pos, target.pos) < maxSeekDistance)
             {
                 List<PathCell> path = FindPath(walkerCollider, targetCollider);
                 List<Vec2> pathPoints = new List<Vec2>();
                 foreach (PathCell p in path)
                 {
-                    pathPoints.Add(new Vec2(p.x + (cellW / 2), p.y + (cellH / 2)));
+                    pathPoints.Add(new Vec2((p.x * cellW) + (cellW / 2), (p.y * cellH) + (cellH / 2)));
                 }
                 return pathPoints;
             }
@@ -51,31 +52,10 @@ namespace IsoEngine
             return new List<Vec2>(); //couldn't find path, return empty
         }
 
-        /*
-        public bool PathExists()
-        {
-            return pathCells.Count > 0;
-        }
-        */
-
-        /*
-        public PathCell GetNextCell()
-        {
-            return pathCells[0];
-        }
-        */
-
-        /*
-        void EatCell()
-        {
-            pathCells.RemoveAt(0);
-        }
-        */
-
         /// <summary>
         /// Find a path between the origin and the target goal.
         /// </summary>
-        /// <returns>The endpoint of the path.</returns>
+        /// <returns>A list of all PathCells in the path (closest point to target at index 0).</returns>
         List<PathCell> FindPath(Collider walkerCollider, Collider targetCollider)
         {
             //define start & goal
@@ -275,10 +255,12 @@ namespace IsoEngine
 
         }
 
+        /*
         float GetBasicDistance(Entity walker, Entity target)
         {
             return System.Math.Abs(target.pos.x - walker.pos.x) + System.Math.Abs(target.pos.y - walker.pos.y);
         }
+        */
 
     }
 

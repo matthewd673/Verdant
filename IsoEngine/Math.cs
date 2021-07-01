@@ -5,6 +5,8 @@ namespace IsoEngine
     public static class Math
     {
 
+        public static Random rng = new Random();
+
         public static float AngleBetweenPoints(Vec2 a, Vec2 target)
         {
             return (float)System.Math.Atan2(target.x - a.x, target.y - a.y);
@@ -30,6 +32,12 @@ namespace IsoEngine
         public static bool CheckRectIntersection(Vec2 pos1, int w1, int h1, Vec2 pos2, int w2, int h2)
         {
             return CheckRectIntersection(pos1.x, pos1.y, w1, h1, pos2.x, pos2.y, w2, h2);
+        }
+
+        public static float RandomFloat()
+        {
+            double mantissa = rng.NextDouble() * 2.0 - 1.0;
+            return (float)System.Math.Abs(mantissa);
         }
 
     }

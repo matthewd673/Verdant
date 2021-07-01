@@ -15,6 +15,9 @@ namespace IsoEngine
         public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, bool visualizeColliders = false)
         {
 
+            //update camera
+            cam.Update();
+
             //build pixel texture, if necessary
             if (pixel == null)
             {
@@ -34,7 +37,7 @@ namespace IsoEngine
 
         public static Rectangle GetRenderBounds(float x, float y, int w, int h)
         {
-            return new Rectangle((int)((x - cam.pos.x) * scale), (int)((y - cam.pos.y) * scale), w * scale, h * scale);
+            return new Rectangle((int)((x - cam.GetRenderPos().x) * scale), (int)((y - cam.GetRenderPos().y) * scale), w * scale, h * scale);
         }
         public static Rectangle GetRenderBounds(Vec2 pos, int w, int h)
         {

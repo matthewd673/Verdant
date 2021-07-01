@@ -9,9 +9,14 @@ namespace IsoEngine
         int w;
         int h;
 
+        float shakeStrength;
+        Cooldown shakeCooldown;
+        float offsetX;
+        float offsetY;
+
         public Camera(int w, int h)
         {
-            this.pos = new Vec2();
+            pos = new Vec2();
             this.w = w;
             this.h = h;
         }
@@ -21,6 +26,22 @@ namespace IsoEngine
             this.pos = pos;
             this.w = w;
             this.h = h;
+        }
+
+        public void Update()
+        {
+            if (shakeCooldown == null)
+                return;
+
+            shakeCooldown.Tick();
+            if (!shakeCooldown.Check())
+                ApplyShake();
+            else
+            {
+                offsetX = 0;
+                offsetY = 0;
+                shakeCooldown = null;
+            }
         }
 
         public void CenterOnEntity(Entity e)
@@ -50,6 +71,30 @@ namespace IsoEngine
         public Vec2 WorldToScreenPos(Vec2 worldPos)
         {
             return WorldToScreenPos(worldPos.x, worldPos.y);
+        }
+
+        public void SetShake(float strength, int duration)
+        {
+            shakeStrength = strength;
+            shakeCooldown = new Cooldown(duration);
+            offsetX = 0;
+            offsetY = 0;
+        }
+
+        public bool IsShaking()
+        {
+            return (shakeCooldown != null);
+        }
+
+        void ApplyShake()
+        {
+            offsetX = shakeStrength * Math.RandomFloat();
+            offsetY = shakeStrength * Math.RandomFloat();
+        }
+
+        public Vec2 GetRenderPos()
+        {
+            return new Vec2(pos.x + offsetX, pos.y + offsetY);
         }
 
     }
