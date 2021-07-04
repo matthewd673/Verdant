@@ -8,7 +8,9 @@ namespace IsoEngine
 
         UIManager manager;
 
-        Vec2 pos;
+        public Vec2 pos;
+
+        bool forRemoval;
 
         public UIElement(Vec2 pos)
         {
@@ -28,6 +30,16 @@ namespace IsoEngine
         public virtual void Draw(SpriteBatch spriteBatch)
         {
 
+        }
+
+        public void MarkForRemoval()
+        {
+            forRemoval = true;
+        }
+
+        public bool IsForRemoval()
+        {
+            return forRemoval;
         }
 
     }

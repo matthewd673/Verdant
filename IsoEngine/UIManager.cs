@@ -55,6 +55,8 @@ namespace IsoEngine
             foreach (UIElement e in elements)
             {
                 e.Update();
+                if (e.IsForRemoval())
+                    removeQueue.Add(e);
             }
             //remove and add
             foreach (UIElement e in removeQueue)
