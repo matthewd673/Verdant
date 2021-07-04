@@ -17,7 +17,7 @@ namespace IsoEngine
 
         protected bool hasPhysics = false;
         protected bool moveSafelyWithPhysics = false;
-        protected float friction = 0.6f;
+        protected float friction = 0f;
         protected Vec2 velocity = Vec2.zero;
         protected Vec2 acceleration = Vec2.zero;
 
@@ -42,10 +42,18 @@ namespace IsoEngine
         {
             this.velocity = velocity;
         }
+        public Vec2 GetVelocity()
+        {
+            return velocity;
+        }
 
         public void SetAcceleration(Vec2 acceleration)
         {
             this.acceleration = acceleration;
+        }
+        public Vec2 GetAcceleration()
+        {
+            return acceleration;
         }
 
         public void SetManager(EntityManager manager)

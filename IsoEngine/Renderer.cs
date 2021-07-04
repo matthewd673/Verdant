@@ -12,7 +12,7 @@ namespace IsoEngine
 
         public static Texture2D pixel;
 
-        public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, bool visualizeColliders = false)
+        public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeColliders = false)
         {
 
             //update camera
@@ -26,6 +26,7 @@ namespace IsoEngine
                 pixel.SetData(data);
             }
 
+            //render entities
             foreach (Entity e in entityManager.GetEntities())
             {
                 e.Draw(spriteBatch);
@@ -33,6 +34,11 @@ namespace IsoEngine
                     e.DrawColliders(spriteBatch);
             }
 
+            //render ui elements
+            foreach (UIElement e in uiManager.GetElements())
+            {
+                e.Draw(spriteBatch);
+            }
         }
 
         public static Rectangle GetRenderBounds(float x, float y, int w, int h)

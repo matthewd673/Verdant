@@ -24,7 +24,7 @@ namespace IsoEngine
         /// Add a list of Entities to the manager, and mark this instance as the manager of all of the Entities.
         /// </summary>
         /// <param name="l">The list of Entities to add.</param>
-        public void AddEntities(List<Entity> l)
+        public void AddEntityRange(List<Entity> l)
         {
             foreach (Entity e in l)
             {
