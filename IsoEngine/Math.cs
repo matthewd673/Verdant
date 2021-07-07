@@ -40,5 +40,12 @@ namespace IsoEngine
             return (float)System.Math.Abs(mantissa);
         }
 
+        public static float RandomFloat(float min, float max)
+        {
+            double mantissa = rng.NextDouble() * 2.0 - 1.0;
+            float final = (float)System.Math.Abs(mantissa) * (max - min) + min;
+            return final;
+        }
+
     }
 }

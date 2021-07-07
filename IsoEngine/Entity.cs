@@ -23,6 +23,9 @@ namespace IsoEngine
 
         List<Collider> colliders = new List<Collider>();
 
+        protected bool setZIndexToBase = false;
+        public int zIndex = 0;
+
         bool forRemoval = false;
 
         public Entity(Texture2D sprite, Vec2 pos, int w, int h)
@@ -115,6 +118,9 @@ namespace IsoEngine
             foreach (Collider c in colliders)
                 c.Update();
 
+            if (setZIndexToBase)
+                zIndex = (int)(pos.y + h);
+
         }
 
         /// <summary>
@@ -124,7 +130,8 @@ namespace IsoEngine
         /// <param name="yDelta">The distance to move on the y axis.</param>
         /// <param name="moveCollider">The specific Collider to check against. Otherwise, the first Collider added will be used (whether it is a trigger or solid).</param>
         /// <param name="discreteSteps">The number of discrete steps to take when checking collisions. Increase for fast objects.</param>
-        public void Move(float xDelta, float yDelta, Collider moveCollider = null, int discreteSteps = 4)
+        /// <param name="moveThroughIfColliding">If the Entity is already colliding with another Entity when it begins to move, allow the Entity to pass through it.</param>
+        public void Move(float xDelta, float yDelta, Collider moveCollider = null, int discreteSteps = 4, bool moveThroughIfColliding = false)
         {
 
             if (colliders.Count == 0) //do nothing if there is no collider attached (while it could just move regardless, doing so would break the promise of not colliding imo, easier to debug too).
@@ -143,20 +150,56 @@ namespace IsoEngine
 
             bool collidedOnX = false;
             bool collidedOnY = false;
+
+            List<Entity> preColliding = new List<Entity>();
+            if (moveThroughIfColliding)
+                preColliding = manager.GetAllColliding(this, moveCollider, onlySolids: true);
+
             for (int i = 0; i < discreteSteps; i++)
             {
-                if (!collidedOnX && manager.CheckRectCollisions(newX + xInc, newY, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this).Count == 0) //all clear on X
+                if (!collidedOnX) //all clear on X
                 {
-                    newX += xInc;
-                    xTotalMove += xInc;
+                    List<Entity> collided = manager.CheckRectCollisions(newX + xInc, newY, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this);
+
+                    if (!moveThroughIfColliding && collided.Count == 0)
+                    {
+                        newX += xInc;
+                        xTotalMove += xInc;
+                    }
+                    else
+                    {
+                        foreach (Entity e in preColliding)
+                            collided.Remove(e);
+                        if (collided.Count == 0)
+                        {
+                            newX += xInc;
+                            xTotalMove += xInc;
+                        }
+                    }
                 }
                 else
                     collidedOnX = true;
 
-                if (!collidedOnY && manager.CheckRectCollisions(newX, newY + yInc, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this).Count == 0) //all clear on Y
+                if (!collidedOnY) //all clear on Y
                 {
-                    newY += yInc;
-                    yTotalMove += yInc;
+                    List<Entity> collided = manager.CheckRectCollisions(newX, newY + yInc, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this);
+
+                    if (!moveThroughIfColliding && collided.Count == 0)
+                    {
+
+                        newY += yInc;
+                        yTotalMove += yInc;
+                    }
+                    else
+                    {
+                        foreach (Entity e in preColliding)
+                            collided.Remove(e);
+                        if (collided.Count == 0)
+                        {
+                            newY += yInc;
+                            yTotalMove += yInc;
+                        }
+                    }
                 }
                 else
                     collidedOnY = true;
@@ -190,13 +233,13 @@ namespace IsoEngine
                     color = Color.LimeGreen;
 
                 //top line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(pos, w, 1), color);
+                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos, c.w, 1), color);
                 //bottom line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(pos.x, pos.y + h, w + 1, 1), color);
+                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos.x, c.pos.y + c.h, c.w + 1, 1), color);
                 //left line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(pos, 1, h), color);
+                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos, 1, c.h), color);
                 //right line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(pos.x + w, pos.y, 1, h), color);
+                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos.x + c.w, c.pos.y, 1, c.h), color);
             }
         }
 
