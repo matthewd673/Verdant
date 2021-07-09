@@ -43,5 +43,10 @@ namespace IsoEngine
             time = 0;
         }
 
+        public int GetDuration()
+        {
+            return duration;
+        }
+
     }
 }

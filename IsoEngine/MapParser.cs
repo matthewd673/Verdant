@@ -1,9 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace IsoEngine
 {
-    public static class MapParser
+    public class MapParser
     {
+
+        int tileWidth = 1;
+        int tileHeight = 1;
+
+        Dictionary<char, Action<int, int>> buildActionDictionary;
+
+        public MapParser()
+        {
+            buildActionDictionary = new Dictionary<char, Action<int, int>>();
+        }
+        public MapParser(int tileWidth, int tileHeight)
+        {
+            buildActionDictionary = new Dictionary<char, Action<int, int>>();
+            this.tileWidth = tileWidth;
+            this.tileHeight = tileHeight;
+        }
 
         /// <summary>
         /// Given the contents of a MapTools map file, returns a 2D array of characters to be further parsed into Entities.
@@ -35,6 +52,31 @@ namespace IsoEngine
             }
 
             return map;
+        }
+
+        public void DefineBuildAction(char tileChar, Action<int, int> buildAction)
+        {
+            buildActionDictionary.Add(tileChar, buildAction);
+        }
+        public void RemoveBuildAction(char tileChar)
+        {
+            buildActionDictionary.Remove(tileChar);
+        }
+        public void ClearBuildActions()
+        {
+            buildActionDictionary.Clear();
+        }
+
+        public void BuildMap(char[,] mapData)
+        {
+            for (int i = 0; i < mapData.GetLength(0); i++)
+            {
+                for (int j = 0; j < mapData.GetLength(1); j++)
+                {
+                    if (buildActionDictionary.ContainsKey(mapData[i, j]))
+                        buildActionDictionary[mapData[i, j]].Invoke(i * tileWidth, j * tileHeight);
+                }
+            }
         }
 
     }
