@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace IsoEngine
+namespace IsoEngine.UI
 {
     public class UIElement
     {
@@ -9,12 +9,16 @@ namespace IsoEngine
         UIManager manager;
 
         public Vec2 pos;
+        public int w;
+        public int h;
 
         bool forRemoval;
 
-        public UIElement(Vec2 pos)
+        public UIElement(Vec2 pos, int w, int h)
         {
             this.pos = pos;
+            this.w = w;
+            this.h = h;
         }
 
         public void SetManager(UIManager manager)

@@ -180,6 +180,11 @@ namespace IsoEngine
             return colliding;
         }
 
+        /// <summary>
+        /// Get all Entities of a current type currently in the manager.
+        /// </summary>
+        /// <typeparam name="T">The type of Entity to search for.</typeparam>
+        /// <returns>A list of Entities of the given type in the manager.</returns>
         public List<T> GetAllEntitiesOfType<T>() where T : Entity
         {
             List<T> found = new List<T>();
@@ -191,6 +196,9 @@ namespace IsoEngine
             return found;
         }
 
+        /// <summary>
+        /// Update all Entities in the manager.
+        /// </summary>
         public void Update()
         {
             //update all

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IsoEngine
+namespace IsoEngine.UI
 {
     public class UIManager
     {

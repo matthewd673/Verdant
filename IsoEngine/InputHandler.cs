@@ -18,7 +18,6 @@ namespace IsoEngine
 
         public static void Update()
         {
-
             oldKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
@@ -29,7 +28,6 @@ namespace IsoEngine
             mY = currentMouseState.Y;
             mouseVec.x = mX;
             mouseVec.y = mY;
-
         }
 
         public static KeyboardState GetKeyboardState()
@@ -40,6 +38,18 @@ namespace IsoEngine
         public static MouseState GetMouseState()
         {
             return currentMouseState;
+        }
+
+        public static bool IsMouseFirstPressed()
+        {
+            return (oldMouseState.LeftButton == ButtonState.Released &&
+                currentMouseState.LeftButton == ButtonState.Pressed);
+        }
+
+        public static bool IsMouseFirstReleased()
+        {
+            return (oldMouseState.LeftButton == ButtonState.Pressed &&
+                currentMouseState.LeftButton == ButtonState.Released);
         }
 
     }

@@ -87,5 +87,14 @@ namespace IsoEngine
             return sprites[x, y];
         }
 
+        /// <summary>
+        /// Get a 2D array containing all sprites in the sheet.
+        /// </summary>
+        /// <returns>A 2D array of Texture2D sprites.</returns>
+        public Texture2D[,] GetFullSheet()
+        {
+            return sprites;
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using IsoEngine.UI;
 
 namespace IsoEngine
 {
@@ -20,7 +21,6 @@ namespace IsoEngine
 
         public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeColliders = false)
         {
-
             //update camera
             cam.Update();
 
