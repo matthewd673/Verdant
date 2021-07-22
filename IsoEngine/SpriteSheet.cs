@@ -8,29 +8,27 @@ namespace IsoEngine
     {
 
         protected Texture2D[,] sprites;
-        int width;
-        int height;
 
         /// <summary>
         /// Initialize a new SpriteSheet.
         /// </summary>
-        /// <param name="sheet">The Texture2D sheet of sprites. Sprites should be in one row, ordered left to right.</param>
-        /// <param name="width">The number of sprites in the sheet.</param>
-        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping sprites.</param>
-        public SpriteSheet(Texture2D sheet, int width, GraphicsDevice graphicsDevice)
+        /// <param name="sheetTexture">The Texture2D sheet of sprites. Sprites should be in one row, ordered left to right.</param>
+        /// <param name="spriteW">The width of each sprite.</param>
+        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
+        public SpriteSheet(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice)
         {
-            BuildSpriteSheet(sheet, width, 1, graphicsDevice);
+            sprites = BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice);
         }
         /// <summary>
         /// Initialize a new 2D SpriteSheet.
         /// </summary>
-        /// <param name="sheet">The Texture2D sheet of sprites. Sprites should be in a 2D grid of uniform rows and columns.</param>
-        /// <param name="width">The number of sprites in each row.</param>
-        /// <param name="height">The number of sprites in each column.</param>
+        /// <param name="sheetTexture">The Texture2D sheet of sprites. Sprites should be in a 2D grid of uniform rows and columns.</param>
+        /// <param name="spriteW">The width of each sprite.</param>
+        /// <param name="spriteH">The height of each sprite.</param>
         /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
-        public SpriteSheet(Texture2D sheet, int width, int height, GraphicsDevice graphicsDevice)
+        public SpriteSheet(Texture2D sheetTexture, int spriteW, int spriteH, GraphicsDevice graphicsDevice)
         {
-            BuildSpriteSheet(sheet, width, height, graphicsDevice);
+            sprites = BuildTexture2DArray(sheetTexture, spriteW, spriteH, graphicsDevice);
         }
         /// <summary>
         /// Initialize a new SpriteSheet from an existing array of Texture2Ds.
@@ -39,31 +37,39 @@ namespace IsoEngine
         public SpriteSheet(Texture2D[,] sprites)
         {
             this.sprites = sprites;
-            width = sprites.GetLength(0);
-            height = sprites.GetLength(1);
         }
 
-        void BuildSpriteSheet(Texture2D sheet, int width, int height, GraphicsDevice graphicsDevice)
+        /// <summary>
+        /// Crop a single Texture2D sheet into a 2D array of sprites.
+        /// </summary>
+        /// <param name="sheetTexture">The Texture2D sheet of sprites.</param>
+        /// <param name="spriteW">The width of each sprite in the sheet.</param>
+        /// <param name="spriteH">The height of each sprite in the sheet.</param>
+        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
+        /// <returns>A 2D array of all Texture2D sprites in the sheet.</returns>
+        public static Texture2D[,] BuildTexture2DArray(Texture2D sheetTexture, int spriteW, int spriteH, GraphicsDevice graphicsDevice)
         {
-            int spriteW = sheet.Width / width;
-            int spriteH = sheet.Height / height;
 
-            sprites = new Texture2D[width, height];
+            int sheetW = sheetTexture.Width / spriteW;
+            int sheetH = sheetTexture.Height / spriteH;
 
-            int ct = 0;
-            for (int i = 0; i < width; i++)
+            Texture2D[,] sprites = new Texture2D[sheetW, sheetH];
+
+            for (int i = 0; i < sheetW; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < sheetH; j++)
                 {
                     //crop frame from sheet
                     Texture2D slice = new Texture2D(graphicsDevice, spriteW, spriteH);
                     Color[] colorData = new Color[spriteW * spriteH];
-                    sheet.GetData(0, new Rectangle(i * spriteW, j * spriteH, spriteW, spriteH), colorData, 0, colorData.Length);
+                    sheetTexture.GetData(0, new Rectangle(i * spriteW, j * spriteH, spriteW, spriteH), colorData, 0, colorData.Length);
                     slice.SetData(colorData);
                     //add to array
                     sprites[i, j] = slice;
                 }
             }
+
+            return sprites;
         }
 
         /// <summary>
@@ -85,6 +91,24 @@ namespace IsoEngine
         public Texture2D Get(int x, int y)
         {
             return sprites[x, y];
+        }
+
+        /// <summary>
+        /// Get width of the sheet (the number of columns of sprites).
+        /// </summary>
+        /// <returns>The width of the sheet.</returns>
+        public int GetSheetWidth()
+        {
+            return sprites.GetLength(0);
+        }
+
+        /// <summary>
+        /// Get the height of the sheet (the number of rows of sprites).
+        /// </summary>
+        /// <returns>The height of the sheet.</returns>
+        public int GetSheetHeight()
+        {
+            return sprites.GetLength(1);
         }
 
         /// <summary>

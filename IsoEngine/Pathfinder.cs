@@ -255,6 +255,23 @@ namespace IsoEngine
 
         }
 
+        public void Visualize(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            for(int i = 0; i < pathMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < pathMap.GetLength(1); j++)
+                {
+                    Microsoft.Xna.Framework.Color drawColor = Microsoft.Xna.Framework.Color.Red;
+                    if (pathMap[i, j])
+                        drawColor = Microsoft.Xna.Framework.Color.White;
+                    spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(i * cellW, j * cellH, 1, cellH), drawColor);
+                    spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(i * cellW, j * cellH, cellW, 1), drawColor);
+                    spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds((i + 1) * cellW, j * cellH, 1, cellH), drawColor);
+                    spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(i * cellW, (j * 1) * cellH, cellW, 1), drawColor);
+                }
+            }
+        }
+
         /*
         float GetBasicDistance(Entity walker, Entity target)
         {

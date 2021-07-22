@@ -35,6 +35,7 @@ namespace IsoEngine
 
         public static Vec2 operator *(Vec2 a, int c) => new Vec2(a.x * c, a.y * c);
         public static Vec2 operator *(Vec2 a, float c) => new Vec2(a.x * c, a.y * c);
-
+        public static Vec2 operator +(Vec2 a, float c) => new Vec2(a.x + c, a.y + c);
+        public static Vec2 operator -(Vec2 a, float c) => new Vec2(a.x - c, a.y - c);
     }
 }
