@@ -121,7 +121,7 @@ namespace IsoEngine
         }
 
         /// <summary>
-        /// Reset the Animation to the first frame. The Animation will also be marked incomplete.
+        /// Reset the Animation to the first frame. The Animation will be marked incomplete, and the number of ticks until next frame will be reset.
         /// </summary>
         public void Reset()
         {
