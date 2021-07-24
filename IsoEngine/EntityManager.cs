@@ -16,7 +16,6 @@ namespace IsoEngine
         /// <param name="e">The Entity to add.</param>
         public void AddEntity(Entity e)
         {
-            e.SetManager(this);
             addQueue.Add(e);
         }
 
@@ -39,7 +38,6 @@ namespace IsoEngine
         /// <param name="e">The Entity to remove.</param>
         public void RemoveEntity(Entity e)
         {
-            e.SetManager(null);
             removeQueue.Add(e);
         }
 
@@ -51,10 +49,15 @@ namespace IsoEngine
             //remove marked
             foreach (Entity e in removeQueue)
             {
+                e.SetManager(null);
                 entities.Remove(e);
             }
             //add marked
-            entities.AddRange(addQueue);
+            foreach (Entity e in addQueue)
+            {
+                e.SetManager(this);
+                entities.Add(e);
+            }
 
             addQueue.Clear();
             removeQueue.Clear();
@@ -213,10 +216,15 @@ namespace IsoEngine
             //remove marked
             foreach (Entity e in removeQueue)
             {
+                e.SetManager(null);
                 entities.Remove(e);
             }
             //add marked
-            entities.AddRange(addQueue);
+            foreach (Entity e in addQueue)
+            {
+                e.SetManager(this);
+                entities.Add(e);
+            }
 
             addQueue.Clear();
             removeQueue.Clear();
