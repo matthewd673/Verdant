@@ -16,3 +16,7 @@ Currently built on `.NET Framework 4.5.2` for compatibility with `MonoGame 3.x`.
 ## MapTools
 
 MapTools is an included tool for creating simple map files built from images, which IsoEngine can parse. MapTools and its map files can be used entirely independently of IsoEngine.
+
+## [Documentation](https://github.com/matthewd673/IsoEngine/wiki)
+
+Documentation for each class is available on [the wiki](https://github.com/matthewd673/IsoEngine/wiki). It is automatically generated from documentation comments within the codebase.
