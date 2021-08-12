@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace IsoEngine
 {
-    public class Animation
+    public class Animation : IRenderObject
     {
 
         SpriteSheet sheet;
@@ -77,39 +77,10 @@ namespace IsoEngine
         }
 
         /// <summary>
-        /// Perform the next step of the Animation and return the current frame.
+        /// Perform the next step of the Animation and return the current frame. Identical to the Get method implemented from IRenderObject.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D Animate()
-        {
-
-            if (settled) //skip other steps if settled
-                return sheet.Get(frameIndex, frameSet.row);
-
-            animateCooldown.Tick();
-
-            if (animateCooldown.Consume())
-            {
-                frameIndex++;
-
-                if (frameIndex >= frameSet.endFrame)
-                {
-                    if (looping)
-                    {
-                        frameIndex = frameSet.startFrame;
-                        hasLooped = true;
-                    }
-                    else
-                    {
-                        frameIndex = frameSet.endFrame - 1;
-                        settled = true;
-                    }
-                }
-
-            }
-
-            return sheet.Get(frameIndex, frameSet.row);
-        }
+        public Texture2D Animate() { return Get(); }
 
         /// <summary>
         /// Get the current frame of the Animation (without animating further).
@@ -117,7 +88,7 @@ namespace IsoEngine
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
         public Texture2D GetCurrentFrame()
         {
-            return sheet.Get(frameIndex, frameSet.row);
+            return sheet.GetIndex(frameIndex, frameSet.row);
         }
 
         /// <summary>
@@ -170,13 +141,59 @@ namespace IsoEngine
         }
 
         /// <summary>
+        /// Perform the next step of the Animation and return the current frame.
+        /// </summary>
+        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
+        public Texture2D Get()
+        {
+            if (settled) //skip other steps if settled
+                return sheet.GetIndex(frameIndex, frameSet.row);
+
+            animateCooldown.Tick();
+
+            if (animateCooldown.Consume())
+            {
+                frameIndex++;
+
+                if (frameIndex >= frameSet.endFrame)
+                {
+                    if (looping)
+                    {
+                        frameIndex = frameSet.startFrame;
+                        hasLooped = true;
+                    }
+                    else
+                    {
+                        frameIndex = frameSet.endFrame - 1;
+                        settled = true;
+                    }
+                }
+
+            }
+
+            return sheet.GetIndex(frameIndex, frameSet.row);
+        }
+
+        /// <summary>
+        /// Return the current frame of the Animation without progressing the Animation.
+        /// </summary>
+        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
+        public Texture2D GetWithoutAnimating()
+        {
+            return sheet.GetIndex(frameIndex, frameSet.row);
+        }
+
+        /// <summary>
         /// Get the sprite at the specified index, relative to the FrameSet's start frame.
         /// </summary>
         /// <param name="index">The frame index to pull from.</param>
+        /// <param name="j">The row on the Animation sheet to pull from. By default, the appropriate row as defined by the FrameSet will be used.</param>
         /// <returns>The sprite at the specified index.</returns>
-        public Texture2D Get(int index)
+        public Texture2D GetIndex(int index, int j = -1)
         {
-            return sheet.Get(index + frameSet.startFrame, frameSet.row);
+            if (j == -1)
+                j = frameSet.row;
+            return sheet.GetIndex(index + frameSet.startFrame, j);
         }
 
         /// <summary>

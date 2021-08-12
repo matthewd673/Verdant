@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace IsoEngine
 {
-    public class SpriteSheet
+    public class SpriteSheet : IRenderObject
     {
 
         protected Texture2D[,] sprites;
@@ -73,24 +73,23 @@ namespace IsoEngine
         }
 
         /// <summary>
-        /// Get the sprite at the x position in the first row.
+        /// Get the sprite at the x position (and optionally y position) on the sheet.
         /// </summary>
         /// <param name="x">The x position of the sprite.</param>
+        /// <param name="y">The y position of the sprite. Defaults to 0 (first row).</param>
         /// <returns>The Texture2D sprite located at the given coordinates.</returns>
-        public Texture2D Get(int x)
+        public Texture2D GetIndex(int x, int y = 0)
         {
-            return sprites[x, 0];
+            return sprites[x, y];
         }
 
         /// <summary>
-        /// Get the sprite at the x and y coordinates on the sheet.
+        /// Get the first sprite on the sheet. SpriteSheet is intended to be used with GetIndex.
         /// </summary>
-        /// <param name="x">The x position of the sprite.</param>
-        /// <param name="y">The y position of the sprite.</param>
-        /// <returns>The Texture2D sprite located at the given coordinates.</returns>
-        public Texture2D Get(int x, int y)
+        /// <returns>The Texture2D sprite located at (0, 0) on the sheet.</returns>
+        public Texture2D Get()
         {
-            return sprites[x, y];
+            return GetIndex(0, 0);
         }
 
         /// <summary>
@@ -119,6 +118,5 @@ namespace IsoEngine
         {
             return sprites;
         }
-
     }
 }

@@ -11,7 +11,7 @@ namespace IsoEngine
         EntityManager manager;
 
         public Vec2 pos;
-        public Texture2D sprite;
+        public IRenderObject sprite;
         public int w;
         public int h;
 
@@ -28,7 +28,14 @@ namespace IsoEngine
 
         bool forRemoval = false;
 
-        public Entity(Texture2D sprite, Vec2 pos, int w, int h)
+        /// <summary>
+        /// Initialize a new Entity.
+        /// </summary>
+        /// <param name="sprite">The Entity's sprite.</param>
+        /// <param name="pos">The position of the Entity.</param>
+        /// <param name="w">The width of the Entity.</param>
+        /// <param name="h">The height of the Entity.</param>
+        public Entity(IRenderObject sprite, Vec2 pos, int w, int h)
         {
             this.sprite = sprite;
             this.pos = pos;
@@ -36,39 +43,72 @@ namespace IsoEngine
             this.h = h;
         }
 
+        /// <summary>
+        /// Set the Entity's current friction.
+        /// </summary>
+        /// <param name="friction">The friction value, typically between 0 and 1.</param>
         public void SetFriction(float friction)
         {
             this.friction = friction;
         }
 
+        /// <summary>
+        /// Set the Entity's current velocity.
+        /// </summary>
+        /// <param name="velocity">The velocity value, represented as a Vec2.</param>
         public void SetVelocity(Vec2 velocity)
         {
             this.velocity = velocity;
         }
+
+        /// <summary>
+        /// Get the Entity's current velocity.
+        /// </summary>
+        /// <returns>The current velocity, represented as a Vec2.</returns>
         public Vec2 GetVelocity()
         {
             return velocity;
         }
 
+        /// <summary>
+        /// Set the Entity's current acceleration.
+        /// </summary>
+        /// <param name="acceleration">The acceleration value, represented as a Vec2.</param>
         public void SetAcceleration(Vec2 acceleration)
         {
             this.acceleration = acceleration;
         }
+
+        /// <summary>
+        /// Get the Entity's current acceleration.
+        /// </summary>
+        /// <returns>The current acceleration, represented as a Vec2.</returns>
         public Vec2 GetAcceleration()
         {
             return acceleration;
         }
 
+        /// <summary>
+        /// Manually set the Entity's parent EntityManager. This is performed automatically when adding an Entity to an EntityManager.
+        /// </summary>
+        /// <param name="manager">The EntityManager to mark as parent.</param>
         public void SetManager(EntityManager manager)
         {
             this.manager = manager;
         }
 
+        /// <summary>
+        /// Mark this Entity to be removed from the EntityManager at the end of the update loop.
+        /// </summary>
         public void MarkForRemoval()
         {
             forRemoval = true;
         }
 
+        /// <summary>
+        /// Check if this Entity is marked for removal from the EntityManager.
+        /// </summary>
+        /// <returns>Returns true if the Entity is marked for removal.</returns>
         public bool IsForRemoval()
         {
             return forRemoval;
@@ -82,23 +122,45 @@ namespace IsoEngine
         {
             AddCollider(new Collider(this, trigger: trigger, relativePos: true));
         }
+
+        /// <summary>
+        /// Add a Collider to the Entity.
+        /// </summary>
+        /// <param name="c">The Collider to add.</param>
         public void AddCollider(Collider c)
         {
             colliders.Add(c);
         }
+
+        /// <summary>
+        /// Remove a Collider from the Entity.
+        /// </summary>
+        /// <param name="c">The Collider to remove.</param>
         public void RemoveCollider(Collider c)
         {
             colliders.Remove(c);
         }
+
+        /// <summary>
+        /// Remove all Colliders from the Entity.
+        /// </summary>
         public void ClearColliders()
         {
             colliders.Clear();
         }
+
+        /// <summary>
+        /// Get a list of all the Colliders currently attached to the Entity.
+        /// </summary>
+        /// <returns>A list of all Colliders on the Entity.</returns>
         public List<Collider> GetColliders()
         {
             return colliders;
         }
 
+        /// <summary>
+        /// Perform the Entity's basic update loop: performing physics movement, updating child Colliders, and updating the z-index if appropriate.
+        /// </summary>
         public virtual void Update()
         {
             if (hasPhysics && velocity != null)
@@ -214,15 +276,19 @@ namespace IsoEngine
 
         }
 
+        /// <summary>
+        /// Perfom a basic render of the Entity.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, Renderer.GetRenderBounds(this), Color.White);
+            spriteBatch.Draw(sprite.Get(), Renderer.GetRenderBounds(this), Color.White);
         }
 
         /// <summary>
         /// Draws all of the Colliders attached to the Entity (for debug). Yellow = Solid, Green = Trigger.
         /// </summary>
-        /// <param name="spriteBatch">The SpriteBatch used for drawing.</param>
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public void DrawColliders(SpriteBatch spriteBatch)
         {
             foreach (Collider c in colliders)

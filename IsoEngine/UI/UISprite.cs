@@ -19,7 +19,7 @@ namespace IsoEngine.UI
         {
             sprites = new Texture2D[,] { { sprite } };
         }
-        public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos, sheet.Get(0).Width, sheet.Get(0).Height)
+        public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos, sheet.Get().Width, sheet.Get().Height)
         {
             sprites = sheet.GetFullSheet();
         }

@@ -8,7 +8,15 @@ namespace IsoEngine
 
         int lifetime;
 
-        public Particle(Texture2D sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
+        /// <summary>
+        /// Initialize a new Particle.
+        /// </summary>
+        /// <param name="sprite">The Particle's sprite.</param>
+        /// <param name="pos">The position of the Particle.</param>
+        /// <param name="w">The width of the Particle.</param>
+        /// <param name="h">The height of the Particle.</param>
+        /// <param name="lifetime">The number of frames the Particle should live before being marked as dead.</param>
+        public Particle(IRenderObject sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
         {
             this.lifetime = lifetime;
             hasPhysics = true;
