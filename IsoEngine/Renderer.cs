@@ -13,11 +13,15 @@ namespace IsoEngine
         public static Camera cam = new Camera(new Vec2(), 800, 600); //default, should be changed based on preferredbackbufferwidth & height
         public static int scale = 2;
 
-        public static Texture2D pixel;
+        static Sprite pixel;
 
         public static bool sort = true;
 
         static IEnumerable<Entity> sortedQueue;
+
+        public static Texture2D GetPixel() { return pixel.Get(); }
+
+        public static Sprite GetPixelSprite() { return pixel; }
 
         public static void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeColliders = false)
         {
@@ -25,11 +29,13 @@ namespace IsoEngine
             cam.Update();
 
             //build pixel texture, if necessary
+            //TODO: find a more elegant way of accomplishing this (preferably in an init method or something)
             if (pixel == null)
             {
-                pixel = new Texture2D(graphicsDevice, 1, 1);
+                Texture2D texturePixel = new Texture2D(graphicsDevice, 1, 1);
                 Color[] data = new Color[1] { Color.White };
-                pixel.SetData(data);
+                texturePixel.SetData(data);
+                pixel = texturePixel;
             }
 
             //render entities
@@ -71,6 +77,10 @@ namespace IsoEngine
         public static Rectangle GetRenderBounds(Entity e)
         {
             return GetRenderBounds(e.pos, e.w, e.h);
+        }
+        public static Rectangle GetRenderBounds(TransformAnimation.TransformState transformState)
+        {
+            return GetRenderBounds(transformState.x, transformState.y, (int)transformState.w, (int)transformState.h);
         }
 
         public static Vec2Int GetRenderPos(Entity e)

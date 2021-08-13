@@ -13,5 +13,7 @@ namespace IsoEngine
             this.y = y;
         }
 
+        public static implicit operator Vec2(Vec2Int vec2Int) => new Vec2(vec2Int.x, vec2Int.y);
+
     }
 }

@@ -14,7 +14,7 @@ namespace IsoEngine
 
         bool autoRemove;
 
-        public ParticleSystem(Vec2 pos, int particleSpreadRadius, bool autoRemove = true) : base(Renderer.pixel, pos, 0, 0)
+        public ParticleSystem(Vec2 pos, int particleSpreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
         {
             rng = new Random();
             this.particleSpreadRadius = particleSpreadRadius;

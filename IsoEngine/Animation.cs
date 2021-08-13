@@ -175,15 +175,6 @@ namespace IsoEngine
         }
 
         /// <summary>
-        /// Return the current frame of the Animation without progressing the Animation.
-        /// </summary>
-        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D GetWithoutAnimating()
-        {
-            return sheet.GetIndex(frameIndex, frameSet.row);
-        }
-
-        /// <summary>
         /// Get the sprite at the specified index, relative to the FrameSet's start frame.
         /// </summary>
         /// <param name="index">The frame index to pull from.</param>

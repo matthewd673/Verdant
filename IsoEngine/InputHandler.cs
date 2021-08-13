@@ -50,12 +50,30 @@ namespace IsoEngine
         }
 
         /// <summary>
+        /// Get the KeyboardState from the previous frame.
+        /// </summary>
+        /// <returns>A KeyboardState.</returns>
+        public static KeyboardState GetPreviousKeyboardState()
+        {
+            return oldKeyboardState;
+        }
+
+        /// <summary>
         /// Get the current MouseState.
         /// </summary>
         /// <returns>A MouseState.</returns>
         public static MouseState GetMouseState()
         {
             return currentMouseState;
+        }
+
+        /// <summary>
+        /// Get the MouseState from the previous frame.
+        /// </summary>
+        /// <returns>A MouseState.</returns>
+        public static MouseState GetPreviousMouseState()
+        {
+            return oldMouseState;
         }
 
         /// <summary>
@@ -128,6 +146,15 @@ namespace IsoEngine
         {
             return (oldKeyboardState.IsKeyDown(key) &&
                 currentKeyboardState.IsKeyUp(key));
+        }
+
+        /// <summary>
+        /// Get the distance the mouse has travelled since the previous frame.
+        /// </summary>
+        /// <returns>A Vec2Int representing the distance the mouse has travelled.</returns>
+        public static Vec2Int GetMouseDelta()
+        {
+            return new Vec2Int(currentMouseState.X - oldMouseState.X, currentMouseState.Y - oldMouseState.Y);
         }
 
     }

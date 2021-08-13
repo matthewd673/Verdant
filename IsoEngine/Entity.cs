@@ -299,13 +299,13 @@ namespace IsoEngine
                     color = Color.LimeGreen;
 
                 //top line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos, c.w, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, c.w, 1), color);
                 //bottom line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos.x, c.pos.y + c.h, c.w + 1, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.x, c.pos.y + c.h, c.w + 1, 1), color);
                 //left line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, 1, c.h), color);
                 //right line
-                spriteBatch.Draw(Renderer.pixel, Renderer.GetRenderBounds(c.pos.x + c.w, c.pos.y, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.x + c.w, c.pos.y, 1, c.h), color);
             }
         }
 
