@@ -36,8 +36,8 @@ namespace IsoEngine
 
             mX = currentMouseState.X;
             mY = currentMouseState.Y;
-            mouseVec.x = mX;
-            mouseVec.y = mY;
+            mouseVec.X = mX;
+            mouseVec.Y = mY;
         }
 
         /// <summary>

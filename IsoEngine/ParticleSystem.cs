@@ -23,8 +23,8 @@ namespace IsoEngine
 
         public Vec2 GetNewParticlePos()
         {
-            float pX = pos.x + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
-            float pY = pos.y + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pX = Position.X + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pY = Position.Y + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
             return new Vec2(pX, pY);
         }
 

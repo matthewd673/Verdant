@@ -46,17 +46,17 @@ namespace IsoEngine
 
         public void CenterOnEntity(Entity e)
         {
-            pos.x = (e.pos.x + e.w / 2) - w / Renderer.scale / 2;
-            pos.y = (e.pos.y + e.h / 2) - h / Renderer.scale / 2;
+            pos.X = (e.Position.X + e.Width / 2) - w / Renderer.scale / 2;
+            pos.Y = (e.Position.Y + e.Height / 2) - h / Renderer.scale / 2;
         }
 
         public Vec2 ScreenToWorldPos(float x, float y)
         {
-            return new Vec2((x - pos.x) / Renderer.scale, (y - pos.y) / Renderer.scale);
+            return new Vec2((x - pos.X) / Renderer.scale, (y - pos.Y) / Renderer.scale);
         }
         public Vec2 ScreenToWorldPos(Vec2 screenPos)
         {
-            return ScreenToWorldPos(screenPos.x, screenPos.y);
+            return ScreenToWorldPos(screenPos.X, screenPos.Y);
         }
 
         public Vec2 MouseToWorldPos()
@@ -66,11 +66,11 @@ namespace IsoEngine
 
         public Vec2 WorldToScreenPos(float x, float y)
         {
-            return new Vec2((x - pos.x) * Renderer.scale, (y - pos.y) * Renderer.scale);
+            return new Vec2((x - pos.X) * Renderer.scale, (y - pos.Y) * Renderer.scale);
         }
         public Vec2 WorldToScreenPos(Vec2 worldPos)
         {
-            return WorldToScreenPos(worldPos.x, worldPos.y);
+            return WorldToScreenPos(worldPos.X, worldPos.Y);
         }
 
         public void SetShake(float strength, int duration)
@@ -94,7 +94,7 @@ namespace IsoEngine
 
         public Vec2 GetRenderPos()
         {
-            return new Vec2(pos.x + offsetX, pos.y + offsetY);
+            return new Vec2(pos.X + offsetX, pos.Y + offsetY);
         }
 
     }

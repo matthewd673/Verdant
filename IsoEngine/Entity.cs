@@ -10,21 +10,25 @@ namespace IsoEngine
 
         EntityManager manager;
 
-        public Vec2 pos;
-        public IRenderObject sprite;
-        public int w;
-        public int h;
+        public Vec2 Position { get; set; }
+        public IRenderObject Sprite { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         protected bool hasPhysics = false;
         protected bool moveSafelyWithPhysics = false;
-        protected float friction = 0f;
-        protected Vec2 velocity = Vec2.zero;
-        protected Vec2 acceleration = Vec2.zero;
+
+        protected float friction { get; set; } = 0f;
+        protected Vec2 Velocity { get; set; } = Vec2.Zero;
+        protected Vec2 Acceleration { get; set; } = Vec2.Zero;
+
+        public float Rotation { get; set; } = 0f;
+        protected Vec2Int rotationOrigin = Vec2Int.Zero;
 
         List<Collider> colliders = new List<Collider>();
 
         protected bool setZIndexToBase = false;
-        public int zIndex = 0;
+        public int ZIndex { get; private set; } = 0;
 
         bool forRemoval = false;
 
@@ -37,55 +41,11 @@ namespace IsoEngine
         /// <param name="h">The height of the Entity.</param>
         public Entity(IRenderObject sprite, Vec2 pos, int w, int h)
         {
-            this.sprite = sprite;
-            this.pos = pos;
-            this.w = w;
-            this.h = h;
-        }
-
-        /// <summary>
-        /// Set the Entity's current friction.
-        /// </summary>
-        /// <param name="friction">The friction value, typically between 0 and 1.</param>
-        public void SetFriction(float friction)
-        {
-            this.friction = friction;
-        }
-
-        /// <summary>
-        /// Set the Entity's current velocity.
-        /// </summary>
-        /// <param name="velocity">The velocity value, represented as a Vec2.</param>
-        public void SetVelocity(Vec2 velocity)
-        {
-            this.velocity = velocity;
-        }
-
-        /// <summary>
-        /// Get the Entity's current velocity.
-        /// </summary>
-        /// <returns>The current velocity, represented as a Vec2.</returns>
-        public Vec2 GetVelocity()
-        {
-            return velocity;
-        }
-
-        /// <summary>
-        /// Set the Entity's current acceleration.
-        /// </summary>
-        /// <param name="acceleration">The acceleration value, represented as a Vec2.</param>
-        public void SetAcceleration(Vec2 acceleration)
-        {
-            this.acceleration = acceleration;
-        }
-
-        /// <summary>
-        /// Get the Entity's current acceleration.
-        /// </summary>
-        /// <returns>The current acceleration, represented as a Vec2.</returns>
-        public Vec2 GetAcceleration()
-        {
-            return acceleration;
+            Sprite = sprite;
+            Position = pos;
+            Width = w;
+            Height = h;
+            rotationOrigin = new Vec2Int(w / 2, h / 2); //set automatic rotation origin
         }
 
         /// <summary>
@@ -95,6 +55,15 @@ namespace IsoEngine
         public void SetManager(EntityManager manager)
         {
             this.manager = manager;
+        }
+
+        /// <summary>
+        /// Get the Entity's parent EntityManager.
+        /// </summary>
+        /// <returns>The parent EntityManager.</returns>
+        public EntityManager GetManager()
+        {
+            return manager;
         }
 
         /// <summary>
@@ -163,17 +132,17 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
-            if (hasPhysics && velocity != null)
+            if (hasPhysics && Velocity != null)
             {
                 if (!moveSafelyWithPhysics)
-                    pos += velocity;
+                    Position += Velocity;
                 else
-                    Move(velocity.x, velocity.y);
+                    Move(Velocity.X, Velocity.Y);
                 
-                if (acceleration != null)
+                if (Acceleration != null)
                 {
-                    velocity += acceleration - (velocity * friction);
-                    acceleration *= friction;
+                    Velocity += Acceleration - (Velocity * friction);
+                    Acceleration *= friction;
                 }
             }
 
@@ -181,7 +150,7 @@ namespace IsoEngine
                 c.Update();
 
             if (setZIndexToBase)
-                zIndex = (int)(pos.y + h);
+                ZIndex = (int)(Position.Y + Height);
 
         }
 
@@ -202,8 +171,8 @@ namespace IsoEngine
             if (moveCollider == null)
                 moveCollider = colliders[0];
 
-            float newX = moveCollider.pos.x;
-            float newY = moveCollider.pos.y;
+            float newX = moveCollider.pos.X;
+            float newY = moveCollider.pos.Y;
             float xInc = xDelta / discreteSteps;
             float yInc = yDelta / discreteSteps;
 
@@ -271,8 +240,8 @@ namespace IsoEngine
                     break;
             }
 
-            pos.x += xTotalMove;
-            pos.y += yTotalMove;
+            Position.X += xTotalMove;
+            Position.Y += yTotalMove;
 
         }
 
@@ -282,7 +251,10 @@ namespace IsoEngine
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite.Get(), Renderer.GetRenderBounds(this), Color.White);
+            if (Rotation == 0f) //no rotation, simple draw
+                spriteBatch.Draw(Sprite.Get(), Renderer.GetRenderBounds(this), Color.White);
+            else
+                spriteBatch.Draw(Sprite.Get(), Renderer.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)rotationOrigin, SpriteEffects.None, 0);
         }
 
         /// <summary>
@@ -301,11 +273,11 @@ namespace IsoEngine
                 //top line
                 spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, c.w, 1), color);
                 //bottom line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.x, c.pos.y + c.h, c.w + 1, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.X, c.pos.Y + c.h, c.w + 1, 1), color);
                 //left line
                 spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, 1, c.h), color);
                 //right line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.x + c.w, c.pos.y, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.X + c.w, c.pos.Y, 1, c.h), color);
             }
         }
 

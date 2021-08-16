@@ -21,8 +21,8 @@ namespace IsoEngine
         {
             this.parent = parent;
 
-            offsetX = pos.x;
-            offsetY = pos.y;
+            offsetX = pos.X;
+            offsetY = pos.Y;
             if (relativePos)
                 ApplyOffset();
 
@@ -54,8 +54,8 @@ namespace IsoEngine
             if (relativePos)
                 ApplyOffset();
 
-            w = parent.w;
-            h = parent.h;
+            w = parent.Width;
+            h = parent.Height;
             this.relativePos = relativePos;
             this.trigger = trigger;
         }
@@ -69,8 +69,8 @@ namespace IsoEngine
 
         void ApplyOffset()
         {
-            pos.x = offsetX + parent.pos.x;
-            pos.y = offsetY + parent.pos.y;
+            pos.X = offsetX + parent.Position.X;
+            pos.Y = offsetY + parent.Position.Y;
         }
 
     }

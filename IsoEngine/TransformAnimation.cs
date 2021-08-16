@@ -105,7 +105,7 @@ namespace IsoEngine
         /// <returns>A TransformState representing the Entity's current state.</returns>
         public static TransformState CaptureState(Entity e)
         {
-            return new TransformState(e.pos.x, e.pos.y, e.w, e.h, 0); //rotation currently unsupported by entities
+            return new TransformState(e.Position.X, e.Position.Y, e.Width, e.Height, 0); //rotation currently unsupported by entities
         }
 
         public struct TransformState
@@ -145,6 +145,12 @@ namespace IsoEngine
                 h = state.h;
                 r = state.r;
             }
+
+            public static TransformState operator +(TransformState a, TransformState b) => new TransformState(a.x + b.x, a.y + b.y, a.w + b.w, a.h + b.h, a.r + b.r);
+            public static TransformState operator -(TransformState a, TransformState b) => new TransformState(a.x - b.x, a.y - b.y, a.w - b.w, a.h - b.h, a.r - b.r);
+            public static TransformState operator *(TransformState a, TransformState b) => new TransformState(a.x * b.x, a.y * b.y, a.w * b.w, a.h * b.h, a.r * b.r);
+            public static TransformState operator /(TransformState a, TransformState b) => new TransformState(a.x / b.x, a.y / b.y, a.w / b.w, a.h / b.h, a.r / b.r);
+
         }
 
     }

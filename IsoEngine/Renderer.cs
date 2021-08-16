@@ -41,7 +41,7 @@ namespace IsoEngine
             //render entities
             if (sort)
             {
-                sortedQueue = entityManager.GetEntities().OrderBy(n => n.zIndex);
+                sortedQueue = entityManager.GetEntities().OrderBy(n => n.ZIndex);
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
@@ -68,15 +68,15 @@ namespace IsoEngine
 
         public static Rectangle GetRenderBounds(float x, float y, int w, int h)
         {
-            return new Rectangle((int)((x - cam.GetRenderPos().x) * scale), (int)((y - cam.GetRenderPos().y) * scale), w * scale, h * scale);
+            return new Rectangle((int)((x - cam.GetRenderPos().X) * scale), (int)((y - cam.GetRenderPos().Y) * scale), w * scale, h * scale);
         }
         public static Rectangle GetRenderBounds(Vec2 pos, int w, int h)
         {
-            return GetRenderBounds(pos.x, pos.y, w, h);
+            return GetRenderBounds(pos.X, pos.Y, w, h);
         }
         public static Rectangle GetRenderBounds(Entity e)
         {
-            return GetRenderBounds(e.pos, e.w, e.h);
+            return GetRenderBounds(e.Position, e.Width, e.Height);
         }
         public static Rectangle GetRenderBounds(TransformAnimation.TransformState transformState)
         {
@@ -85,7 +85,7 @@ namespace IsoEngine
 
         public static Vec2Int GetRenderPos(Entity e)
         {
-            return new Vec2Int((int)((e.pos.x - cam.GetRenderPos().x) * scale), (int)((e.pos.y - cam.GetRenderPos().y) * scale));
+            return new Vec2Int((int)((e.Position.X - cam.GetRenderPos().X) * scale), (int)((e.Position.Y - cam.GetRenderPos().Y) * scale));
         }
 
     }

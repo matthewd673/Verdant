@@ -172,7 +172,7 @@ namespace IsoEngine
                     if (onlyTriggers && !c.trigger)
                         continue;
 
-                    if (Math.CheckRectIntersection(x, y, w, h, c.pos.x, c.pos.y, c.w, c.h))
+                    if (Math.CheckRectIntersection(x, y, w, h, c.pos.X, c.pos.Y, c.w, c.h))
                     {
                         colliding.Add(b);
                         break;

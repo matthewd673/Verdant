@@ -15,7 +15,7 @@ namespace IsoEngine
         /// <returns>A float representing the angle between the two points.</returns>
         public static float AngleBetweenPoints(Vec2 a, Vec2 target)
         {
-            return (float)System.Math.Atan2(target.x - a.x, target.y - a.y);
+            return (float)System.Math.Atan2(target.X - a.X, target.Y - a.Y);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace IsoEngine
         /// <returns>The distance between the two points.</returns>
         public static float GetDistance(Vec2 a, Vec2 b)
         {
-            return (float)System.Math.Sqrt(System.Math.Pow(b.y - a.y, 2) + System.Math.Pow(b.x - a.x, 2));
+            return (float)System.Math.Sqrt(System.Math.Pow(b.Y - a.Y, 2) + System.Math.Pow(b.X - a.X, 2));
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace IsoEngine
         /// <returns>Returns true if the AABBs are intersecting, and false otherwise.</returns>
         public static bool CheckRectIntersection(Vec2 pos1, int w1, int h1, Vec2 pos2, int w2, int h2)
         {
-            return CheckRectIntersection(pos1.x, pos1.y, w1, h1, pos2.x, pos2.y, w2, h2);
+            return CheckRectIntersection(pos1.X, pos1.Y, w1, h1, pos2.X, pos2.Y, w2, h2);
         }
 
         /// <summary>
@@ -84,10 +84,10 @@ namespace IsoEngine
         /// <returns>Returns true if the point is within the AABB, and false otherwise.</returns>
         public static bool CheckPointOnRectIntersection(Vec2 point, float x, float y, int w, int h)
         {
-            return (point.x < x + w &&
-                point.x > x &&
-                point.y < y + h &&
-                point.y > y);
+            return (point.X < x + w &&
+                point.X > x &&
+                point.Y < y + h &&
+                point.Y > y);
         }
 
         /// <summary>

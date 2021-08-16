@@ -38,7 +38,7 @@ namespace IsoEngine
             //ensure that the target is within the appropriate range before finding a path
             //if (GetBasicDistance(walker, target) < maxSeekDistance) //&&
                 //System.Math.Abs(lastTargetPos.x - targetCollider.pos.x) + System.Math.Abs(lastTargetPos.y - targetCollider.pos.y) > targetMoveThreshold)
-            if (Math.GetDistance(walker.pos, target.pos) < maxSeekDistance)
+            if (Math.GetDistance(walker.Position, target.Position) < maxSeekDistance)
             {
                 List<PathCell> path = FindPath(walkerCollider, targetCollider);
                 List<Vec2> pathPoints = new List<Vec2>();
@@ -61,8 +61,8 @@ namespace IsoEngine
             //define start & goal
             Collider walkerC = walkerCollider;
             Collider targetC = targetCollider;
-            PathCell start = new PathCell((int)(walkerC.pos.x / cellW), (int)(walkerC.pos.y / cellH));
-            PathCell goal = new PathCell((int)(targetC.pos.x / cellW), (int)(targetC.pos.y / cellH));
+            PathCell start = new PathCell((int)(walkerC.pos.X / cellW), (int)(walkerC.pos.Y / cellH));
+            PathCell goal = new PathCell((int)(targetC.pos.X / cellW), (int)(targetC.pos.Y / cellH));
 
             lastGoalPos = new Vec2(goal.x, goal.y); //for stat tracking
 
@@ -224,11 +224,11 @@ namespace IsoEngine
                 {
                     obsColliders.Add(c);
 
-                    if (c.pos.x + c.w > maxX)
-                        maxX = (int)c.pos.x + c.w;
+                    if (c.pos.X + c.w > maxX)
+                        maxX = (int)c.pos.X + c.w;
 
-                    if (c.pos.y + c.h > maxY)
-                        maxY = (int)c.pos.y + c.h;
+                    if (c.pos.Y + c.h > maxY)
+                        maxY = (int)c.pos.Y + c.h;
                 }
             }
 
