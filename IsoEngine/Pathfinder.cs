@@ -264,10 +264,10 @@ namespace IsoEngine
                     Microsoft.Xna.Framework.Color drawColor = Microsoft.Xna.Framework.Color.Red;
                     if (pathMap[i, j])
                         drawColor = Microsoft.Xna.Framework.Color.White;
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(i * cellW, j * cellH, 1, cellH), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(i * cellW, j * cellH, cellW, 1), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds((i + 1) * cellW, j * cellH, 1, cellH), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(i * cellW, (j * 1) * cellH, cellW, 1), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, 1, cellH), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, cellW, 1), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds((i + 1) * cellW, j * cellH, 1, cellH), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, (j * 1) * cellH, cellW, 1), drawColor);
                 }
             }
         }

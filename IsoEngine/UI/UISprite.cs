@@ -44,10 +44,10 @@ namespace IsoEngine.UI
         {
             spriteBatch.Draw(sprites[spriteX, spriteY],
                 new Rectangle(
-                    (int)(pos.X * Renderer.scale),
-                    (int)(pos.Y * Renderer.scale),
-                    w * Renderer.scale,
-                    h * Renderer.scale),
+                    (int)(pos.X * Renderer.Scale),
+                    (int)(pos.Y * Renderer.Scale),
+                    w * Renderer.Scale,
+                    h * Renderer.Scale),
                 Color.White);
         }
 

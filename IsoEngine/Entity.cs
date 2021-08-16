@@ -252,9 +252,9 @@ namespace IsoEngine
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (Rotation == 0f) //no rotation, simple draw
-                spriteBatch.Draw(Sprite.Get(), Renderer.GetRenderBounds(this), Color.White);
+                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
             else
-                spriteBatch.Draw(Sprite.Get(), Renderer.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)rotationOrigin, SpriteEffects.None, 0);
+                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)rotationOrigin, SpriteEffects.None, 0);
         }
 
         /// <summary>
@@ -271,13 +271,13 @@ namespace IsoEngine
                     color = Color.LimeGreen;
 
                 //top line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, c.w, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos, c.w, 1), color);
                 //bottom line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.X, c.pos.Y + c.h, c.w + 1, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos.X, c.pos.Y + c.h, c.w + 1, 1), color);
                 //left line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos, 1, c.h), color);
                 //right line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.GetRenderBounds(c.pos.X + c.w, c.pos.Y, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos.X + c.w, c.pos.Y, 1, c.h), color);
             }
         }
 
