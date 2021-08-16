@@ -16,7 +16,7 @@ namespace IsoEngine
         /// <param name="w">The width of the Particle.</param>
         /// <param name="h">The height of the Particle.</param>
         /// <param name="lifetime">The number of frames the Particle should live before being marked as dead.</param>
-        public Particle(IRenderObject sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
+        public Particle(RenderObject sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
         {
             this.lifetime = lifetime;
             hasPhysics = true;

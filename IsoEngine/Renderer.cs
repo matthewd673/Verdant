@@ -96,7 +96,7 @@ namespace IsoEngine
         /// <param name="visualizeColliders">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
         public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeColliders = false)
         {
-            Render(spriteBatch, scene.entityManager, scene.uiManager, visualizeColliders: visualizeColliders);
+            Render(spriteBatch, scene.EntityManager, scene.UIManager, visualizeColliders: visualizeColliders);
         }
 
     }

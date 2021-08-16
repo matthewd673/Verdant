@@ -8,8 +8,8 @@ namespace IsoEngine
 
         SceneManager manager;
 
-        public EntityManager entityManager;
-        public UIManager uiManager;
+        public EntityManager EntityManager { get; private set; }
+        public UIManager UIManager { get; private set; }
 
         /// <summary>
         /// Create a new Scene. It will not be initialized immediately.
@@ -39,8 +39,8 @@ namespace IsoEngine
         /// </summary>
         public virtual void Initialize()
         {
-            entityManager = new EntityManager();
-            uiManager = new UIManager();
+            EntityManager = new EntityManager();
+            UIManager = new UIManager();
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace IsoEngine
         {
             InputHandler.Update(); //always update input
 
-            entityManager.Update();
-            uiManager.Update();
+            EntityManager.Update();
+            UIManager.Update();
         }
 
     }

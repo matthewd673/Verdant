@@ -11,16 +11,16 @@ namespace IsoEngine
         EntityManager manager;
 
         public Vec2 Position { get; set; }
-        public IRenderObject Sprite { get; set; }
+        public RenderObject Sprite { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
         protected bool hasPhysics = false;
         protected bool moveSafelyWithPhysics = false;
 
-        protected float friction { get; set; } = 0f;
-        protected Vec2 Velocity { get; set; } = Vec2.Zero;
-        protected Vec2 Acceleration { get; set; } = Vec2.Zero;
+        public float Friction { get; set; } = 0f;
+        public Vec2 Velocity { get; set; } = Vec2.Zero;
+        public Vec2 Acceleration { get; set; } = Vec2.Zero;
 
         public float Rotation { get; set; } = 0f;
         protected Vec2Int rotationOrigin = Vec2Int.Zero;
@@ -28,7 +28,7 @@ namespace IsoEngine
         List<Collider> colliders = new List<Collider>();
 
         protected bool setZIndexToBase = false;
-        public int ZIndex { get; private set; } = 0;
+        public int ZIndex { get; protected set; } = 0;
 
         bool forRemoval = false;
 
@@ -39,7 +39,7 @@ namespace IsoEngine
         /// <param name="pos">The position of the Entity.</param>
         /// <param name="w">The width of the Entity.</param>
         /// <param name="h">The height of the Entity.</param>
-        public Entity(IRenderObject sprite, Vec2 pos, int w, int h)
+        public Entity(RenderObject sprite, Vec2 pos, int w, int h)
         {
             Sprite = sprite;
             Position = pos;
@@ -141,8 +141,8 @@ namespace IsoEngine
                 
                 if (Acceleration != null)
                 {
-                    Velocity += Acceleration - (Velocity * friction);
-                    Acceleration *= friction;
+                    Velocity += Acceleration - (Velocity * Friction);
+                    Acceleration *= Friction;
                 }
             }
 

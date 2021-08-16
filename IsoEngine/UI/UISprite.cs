@@ -11,13 +11,13 @@ namespace IsoEngine.UI
         int spriteX = 0;
         int spriteY = 0;
 
-        public UISprite(Texture2D sprite, Vec2 pos) : base(pos, sprite.Width, sprite.Height)
+        public UISprite(Sprite sprite, Vec2 pos) : base(pos, sprite.Width, sprite.Height)
         {
-            sprites = new Texture2D[,] { { sprite } };
+            sprites = new Texture2D[,] { { sprite.Get() } };
         }
-        public UISprite(Texture2D sprite, Vec2 pos, int w, int h) : base(pos, w, h)
+        public UISprite(Sprite sprite, Vec2 pos, int w, int h) : base(pos, w, h)
         {
-            sprites = new Texture2D[,] { { sprite } };
+            sprites = new Texture2D[,] { { sprite.Get() } };
         }
         public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos, sheet.Get().Width, sheet.Get().Height)
         {
@@ -44,10 +44,10 @@ namespace IsoEngine.UI
         {
             spriteBatch.Draw(sprites[spriteX, spriteY],
                 new Rectangle(
-                    (int)(pos.X * Renderer.Scale),
-                    (int)(pos.Y * Renderer.Scale),
-                    w * Renderer.Scale,
-                    h * Renderer.Scale),
+                    (int)(Position.X * Renderer.Scale),
+                    (int)(Position.Y * Renderer.Scale),
+                    Width * Renderer.Scale,
+                    Height * Renderer.Scale),
                 Color.White);
         }
 

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace IsoEngine
 {
-    public class Animation : IRenderObject
+    public class Animation : RenderObject
     {
 
         SpriteSheet sheet;
@@ -144,7 +144,7 @@ namespace IsoEngine
         /// Perform the next step of the Animation and return the current frame.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D Get()
+        public override Texture2D Get()
         {
             if (settled) //skip other steps if settled
                 return sheet.GetIndex(frameIndex, frameSet.row);
@@ -180,7 +180,7 @@ namespace IsoEngine
         /// <param name="index">The frame index to pull from.</param>
         /// <param name="j">The row on the Animation sheet to pull from. By default, the appropriate row as defined by the FrameSet will be used.</param>
         /// <returns>The sprite at the specified index.</returns>
-        public Texture2D GetIndex(int index, int j = -1)
+        public override Texture2D GetIndex(int index, int j = -1)
         {
             if (j == -1)
                 j = frameSet.row;

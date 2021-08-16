@@ -8,12 +8,8 @@ namespace IsoEngine.UI
 
         bool hovered = false;
 
-        Action<UIButton> hoverAction;
-        Action<UIButton> hoverExitAction;
-        Action<UIButton> clickAction;
-
-        public UIButton(Texture2D sprite, Vec2 pos) : base(sprite, pos) { }
-        public UIButton(Texture2D sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
+        public UIButton(Sprite sprite, Vec2 pos) : base(sprite, pos) { }
+        public UIButton(Sprite sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
         public UIButton(SpriteSheet sheet, Vec2 pos) : base(sheet, pos) { }
         public UIButton(SpriteSheet sheet, Vec2 pos, int w, int h) : base(sheet, pos, w, h) { }
 
@@ -22,7 +18,7 @@ namespace IsoEngine.UI
             base.Update();
 
             //check for hover
-            if (Math.CheckPointOnRectIntersection(InputHandler.mouseVec, pos.X * Renderer.Scale, pos.Y * Renderer.Scale, w * Renderer.Scale, h * Renderer.Scale))
+            if (Math.CheckPointOnRectIntersection(InputHandler.mouseVec, Position.X * Renderer.Scale, Position.Y * Renderer.Scale, Width * Renderer.Scale, Height * Renderer.Scale))
             { //button is being hovered
                 if (!hovered) //it wasn't hovered last time, so trigger
                     OnHover();
@@ -41,33 +37,28 @@ namespace IsoEngine.UI
 
         }
 
-        void OnHover()
+        public event EventHandler Hover;
+        public virtual void OnHover()
         {
-            if (hoverAction != null)
-                hoverAction.Invoke(this);
-        }
-        void OnHoverExit()
-        {
-            if (hoverExitAction != null)
-                hoverExitAction.Invoke(this);
-        }
-        void OnClick()
-        {
-            if (clickAction != null)
-                clickAction.Invoke(this);
+            EventHandler hoverEvent = Hover; //recommended to avoid null
+            if (hoverEvent != null)
+                hoverEvent(this, EventArgs.Empty);
         }
 
-        public void SetHoverAction(Action<UIButton> hoverAction)
+        public event EventHandler HoverExit;
+        public virtual void OnHoverExit()
         {
-            this.hoverAction = hoverAction;
+            EventHandler hoverExitEvent = HoverExit; //recommended to avoid null
+            if (hoverExitEvent != null)
+                hoverExitEvent(this, EventArgs.Empty);
         }
-        public void SetHoverExitAction(Action<UIButton> hoverExitAction)
+
+        public event EventHandler Click;
+        public virtual void OnClick()
         {
-            this.hoverExitAction = hoverExitAction;
-        }
-        public void SetClickAction(Action<UIButton> clickAction)
-        {
-            this.clickAction = clickAction;
+            EventHandler clickEvent = Click; //recommended to avoid null
+            if (clickEvent != null)
+                clickEvent(this, EventArgs.Empty);
         }
 
     }
