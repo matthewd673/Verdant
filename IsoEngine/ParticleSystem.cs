@@ -8,17 +8,25 @@ namespace IsoEngine
     {
 
         List<Particle> particles = new List<Particle>();
-
         int particleSpreadRadius;
+        bool autoRemove;
 
-        public bool AutoRemove { get; set; }
-
+        /// <summary>
+        /// Initialize a new ParticleSystem.
+        /// </summary>
+        /// <param name="pos">The position of the system.</param>
+        /// <param name="particleSpreadRadius">The radius that GetNewParticlePos will spawn within.</param>
+        /// <param name="autoRemove">Determine if dead particles should be removed automatically.</param>
         public ParticleSystem(Vec2 pos, int particleSpreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
         {
             this.particleSpreadRadius = particleSpreadRadius;
-            AutoRemove = autoRemove;
+            this.autoRemove = autoRemove;
         }
 
+        /// <summary>
+        /// Get a new, random spawn point within the spawn radius. The spawn position is NOT relative to the ParticleSystem's position.
+        /// </summary>
+        /// <returns>A Vec2 representing a new possible spawn position.</returns>
         public Vec2 GetNewParticlePos()
         {
             float pX = Position.X + Math.Rand.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
@@ -26,14 +34,20 @@ namespace IsoEngine
             return new Vec2(pX, pY);
         }
 
+        /// <summary>
+        /// Add a Particle to the system.
+        /// </summary>
+        /// <param name="particle">The Particle to add.</param>
         public void AddParticle(Particle particle)
         {
             particles.Add(particle);
         }
 
+        /// <summary>
+        /// Update the ParticleSystem, and all child Particles.
+        /// </summary>
         public override void Update()
         {
-
             for (int i = 0; i < particles.Count; i++)
             {
                 particles[i].Update();
@@ -45,18 +59,20 @@ namespace IsoEngine
                 }
             }
 
-            if (AutoRemove && particles.Count == 0)
+            if (autoRemove && particles.Count == 0)
                 MarkForRemoval();
 
             base.Update();
         }
 
+        /// <summary>
+        /// Draw all Particles in the system.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to use when drawing.</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (Particle p in particles)
-            {
                 p.Draw(spriteBatch);
-            }
         }
 
     }

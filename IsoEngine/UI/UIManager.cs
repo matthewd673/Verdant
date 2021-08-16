@@ -24,14 +24,14 @@ namespace IsoEngine.UI
         {
             foreach (UIElement e in l)
             {
-                e.SetManager(this);
+                e.Manager = this;
                 addQueue.Add(e);
             }
         }
 
         public void RemoveElement(UIElement e)
         {
-            e.SetManager(null);
+            e.Manager = null;
             removeQueue.Add(e);
         }
         

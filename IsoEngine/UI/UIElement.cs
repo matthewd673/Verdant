@@ -6,11 +6,11 @@ namespace IsoEngine.UI
     public class UIElement
     {
 
-        UIManager manager;
+        public UIManager Manager { get; set; }
 
-        public Vec2 Position;
-        public int Width;
-        public int Height;
+        public Vec2 Position { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         bool forRemoval;
 
@@ -19,11 +19,6 @@ namespace IsoEngine.UI
             Position = pos;
             Width = w;
             Height = h;
-        }
-
-        public void SetManager(UIManager manager)
-        {
-            this.manager = manager;
         }
 
         public virtual void Update() { }

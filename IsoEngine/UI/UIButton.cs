@@ -6,7 +6,7 @@ namespace IsoEngine.UI
     public class UIButton : UISprite
     {
 
-        bool hovered = false;
+        public bool Hovered { get; private set; } = false;
 
         public UIButton(Sprite sprite, Vec2 pos) : base(sprite, pos) { }
         public UIButton(Sprite sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
@@ -20,19 +20,19 @@ namespace IsoEngine.UI
             //check for hover
             if (Math.CheckPointOnRectIntersection(InputHandler.MousePosition, Position.X * Renderer.Scale, Position.Y * Renderer.Scale, Width * Renderer.Scale, Height * Renderer.Scale))
             { //button is being hovered
-                if (!hovered) //it wasn't hovered last time, so trigger
+                if (!Hovered) //it wasn't hovered last time, so trigger
                     OnHover();
-                hovered = true;
+                Hovered = true;
             }
             else //button is no longer being hovered
             {
-                if (hovered) //it was hovered before, so trigger exit
+                if (Hovered) //it was hovered before, so trigger exit
                     OnHoverExit();
-                hovered = false;
+                Hovered = false;
             }
 
             //check for click
-            if (hovered && InputHandler.IsMouseFirstReleased())
+            if (Hovered && InputHandler.IsMouseFirstReleased())
                 OnClick();
 
         }

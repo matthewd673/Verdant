@@ -15,7 +15,7 @@ namespace IsoEngine
         public int MaxSeekDistance { get; set; }
         public int MaxSearchCells { get; set; } = 100;
 
-        public Vec2 lastGoalPos = new Vec2(0, 0);
+        public Vec2 LastGoalPosition { get; private set; } = new Vec2(0, 0);
 
         /// <summary>
         /// Initialize a new Pathfinder.
@@ -41,8 +41,6 @@ namespace IsoEngine
         public List<Vec2> UpdatePath(Entity walker, Entity target, Collider walkerCollider, Collider targetCollider)
         {
             //ensure that the target is within the appropriate range before finding a path
-            //if (GetBasicDistance(walker, target) < maxSeekDistance) //&&
-                //System.Math.Abs(lastTargetPos.x - targetCollider.pos.x) + System.Math.Abs(lastTargetPos.y - targetCollider.pos.y) > targetMoveThreshold)
             if (Math.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
             {
                 List<PathCell> path = FindPath(walkerCollider, targetCollider);
@@ -69,7 +67,7 @@ namespace IsoEngine
             PathCell start = new PathCell((int)(walkerC.Position.X / cellW), (int)(walkerC.Position.Y / cellH));
             PathCell goal = new PathCell((int)(targetC.Position.X / cellW), (int)(targetC.Position.Y / cellH));
 
-            lastGoalPos = new Vec2(goal.X, goal.Y); //for stat tracking
+            LastGoalPosition = new Vec2(goal.X, goal.Y); //for stat tracking
 
             //lastTargetPos = targetC.pos;
 
@@ -260,6 +258,10 @@ namespace IsoEngine
 
         }
 
+        /// <summary>
+        /// For debugging. Draw a grid visualizing all PathCells (white = walkable).
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to use when drawing.</param>
         public void Visualize(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
             for(int i = 0; i < pathMap.GetLength(0); i++)
@@ -276,13 +278,6 @@ namespace IsoEngine
                 }
             }
         }
-
-        /*
-        float GetBasicDistance(Entity walker, Entity target)
-        {
-            return System.Math.Abs(target.pos.x - walker.pos.x) + System.Math.Abs(target.pos.y - walker.pos.y);
-        }
-        */
     }
 
     /// <summary>

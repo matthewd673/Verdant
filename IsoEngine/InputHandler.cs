@@ -21,7 +21,7 @@ namespace IsoEngine
 
         public static int MouseX { get; private set; }
         public static int MouseY { get; private set; }
-        public static Vec2Int MousePosition = new Vec2Int();
+        public static Vec2Int MousePosition { get; private set; } = new Vec2Int();
 
         /// <summary>
         /// Update the current state of the InputHandler.

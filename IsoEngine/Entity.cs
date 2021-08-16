@@ -15,19 +15,19 @@ namespace IsoEngine
         public int Width { get; set; }
         public int Height { get; set; }
 
-        protected bool hasPhysics = false;
-        protected bool moveSafelyWithPhysics = false;
+        public bool HasPhysics { get; protected set; } = false;
+        public bool MoveSafelyWithPhysics { get; protected set; } = false;
 
         public float Friction { get; set; } = 0f;
         public Vec2 Velocity { get; set; } = Vec2.Zero;
         public Vec2 Acceleration { get; set; } = Vec2.Zero;
 
         public float Rotation { get; set; } = 0f;
-        protected Vec2Int rotationOrigin = Vec2Int.Zero;
+        protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
 
         List<Collider> colliders = new List<Collider>();
 
-        protected bool setZIndexToBase = false;
+        protected bool SetZIndexToBase { get; set; } = false;
         public int ZIndex { get; protected set; } = 0;
 
         bool forRemoval = false;
@@ -45,7 +45,7 @@ namespace IsoEngine
             Position = pos;
             Width = w;
             Height = h;
-            rotationOrigin = new Vec2Int(w / 2, h / 2); //set automatic rotation origin
+            RotationOrigin = new Vec2Int(w / 2, h / 2); //set automatic rotation origin
         }
 
         /// <summary>
@@ -132,9 +132,9 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
-            if (hasPhysics && Velocity != null)
+            if (HasPhysics && Velocity != null)
             {
-                if (!moveSafelyWithPhysics)
+                if (!MoveSafelyWithPhysics)
                     Position += Velocity;
                 else
                     Move(Velocity.X, Velocity.Y);
@@ -149,7 +149,7 @@ namespace IsoEngine
             foreach (Collider c in colliders)
                 c.Update();
 
-            if (setZIndexToBase)
+            if (SetZIndexToBase)
                 ZIndex = (int)(Position.Y + Height);
 
         }
@@ -254,7 +254,7 @@ namespace IsoEngine
             if (Rotation == 0f) //no rotation, simple draw
                 spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
             else
-                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)rotationOrigin, SpriteEffects.None, 0);
+                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)RotationOrigin, SpriteEffects.None, 0);
         }
 
         /// <summary>
