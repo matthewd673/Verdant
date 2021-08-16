@@ -22,6 +22,9 @@ namespace IsoEngine
             hasPhysics = true;
         }
 
+        /// <summary>
+        /// Update the Particle.
+        /// </summary>
         public override void Update()
         {
             lifetime--;
@@ -30,6 +33,10 @@ namespace IsoEngine
             base.Update();
         }
 
+        /// <summary>
+        /// Check if the Particle is dead.
+        /// </summary>
+        /// <returns>Returns true if the Particle is dead, false otherwise.</returns>
         public bool IsDead()
         {
             return lifetime <= 0;

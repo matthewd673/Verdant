@@ -171,8 +171,8 @@ namespace IsoEngine
             if (moveCollider == null)
                 moveCollider = colliders[0];
 
-            float newX = moveCollider.pos.X;
-            float newY = moveCollider.pos.Y;
+            float newX = moveCollider.Position.X;
+            float newY = moveCollider.Position.Y;
             float xInc = xDelta / discreteSteps;
             float yInc = yDelta / discreteSteps;
 
@@ -190,7 +190,7 @@ namespace IsoEngine
             {
                 if (!collidedOnX) //all clear on X
                 {
-                    List<Entity> collided = manager.CheckRectCollisions(newX + xInc, newY, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this);
+                    List<Entity> collided = manager.CheckRectCollisions(newX + xInc, newY, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreEntity: this);
 
                     if (!moveThroughIfColliding && collided.Count == 0)
                     {
@@ -213,7 +213,7 @@ namespace IsoEngine
 
                 if (!collidedOnY) //all clear on Y
                 {
-                    List<Entity> collided = manager.CheckRectCollisions(newX, newY + yInc, moveCollider.w, moveCollider.h, onlySolids: true, ignoreEntity: this);
+                    List<Entity> collided = manager.CheckRectCollisions(newX, newY + yInc, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreEntity: this);
 
                     if (!moveThroughIfColliding && collided.Count == 0)
                     {
@@ -267,17 +267,17 @@ namespace IsoEngine
             {
                 //color code
                 Color color = Color.Yellow;
-                if (c.trigger)
+                if (c.Trigger)
                     color = Color.LimeGreen;
 
                 //top line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos, c.w, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position, c.Width, 1), color);
                 //bottom line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos.X, c.pos.Y + c.h, c.w + 1, 1), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position.X, c.Position.Y + c.Height, c.Width + 1, 1), color);
                 //left line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position, 1, c.Height), color);
                 //right line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.pos.X + c.w, c.pos.Y, 1, c.h), color);
+                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position.X + c.Width, c.Position.Y, 1, c.Height), color);
             }
         }
 

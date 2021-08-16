@@ -7,7 +7,7 @@ namespace IsoEngine
     {
 
         List<Scene> scenes = new List<Scene>();
-        Scene activeScene;
+        public Scene Active { get; set; }
 
         /// <summary>
         /// Initialize a new SceneManager.
@@ -40,7 +40,7 @@ namespace IsoEngine
             foreach (Scene s in scenes)
                 AddScene(s, automaticallyMakeActive: false);
 
-            SetActiveScene(activeScene);
+            Active = activeScene;
         }
 
         /// <summary>
@@ -50,29 +50,19 @@ namespace IsoEngine
         /// <param name="automaticallyMakeActive">Determines if the Scene will be made active if there is not another Scene currently active.</param>
         public void AddScene(Scene s, bool automaticallyMakeActive = true)
         {
-            s.SetManager(this);
+            s.Manager = this;
             scenes.Add(s);
             //set active scene if there isn't one
-            if (activeScene == null || scenes.Count == 1)
-                activeScene = s;
+            if (Active == null || scenes.Count == 1)
+                Active = s;
         }
 
         /// <summary>
-        /// Get the current active Scene.
+        /// Update the active Scene.
         /// </summary>
-        /// <returns>The current active Scene.</returns>
-        public Scene GetActiveScene()
+        public void Update()
         {
-            return activeScene;
-        }
-
-        /// <summary>
-        /// Set the currently active Scene. It does not need to be managed by this SceneManager, but it should be.
-        /// </summary>
-        /// <param name="activeScene">The scene to make active.</param>
-        public void SetActiveScene(Scene activeScene)
-        {
-            this.activeScene = activeScene;
+            Active.Update();
         }
 
     }

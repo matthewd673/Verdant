@@ -5,11 +5,25 @@ namespace IsoEngine
 {
     public class Vec2Int
     {
+
         public int X { get; set; }
         public int Y { get; set; }
 
         public static Vec2Int Zero { get; } = new Vec2Int(0, 0);
 
+        /// <summary>
+        /// Initialize a Vec2Int equal to (0, 0).
+        /// </summary>
+        public Vec2Int()
+        {
+            X = 0;
+            Y = 0;
+        }
+        /// <summary>
+        /// Initialize a new Vec2Int.
+        /// </summary>
+        /// <param name="x">The x component.</param>
+        /// <param name="y">The y component.</param>
         public Vec2Int(int x, int y)
         {
             X = x;

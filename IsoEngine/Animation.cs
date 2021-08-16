@@ -9,7 +9,7 @@ namespace IsoEngine
         SpriteSheet sheet;
         FrameSet frameSet;
 
-        Cooldown animateCooldown;
+        Timer animateCooldown;
         bool looping;
 
         int frameIndex;
@@ -27,7 +27,7 @@ namespace IsoEngine
         {
             this.sheet = sheet;
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
-            animateCooldown = new Cooldown(frameDelay);
+            animateCooldown = new Timer(frameDelay);
             this.looping = looping;
         }
         /// <summary>
@@ -41,7 +41,7 @@ namespace IsoEngine
         {
             this.sheet = sheet;
             this.frameSet = frameSet;
-            animateCooldown = new Cooldown(frameDelay);
+            animateCooldown = new Timer(frameDelay);
             this.looping = looping;
         }
         /// <summary>
@@ -56,7 +56,7 @@ namespace IsoEngine
         {
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
-            animateCooldown = new Cooldown(frameDelay);
+            animateCooldown = new Timer(frameDelay);
             this.looping = looping;
         }
         /// <summary>
@@ -72,7 +72,7 @@ namespace IsoEngine
         {
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             this.frameSet = frameSet;
-            animateCooldown = new Cooldown(frameDelay);
+            animateCooldown = new Timer(frameDelay);
             this.looping = looping;
         }
 
@@ -193,7 +193,7 @@ namespace IsoEngine
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(sheet, frameSet, animateCooldown.GetDuration(), looping);
+            return new Animation(sheet, frameSet, animateCooldown.Duration, looping);
         }
 
         public struct FrameSet

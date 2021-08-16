@@ -7,22 +7,27 @@ namespace IsoEngine
     public class Pathfinder
     {
 
-        public static bool[,] pathMap;
+        bool[,] pathMap;
 
         int cellW;
         int cellH;
 
-        int maxSeekDistance;
-
-        int maxSearchCells = 100;
+        public int MaxSeekDistance { get; set; }
+        public int MaxSearchCells { get; set; } = 100;
 
         public Vec2 lastGoalPos = new Vec2(0, 0);
 
+        /// <summary>
+        /// Initialize a new Pathfinder.
+        /// </summary>
+        /// <param name="cellW">The width of each cell.</param>
+        /// <param name="cellH">The height of each cell.</param>
+        /// <param name="maxSeekDistance">The maximum distance between a walker and target before the walker stops trying to pathfind. Checked in UpdatePath.</param>
         public Pathfinder(int cellW, int cellH, int maxSeekDistance)
         {
             this.cellW = cellW;
             this.cellH = cellH;
-            this.maxSeekDistance = maxSeekDistance;
+            MaxSeekDistance = maxSeekDistance;
         }
 
         /// <summary>
@@ -38,13 +43,13 @@ namespace IsoEngine
             //ensure that the target is within the appropriate range before finding a path
             //if (GetBasicDistance(walker, target) < maxSeekDistance) //&&
                 //System.Math.Abs(lastTargetPos.x - targetCollider.pos.x) + System.Math.Abs(lastTargetPos.y - targetCollider.pos.y) > targetMoveThreshold)
-            if (Math.GetDistance(walker.Position, target.Position) < maxSeekDistance)
+            if (Math.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
             {
                 List<PathCell> path = FindPath(walkerCollider, targetCollider);
                 List<Vec2> pathPoints = new List<Vec2>();
                 foreach (PathCell p in path)
                 {
-                    pathPoints.Add(new Vec2((p.x * cellW) + (cellW / 2), (p.y * cellH) + (cellH / 2)));
+                    pathPoints.Add(new Vec2((p.X * cellW) + (cellW / 2), (p.Y * cellH) + (cellH / 2)));
                 }
                 return pathPoints;
             }
@@ -61,10 +66,10 @@ namespace IsoEngine
             //define start & goal
             Collider walkerC = walkerCollider;
             Collider targetC = targetCollider;
-            PathCell start = new PathCell((int)(walkerC.pos.X / cellW), (int)(walkerC.pos.Y / cellH));
-            PathCell goal = new PathCell((int)(targetC.pos.X / cellW), (int)(targetC.pos.Y / cellH));
+            PathCell start = new PathCell((int)(walkerC.Position.X / cellW), (int)(walkerC.Position.Y / cellH));
+            PathCell goal = new PathCell((int)(targetC.Position.X / cellW), (int)(targetC.Position.Y / cellH));
 
-            lastGoalPos = new Vec2(goal.x, goal.y); //for stat tracking
+            lastGoalPos = new Vec2(goal.X, goal.Y); //for stat tracking
 
             //lastTargetPos = targetC.pos;
 
@@ -81,42 +86,42 @@ namespace IsoEngine
             while (open.Count > 0)
             {
 
-                if (open.Count + closed.Count > maxSearchCells)
+                if (open.Count + closed.Count > MaxSearchCells)
                 {
                     //pathCells = new List<PathCell>();
                     break;
                 }
 
                 //get square with lowest f
-                var lowestF = open.Min(c => c.f);
-                current = open.First(c => c.f == lowestF);
+                var lowestF = open.Min(c => c.F);
+                current = open.First(c => c.F == lowestF);
 
                 //move current to closed
                 closed.Add(current);
                 open.Remove(current);
 
                 //if goal is in closed list, we're done
-                if (closed.FirstOrDefault(c => c.x == goal.x && c.y == goal.y) != null)
+                if (closed.FirstOrDefault(c => c.X == goal.X && c.Y == goal.Y) != null)
                     break;
 
                 //find adjacent tiles
                 List<PathCell> adjacent = GetAdjacentCells(current, open);
-                g = current.g + 1;
+                g = current.G + 1;
 
                 //loop through adjacent
                 foreach (PathCell a in adjacent)
                 {
                     //make sure it isn't already closed
-                    if (closed.FirstOrDefault(c => c.x == a.x && c.y == a.y) != null)
+                    if (closed.FirstOrDefault(c => c.X == a.X && c.Y == a.Y) != null)
                         continue;
 
                     //create and add to open if not open either
-                    if (open.FirstOrDefault(c => c.x == a.x && c.y == a.y) == null)
+                    if (open.FirstOrDefault(c => c.X == a.X && c.Y == a.Y) == null)
                     {
                         //set metrics
-                        a.g = g;
-                        a.h = CalculateH(a, goal);
-                        a.f = a.g = a.h;
+                        a.G = g;
+                        a.H = CalculateH(a, goal);
+                        a.F = a.G = a.H;
                         a.parent = current;
 
                         //add to top of open list
@@ -125,10 +130,10 @@ namespace IsoEngine
                     else //is already open
                     {
                         //update g if this path is more efficient
-                        if (g + a.h < a.f)
+                        if (g + a.H < a.F)
                         {
-                            a.g = g;
-                            a.f = a.g + a.h;
+                            a.G = g;
+                            a.F = a.G + a.H;
                             a.parent = current;
                         }
                     }
@@ -161,7 +166,7 @@ namespace IsoEngine
         /// <returns>The h value.</returns>
         int CalculateH(PathCell cell, PathCell goal)
         {
-            return System.Math.Abs(goal.x - cell.x) + System.Math.Abs(goal.y - cell.y);
+            return System.Math.Abs(goal.X - cell.X) + System.Math.Abs(goal.Y - cell.Y);
         }
 
         /// <summary>
@@ -180,18 +185,18 @@ namespace IsoEngine
                 {
 
                     //make sure coord is safe
-                    if (focus.x + i > 0 &&
-                        focus.x + i < pathMap.GetLength(0) &&
-                        focus.y + j > 0 &&
-                        focus.y + j < pathMap.GetLength(1))
+                    if (focus.X + i > 0 &&
+                        focus.X + i < pathMap.GetLength(0) &&
+                        focus.Y + j > 0 &&
+                        focus.Y + j < pathMap.GetLength(1))
                     {
                         //make sure its walkable
-                        if (pathMap[focus.x + i, focus.y + j])
+                        if (pathMap[focus.X + i, focus.Y + j])
                         {
                             //find node, create it if necessary, and add to returned list
-                            PathCell node = open.Find(c => c.x == focus.x + i && c.y == focus.y + j);
+                            PathCell node = open.Find(c => c.X == focus.X + i && c.Y == focus.Y + j);
                             if (node == null)
-                                adjacent.Add(new PathCell(focus.x + i, focus.y + j));
+                                adjacent.Add(new PathCell(focus.X + i, focus.Y + j));
                             else
                                 adjacent.Add(node);
                         }
@@ -224,11 +229,11 @@ namespace IsoEngine
                 {
                     obsColliders.Add(c);
 
-                    if (c.pos.X + c.w > maxX)
-                        maxX = (int)c.pos.X + c.w;
+                    if (c.Position.X + c.Width > maxX)
+                        maxX = (int)c.Position.X + c.Width;
 
-                    if (c.pos.Y + c.h > maxY)
-                        maxY = (int)c.pos.Y + c.h;
+                    if (c.Position.Y + c.Height > maxY)
+                        maxY = (int)c.Position.Y + c.Height;
                 }
             }
 
@@ -278,7 +283,32 @@ namespace IsoEngine
             return System.Math.Abs(target.pos.x - walker.pos.x) + System.Math.Abs(target.pos.y - walker.pos.y);
         }
         */
+    }
 
+    /// <summary>
+    /// PathCell represents a single cell used by the A* algorithm as implemented in Pathfinder.
+    /// </summary>
+    class PathCell
+    {
+        public int X;
+        public int Y;
+
+        public int F;
+        public int G;
+        public int H;
+
+        public PathCell parent;
+
+        /// <summary>
+        /// Initialize a new PathCell.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        public PathCell(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 
 }

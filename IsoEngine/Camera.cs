@@ -11,7 +11,7 @@ namespace IsoEngine
         int Height { get; set; }
 
         float shakeStrength;
-        Cooldown shakeCooldown;
+        Timer shakeCooldown;
         float offsetX;
         float offsetY;
 
@@ -168,7 +168,7 @@ namespace IsoEngine
         public void SetShake(float strength, int duration)
         {
             shakeStrength = strength;
-            shakeCooldown = new Cooldown(duration);
+            shakeCooldown = new Timer(duration);
             offsetX = 0;
             offsetY = 0;
         }

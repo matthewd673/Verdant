@@ -18,7 +18,7 @@ namespace IsoEngine.UI
             base.Update();
 
             //check for hover
-            if (Math.CheckPointOnRectIntersection(InputHandler.mouseVec, Position.X * Renderer.Scale, Position.Y * Renderer.Scale, Width * Renderer.Scale, Height * Renderer.Scale))
+            if (Math.CheckPointOnRectIntersection(InputHandler.MousePosition, Position.X * Renderer.Scale, Position.Y * Renderer.Scale, Width * Renderer.Scale, Height * Renderer.Scale))
             { //button is being hovered
                 if (!hovered) //it wasn't hovered last time, so trigger
                     OnHover();

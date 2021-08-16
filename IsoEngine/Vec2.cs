@@ -5,22 +5,35 @@ namespace IsoEngine
 {
     public class Vec2
     {
-        public float X;
-        public float Y;
+
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public static Vec2 Zero { get; } = new Vec2(0, 0);
 
+        /// <summary>
+        /// Initialize a Vec2 equal to (0f, 0f).
+        /// </summary>
         public Vec2()
         {
             X = 0;
             Y = 0;
         }
+        /// <summary>
+        /// Initialize a new Vec2.
+        /// </summary>
+        /// <param name="x">The x component.</param>
+        /// <param name="y">The y component.</param>
         public Vec2(float x, float y)
         {
             X = x;
             Y = y;
         }
 
+        /// <summary>
+        /// Create a new Vec2 with the same x and y as this Vec2.
+        /// </summary>
+        /// <returns>A new Vec2, equal to this Vec2.</returns>
         public Vec2 Copy()
         {
             return new Vec2(X, Y);

@@ -8,7 +8,7 @@ namespace IsoEngine
 
         TransformState from;
         TransformState to;
-        Cooldown animateCooldown;
+        Timer animateCooldown;
 
         TransformState current;
         TransformState intervals;
@@ -23,7 +23,7 @@ namespace IsoEngine
         {
             this.from = from;
             this.to = to;
-            animateCooldown = new Cooldown(duration);
+            animateCooldown = new Timer(duration);
 
             current = new TransformState(from);
             intervals = CalculateIntervals(from, to, duration);

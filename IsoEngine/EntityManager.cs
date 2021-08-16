@@ -101,15 +101,15 @@ namespace IsoEngine
                 foreach (Collider c in b.GetColliders())
                 {
                     //filter out triggers/solids if necessary
-                    if (onlySolids && c.trigger)
+                    if (onlySolids && c.Trigger)
                         continue;
-                    if (onlyTriggers && !c.trigger)
+                    if (onlyTriggers && !c.Trigger)
                         continue;
 
                     //check against only one collider, if specified
                     if (specificCollider != null)
                     {
-                        if (Math.CheckRectIntersection(specificCollider.pos, specificCollider.w, specificCollider.h, c.pos, c.w, c.h))
+                        if (Math.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
                         {
                             colliding.Add(b);
                             break; //don't bother with any more of this entity's colliders
@@ -119,7 +119,7 @@ namespace IsoEngine
                     {
                         foreach (Collider a in e.GetColliders())
                         {
-                            if (Math.CheckRectIntersection(a.pos, a.w, a.h, c.pos, c.w, c.h))
+                            if (Math.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
                             {
                                 colliding.Add(b);
                                 break;
@@ -167,12 +167,12 @@ namespace IsoEngine
                 foreach (Collider c in b.GetColliders())
                 {
                     //filter out triggers/solids if necessary
-                    if (onlySolids && c.trigger)
+                    if (onlySolids && c.Trigger)
                         continue;
-                    if (onlyTriggers && !c.trigger)
+                    if (onlyTriggers && !c.Trigger)
                         continue;
 
-                    if (Math.CheckRectIntersection(x, y, w, h, c.pos.X, c.pos.Y, c.w, c.h))
+                    if (Math.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
                     {
                         colliding.Add(b);
                         break;

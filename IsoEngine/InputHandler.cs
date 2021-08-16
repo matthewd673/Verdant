@@ -13,67 +13,32 @@ namespace IsoEngine
             MIDDLE
         }
 
-        static KeyboardState currentKeyboardState;
-        static KeyboardState oldKeyboardState;
+        public static KeyboardState KeyboardState { get; private set; }
+        public static KeyboardState PreviousKeyboardState { get; private set; }
 
-        static MouseState currentMouseState;
-        static MouseState oldMouseState;
+        public static MouseState MouseState { get; private set; }
+        public static MouseState PreviousMouseState { get; private set; }
 
-        public static int mX;
-        public static int mY;
-        public static Vec2 mouseVec = new Vec2();
+        public static int MouseX { get; private set; }
+        public static int MouseY { get; private set; }
+        public static Vec2Int MousePosition = new Vec2Int();
 
         /// <summary>
         /// Update the current state of the InputHandler.
         /// </summary>
         public static void Update()
         {
-            oldKeyboardState = currentKeyboardState;
-            currentKeyboardState = Keyboard.GetState();
+            //update keyboard & mouse states
+            PreviousKeyboardState = KeyboardState;
+            KeyboardState = Keyboard.GetState();
+            PreviousMouseState = MouseState;
+            MouseState = Mouse.GetState();
 
-            oldMouseState = currentMouseState;
-            currentMouseState = Mouse.GetState();
-
-            mX = currentMouseState.X;
-            mY = currentMouseState.Y;
-            mouseVec.X = mX;
-            mouseVec.Y = mY;
-        }
-
-        /// <summary>
-        /// Get the current KeyboardState.
-        /// </summary>
-        /// <returns>A KeyboardState.</returns>
-        public static KeyboardState GetKeyboardState()
-        {
-            return currentKeyboardState;
-        }
-
-        /// <summary>
-        /// Get the KeyboardState from the previous frame.
-        /// </summary>
-        /// <returns>A KeyboardState.</returns>
-        public static KeyboardState GetPreviousKeyboardState()
-        {
-            return oldKeyboardState;
-        }
-
-        /// <summary>
-        /// Get the current MouseState.
-        /// </summary>
-        /// <returns>A MouseState.</returns>
-        public static MouseState GetMouseState()
-        {
-            return currentMouseState;
-        }
-
-        /// <summary>
-        /// Get the MouseState from the previous frame.
-        /// </summary>
-        /// <returns>A MouseState.</returns>
-        public static MouseState GetPreviousMouseState()
-        {
-            return oldMouseState;
+            //update mouse positions
+            MouseX = MouseState.X;
+            MouseY = MouseState.Y;
+            MousePosition.X = MouseX;
+            MousePosition.Y = MouseY;
         }
 
         /// <summary>
@@ -83,18 +48,18 @@ namespace IsoEngine
         /// <returns>Returns true if the mouse button is pressed and was released on the previous frame. Returns false otherwise.</returns>
         public static bool IsMouseFirstPressed(MouseButton mouseButton = MouseButton.LEFT)
         {
-            ButtonState oldButtonState = oldMouseState.LeftButton;
-            ButtonState currentButtonState = currentMouseState.LeftButton;
+            ButtonState oldButtonState = PreviousMouseState.LeftButton;
+            ButtonState currentButtonState = MouseState.LeftButton;
 
             if (mouseButton == MouseButton.RIGHT)
             {
-                oldButtonState = oldMouseState.RightButton;
-                currentButtonState = currentMouseState.RightButton;
+                oldButtonState = PreviousMouseState.RightButton;
+                currentButtonState = MouseState.RightButton;
             }
             if (mouseButton == MouseButton.MIDDLE)
             {
-                oldButtonState = oldMouseState.MiddleButton;
-                currentButtonState = currentMouseState.MiddleButton;
+                oldButtonState = PreviousMouseState.MiddleButton;
+                currentButtonState = MouseState.MiddleButton;
             }
 
             return (oldButtonState == ButtonState.Released &&
@@ -108,18 +73,18 @@ namespace IsoEngine
         /// <returns>Returns true if the mouse button is released and was pressed on the last frame. Returns false otherwise.</returns>
         public static bool IsMouseFirstReleased(MouseButton mouseButton = MouseButton.LEFT)
         {
-            ButtonState oldButtonState = oldMouseState.LeftButton;
-            ButtonState currentButtonState = currentMouseState.LeftButton;
+            ButtonState oldButtonState = PreviousMouseState.LeftButton;
+            ButtonState currentButtonState = MouseState.LeftButton;
 
             if (mouseButton == MouseButton.RIGHT)
             {
-                oldButtonState = oldMouseState.RightButton;
-                currentButtonState = currentMouseState.RightButton;
+                oldButtonState = PreviousMouseState.RightButton;
+                currentButtonState = MouseState.RightButton;
             }
             if (mouseButton == MouseButton.MIDDLE)
             {
-                oldButtonState = oldMouseState.MiddleButton;
-                currentButtonState = currentMouseState.MiddleButton;
+                oldButtonState = PreviousMouseState.MiddleButton;
+                currentButtonState = MouseState.MiddleButton;
             }
 
             return (oldButtonState == ButtonState.Pressed &&
@@ -133,8 +98,8 @@ namespace IsoEngine
         /// <returns>Returns true if the key is pressed and was released on the previous frame. Returns false otherwise.</returns>
         public static bool IsKeyFirstPressed(Keys key)
         {
-            return (oldKeyboardState.IsKeyUp(key) &&
-                currentKeyboardState.IsKeyDown(key));
+            return (PreviousKeyboardState.IsKeyUp(key) &&
+                KeyboardState.IsKeyDown(key));
         }
 
         /// <summary>
@@ -144,8 +109,8 @@ namespace IsoEngine
         /// <returns>Returns true if the key is released and was pressed on the previous frame. Returns false otherwise.</returns>
         public static bool IsKeyFirstReleased(Keys key)
         {
-            return (oldKeyboardState.IsKeyDown(key) &&
-                currentKeyboardState.IsKeyUp(key));
+            return (PreviousKeyboardState.IsKeyDown(key) &&
+                KeyboardState.IsKeyUp(key));
         }
 
         /// <summary>
@@ -154,7 +119,7 @@ namespace IsoEngine
         /// <returns>A Vec2Int representing the distance the mouse has travelled.</returns>
         public static Vec2Int GetMouseDelta()
         {
-            return new Vec2Int(currentMouseState.X - oldMouseState.X, currentMouseState.Y - oldMouseState.Y);
+            return new Vec2Int(MouseState.X - PreviousMouseState.X, MouseState.Y - PreviousMouseState.Y);
         }
 
     }

@@ -7,24 +7,22 @@ namespace IsoEngine
     public class ParticleSystem : Entity
     {
 
-        Random rng;
         List<Particle> particles = new List<Particle>();
 
         int particleSpreadRadius;
 
-        bool autoRemove;
+        public bool AutoRemove { get; set; }
 
         public ParticleSystem(Vec2 pos, int particleSpreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
         {
-            rng = new Random();
             this.particleSpreadRadius = particleSpreadRadius;
-            this.autoRemove = autoRemove;
+            AutoRemove = autoRemove;
         }
 
         public Vec2 GetNewParticlePos()
         {
-            float pX = Position.X + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
-            float pY = Position.Y + rng.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pX = Position.X + Math.Rand.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pY = Position.Y + Math.Rand.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
             return new Vec2(pX, pY);
         }
 
@@ -47,7 +45,7 @@ namespace IsoEngine
                 }
             }
 
-            if (autoRemove && particles.Count == 0)
+            if (AutoRemove && particles.Count == 0)
                 MarkForRemoval();
 
             base.Update();
