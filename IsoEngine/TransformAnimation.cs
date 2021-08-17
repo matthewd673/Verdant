@@ -39,11 +39,11 @@ namespace IsoEngine
         TransformState CalculateIntervals(TransformState from, TransformState to, int duration)
         {
             //calculate total differences
-            float dX = to.x - from.y;
-            float dY = to.y - from.y;
-            float dW = to.w - from.w;
-            float dH = to.h - from.h;
-            float dR = to.r - from.r;
+            float dX = to.X - from.Y;
+            float dY = to.Y - from.Y;
+            float dW = to.Width - from.Width;
+            float dH = to.Height - from.Height;
+            float dR = to.Rotation - from.Rotation;
 
             //build intervals into new transformstate
             return new TransformState(
@@ -65,11 +65,11 @@ namespace IsoEngine
             if (!animateCooldown.Check())
             {
                 //update current according to intervals
-                current.x += intervals.x;
-                current.y += intervals.y;
-                current.w += intervals.w;
-                current.h += intervals.h;
-                current.r += intervals.r;
+                current.X += intervals.X;
+                current.Y += intervals.Y;
+                current.Width += intervals.Width;
+                current.Height += intervals.Height;
+                current.Rotation += intervals.Rotation;
 
                 //tick animation
                 animateCooldown.Tick();
@@ -105,52 +105,7 @@ namespace IsoEngine
         /// <returns>A TransformState representing the Entity's current state.</returns>
         public static TransformState CaptureState(Entity e)
         {
-            return new TransformState(e.Position.X, e.Position.Y, e.Width, e.Height, 0); //rotation currently unsupported by entities
-        }
-
-        public struct TransformState
-        {
-            public float x;
-            public float y;
-            public float w;
-            public float h;
-            public float r;
-
-            /// <summary>
-            /// Initialize a new TransformState.
-            /// </summary>
-            /// <param name="x">The x coordinate.</param>
-            /// <param name="y">The y coordinate.</param>
-            /// <param name="w">The width.</param>
-            /// <param name="h">The height.</param>
-            /// <param name="r">The rotation.</param>
-            public TransformState(float x, float y, float w, float h, float r)
-            {
-                this.x = x;
-                this.y = y;
-                this.w = w;
-                this.h = h;
-                this.r = r;
-            }
-
-            /// <summary>
-            /// Initialize a new TransformState from an existing TransformState.
-            /// </summary>
-            /// <param name="state">The TransformState to copy from.</param>
-            public TransformState(TransformState state)
-            {
-                x = state.x;
-                y = state.y;
-                w = state.w;
-                h = state.h;
-                r = state.r;
-            }
-
-            public static TransformState operator +(TransformState a, TransformState b) => new TransformState(a.x + b.x, a.y + b.y, a.w + b.w, a.h + b.h, a.r + b.r);
-            public static TransformState operator -(TransformState a, TransformState b) => new TransformState(a.x - b.x, a.y - b.y, a.w - b.w, a.h - b.h, a.r - b.r);
-            public static TransformState operator *(TransformState a, TransformState b) => new TransformState(a.x * b.x, a.y * b.y, a.w * b.w, a.h * b.h, a.r * b.r);
-            public static TransformState operator /(TransformState a, TransformState b) => new TransformState(a.x / b.x, a.y / b.y, a.w / b.w, a.h / b.h, a.r / b.r);
-
+            return new TransformState(e.Position.X, e.Position.Y, e.Width, e.Height, e.Rotation);
         }
 
     }

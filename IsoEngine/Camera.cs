@@ -138,18 +138,37 @@ namespace IsoEngine
         /// <returns>A Rectangle representing the proper rendering bounds for the given Entity. The Entity's rotation will not be considered.</returns>
         public Rectangle GetRenderBounds(Entity e)
         {
-            return GetRenderBounds(e.Position, e.Width, e.Height);
+            return GetRenderBounds(e.Position.X, e.Position.Y, e.Width, e.Height);
         }
         /// <summary>
         /// Given a TransformState, calculate the Rectangle bounds to render at through the Camera. The TransformState's rotation will not be considered.
         /// </summary>
         /// <param name="transformState">The TransformState.</param>
         /// <returns>A Rectangle representing the proper rendering bounds for the given TransformState.</returns>
-        public Rectangle GetRenderBounds(TransformAnimation.TransformState transformState)
+        public Rectangle GetRenderBounds(TransformState transformState)
         {
-            return GetRenderBounds(transformState.x, transformState.y, (int)transformState.w, (int)transformState.h);
+            return GetRenderBounds(transformState.X, transformState.Y, (int)transformState.Width, (int)transformState.Height);
         }
 
+        /// <summary>
+        /// Calculate the screen position that the given coordinates should be rendered at. Unlike WorldToScreenPos(), this method accounts for Camera effects such as screen shake.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <returns>A Vec2Int representing the screen render position.</returns>
+        public Vec2Int GetRenderPos(float x, float y)
+        {
+            return new Vec2Int((int)((x - GetCameraRenderPos().X) * Renderer.Scale), (int)((y - GetCameraRenderPos().Y) * Renderer.Scale));
+        }
+        /// <summary>
+        /// Calculate the screen position that the given Vec2 should be rendered at. Unlike WorldToScreenPos(), this method accounts for Camera effects such as screen shake.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        /// <returns>A Vec2Int representing the screen render position.</returns>
+        public Vec2Int GetRenderPos(Vec2 pos)
+        {
+            return GetRenderPos(pos.X, pos.Y);
+        }
         /// <summary>
         /// Given an Entity, calculate the screen position that it should be rendered at through the Camera.
         /// </summary>
@@ -157,7 +176,7 @@ namespace IsoEngine
         /// <returns>A Vec2Int representing the rendering position for the given Entity.</returns>
         public Vec2Int GetRenderPos(Entity e)
         {
-            return new Vec2Int((int)((e.Position.X - GetCameraRenderPos().X) * Renderer.Scale), (int)((e.Position.Y - GetCameraRenderPos().Y) * Renderer.Scale));
+            return GetRenderPos(e.Position.X, e.Position.Y);
         }
 
         /// <summary>

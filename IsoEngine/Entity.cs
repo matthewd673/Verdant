@@ -45,7 +45,7 @@ namespace IsoEngine
             Position = pos;
             Width = w;
             Height = h;
-            RotationOrigin = new Vec2Int(w / 2, h / 2); //set automatic rotation origin
+            RotationOrigin = new Vec2Int(Width / 2, Height / 2); //set automatic rotation origin
         }
 
         /// <summary>
@@ -132,14 +132,14 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
-            if (HasPhysics && Velocity != null)
+            if (HasPhysics && Velocity != Vec2.Zero)
             {
                 if (!MoveSafelyWithPhysics)
                     Position += Velocity;
                 else
                     Move(Velocity.X, Velocity.Y);
                 
-                if (Acceleration != null)
+                if (Acceleration != Vec2.Zero)
                 {
                     Velocity += Acceleration - (Velocity * Friction);
                     Acceleration *= Friction;
@@ -246,6 +246,19 @@ namespace IsoEngine
         }
 
         /// <summary>
+        /// Set the Entity's bounds and rotation to be equal to those of a given TransformState.
+        /// </summary>
+        /// <param name="state">The TransformState to mirror.</param>
+        public void ApplyTransformState(TransformState state)
+        {
+            Position.X = state.X;
+            Position.Y = state.Y;
+            Width = (int)state.Width;
+            Height = (int)state.Height;
+            Rotation = state.Rotation;
+        }
+
+        /// <summary>
         /// Perfom a basic render of the Entity.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
@@ -254,7 +267,12 @@ namespace IsoEngine
             if (Rotation == 0f) //no rotation, simple draw
                 spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
             else
-                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), null, Color.White, Rotation, (Vector2)RotationOrigin, SpriteEffects.None, 0);
+            {
+                Rectangle renderRect = Renderer.Camera.GetRenderBounds(this);
+                renderRect.X += RotationOrigin.X * Renderer.Scale;
+                renderRect.Y += RotationOrigin.Y * Renderer.Scale;
+                spriteBatch.Draw(Sprite.Get(), renderRect, null, Color.White, Rotation, (Vector2)RotationOrigin * Renderer.Scale, SpriteEffects.None, 0);
+            }
         }
 
         /// <summary>
@@ -271,13 +289,22 @@ namespace IsoEngine
                     color = Color.LimeGreen;
 
                 //top line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position, c.Width, 1), color);
+                Rectangle topLineBounds = Renderer.Camera.GetRenderBounds(c.Position, c.Width, c.Height);
+                topLineBounds.Height = 1;
+                spriteBatch.Draw(Renderer.GetPixel(), topLineBounds, color);
                 //bottom line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position.X, c.Position.Y + c.Height, c.Width + 1, 1), color);
+                Rectangle bottomLineBounds = Renderer.Camera.GetRenderBounds(c.Position.X, c.Position.Y + c.Height, c.Width, 1);
+                bottomLineBounds.Width += 1;
+                bottomLineBounds.Height = 1;
+                spriteBatch.Draw(Renderer.GetPixel(), bottomLineBounds, color);
                 //left line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position, 1, c.Height), color);
+                Rectangle leftLineBounds = Renderer.Camera.GetRenderBounds(c.Position, 1, c.Height);
+                leftLineBounds.Width = 1;
+                spriteBatch.Draw(Renderer.GetPixel(), leftLineBounds, color);
                 //right line
-                spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(c.Position.X + c.Width, c.Position.Y, 1, c.Height), color);
+                Rectangle rightLineBounds = Renderer.Camera.GetRenderBounds(c.Position.X + c.Width, c.Position.Y, 1, c.Height);
+                rightLineBounds.Width = 1;
+                spriteBatch.Draw(Renderer.GetPixel(), rightLineBounds, color);
             }
         }
 

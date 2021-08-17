@@ -12,7 +12,7 @@ namespace IsoEngine
         public static Vec2 Zero { get; } = new Vec2(0, 0);
 
         /// <summary>
-        /// Initialize a Vec2 equal to (0f, 0f).
+        /// Initialize a new Vec2 with components (0, 0).
         /// </summary>
         public Vec2()
         {
@@ -39,6 +39,19 @@ namespace IsoEngine
             return new Vec2(X, Y);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj.GetType() != typeof(Vec2))
+                return false;
+            Vec2 o = (Vec2)obj;
+            return (X == o.X && Y == o.Y);
+        }
+
+        public static bool operator ==(Vec2 a, Vec2 b) => a.Equals(b);
+        public static bool operator !=(Vec2 a, Vec2 b) => !a.Equals(b);
+
         public static Vec2 operator +(Vec2 a) => a;
         public static Vec2 operator -(Vec2 a) => new Vec2(-a.X, -a.Y);
         
@@ -47,9 +60,7 @@ namespace IsoEngine
         public static Vec2 operator *(Vec2 a, Vec2 b) => new Vec2(a.X * b.X, a.Y * b.Y);
         public static Vec2 operator /(Vec2 a, Vec2 b) => new Vec2(a.X / b.X, a.Y / b.Y);
 
-        public static Vec2 operator *(Vec2 a, int c) => new Vec2(a.X * c, a.Y * c);
         public static Vec2 operator *(Vec2 a, float c) => new Vec2(a.X * c, a.Y * c);
-        public static Vec2 operator /(Vec2 a, int c) => new Vec2(a.X / c, a.Y / c);
         public static Vec2 operator /(Vec2 a, float c) => new Vec2(a.X / c, a.Y / c);
         public static Vec2 operator +(Vec2 a, float c) => new Vec2(a.X + c, a.Y + c);
         public static Vec2 operator -(Vec2 a, float c) => new Vec2(a.X - c, a.Y - c);
