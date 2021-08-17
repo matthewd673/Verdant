@@ -64,7 +64,7 @@ namespace IsoEngine
             //render entities
             if (SortEntities)
             {
-                sortedQueue = entityManager.GetEntities().OrderBy(n => n.ZIndex);
+                sortedQueue = entityManager.GetAllEntities().OrderBy(n => n.ZIndex);
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
@@ -74,7 +74,7 @@ namespace IsoEngine
             }
             else
             {
-                foreach (Entity e in entityManager.GetEntities())
+                foreach (Entity e in entityManager.GetAllEntities())
                 {
                     e.Draw(spriteBatch);
                     if (visualizeColliders)

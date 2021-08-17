@@ -8,9 +8,9 @@ namespace IsoEngine
 
         public enum MouseButton
         {
-            LEFT,
-            RIGHT,
-            MIDDLE
+            Left,
+            Right,
+            Middle
         }
 
         public static KeyboardState KeyboardState { get; private set; }
@@ -46,17 +46,17 @@ namespace IsoEngine
         /// </summary>
         /// <param name="mouseButton">The mouse button to check. Defaults to LEFT.</param>
         /// <returns>Returns true if the mouse button is pressed and was released on the previous frame. Returns false otherwise.</returns>
-        public static bool IsMouseFirstPressed(MouseButton mouseButton = MouseButton.LEFT)
+        public static bool IsMouseFirstPressed(MouseButton mouseButton = MouseButton.Left)
         {
             ButtonState oldButtonState = PreviousMouseState.LeftButton;
             ButtonState currentButtonState = MouseState.LeftButton;
 
-            if (mouseButton == MouseButton.RIGHT)
+            if (mouseButton == MouseButton.Right)
             {
                 oldButtonState = PreviousMouseState.RightButton;
                 currentButtonState = MouseState.RightButton;
             }
-            if (mouseButton == MouseButton.MIDDLE)
+            if (mouseButton == MouseButton.Middle)
             {
                 oldButtonState = PreviousMouseState.MiddleButton;
                 currentButtonState = MouseState.MiddleButton;
@@ -71,17 +71,17 @@ namespace IsoEngine
         /// </summary>
         /// <param name="mouseButton">The mouse button to check. Defaults to LEFT.</param>
         /// <returns>Returns true if the mouse button is released and was pressed on the last frame. Returns false otherwise.</returns>
-        public static bool IsMouseFirstReleased(MouseButton mouseButton = MouseButton.LEFT)
+        public static bool IsMouseFirstReleased(MouseButton mouseButton = MouseButton.Left)
         {
             ButtonState oldButtonState = PreviousMouseState.LeftButton;
             ButtonState currentButtonState = MouseState.LeftButton;
 
-            if (mouseButton == MouseButton.RIGHT)
+            if (mouseButton == MouseButton.Right)
             {
                 oldButtonState = PreviousMouseState.RightButton;
                 currentButtonState = MouseState.RightButton;
             }
-            if (mouseButton == MouseButton.MIDDLE)
+            if (mouseButton == MouseButton.Middle)
             {
                 oldButtonState = PreviousMouseState.MiddleButton;
                 currentButtonState = MouseState.MiddleButton;

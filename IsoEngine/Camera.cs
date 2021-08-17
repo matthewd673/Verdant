@@ -7,8 +7,8 @@ namespace IsoEngine
     {
 
         public Vec2 Position { get; set; }
-        int Width { get; set; }
-        int Height { get; set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         float shakeStrength;
         Timer shakeCooldown;

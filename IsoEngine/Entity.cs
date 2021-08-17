@@ -8,7 +8,18 @@ namespace IsoEngine
     public class Entity
     {
 
-        EntityManager manager;
+        EntityManager _manager;
+        public EntityManager Manager
+        {   get { return _manager; }
+            set
+            {
+                _manager = value;
+                if (_manager != null)
+                    Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
+            }
+        }
+        public string Key { get; private set; }
+        public string PreviousKey { get; private set; } = "";
 
         public Vec2 Position { get; set; }
         public RenderObject Sprite { get; set; }
@@ -45,25 +56,9 @@ namespace IsoEngine
             Position = pos;
             Width = w;
             Height = h;
-            RotationOrigin = new Vec2Int(Width / 2, Height / 2); //set automatic rotation origin
-        }
-
-        /// <summary>
-        /// Manually set the Entity's parent EntityManager. This is performed automatically when adding an Entity to an EntityManager.
-        /// </summary>
-        /// <param name="manager">The EntityManager to mark as parent.</param>
-        public void SetManager(EntityManager manager)
-        {
-            this.manager = manager;
-        }
-
-        /// <summary>
-        /// Get the Entity's parent EntityManager.
-        /// </summary>
-        /// <returns>The parent EntityManager.</returns>
-        public EntityManager GetManager()
-        {
-            return manager;
+            //set automatic rotation origin
+            //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
+            RotationOrigin = new Vec2Int(Width / 2, Height / 2);
         }
 
         /// <summary>
@@ -132,6 +127,7 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
+            //apply physics
             if (HasPhysics && Velocity != Vec2.Zero)
             {
                 if (!MoveSafelyWithPhysics)
@@ -146,9 +142,18 @@ namespace IsoEngine
                 }
             }
 
+            //update key
+            if (Manager != null) //only if a managed entity (not Particles, for example)
+            {
+                PreviousKey = Key;
+                Key = Manager.GetKeyFromPos(Position);
+            }
+
+            //update all colliders
             foreach (Collider c in colliders)
                 c.Update();
 
+            //update z index
             if (SetZIndexToBase)
                 ZIndex = (int)(Position.Y + Height);
 
@@ -184,13 +189,13 @@ namespace IsoEngine
 
             List<Entity> preColliding = new List<Entity>();
             if (moveThroughIfColliding)
-                preColliding = manager.GetAllColliding(this, moveCollider, onlySolids: true);
+                preColliding = Manager.GetAllColliding(this, moveCollider, onlySolids: true);
 
             for (int i = 0; i < discreteSteps; i++)
             {
                 if (!collidedOnX) //all clear on X
                 {
-                    List<Entity> collided = manager.CheckRectCollisions(newX + xInc, newY, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreEntity: this);
+                    List<Entity> collided = Manager.CheckRectCollisions(newX + xInc, newY, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreList: new List<Entity> { this });
 
                     if (!moveThroughIfColliding && collided.Count == 0)
                     {
@@ -213,7 +218,7 @@ namespace IsoEngine
 
                 if (!collidedOnY) //all clear on Y
                 {
-                    List<Entity> collided = manager.CheckRectCollisions(newX, newY + yInc, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreEntity: this);
+                    List<Entity> collided = Manager.CheckRectCollisions(newX, newY + yInc, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreList: new List<Entity> { this });
 
                     if (!moveThroughIfColliding && collided.Count == 0)
                     {

@@ -29,8 +29,8 @@ namespace IsoEngine
         /// <returns>A Vec2 representing a new possible spawn position.</returns>
         public Vec2 GetNewParticlePos()
         {
-            float pX = Position.X + Math.Rand.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
-            float pY = Position.Y + Math.Rand.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pX = Position.X + Math.Random.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pY = Position.Y + Math.Random.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
             return new Vec2(pX, pY);
         }
 

@@ -5,7 +5,7 @@ namespace IsoEngine
     public static class Math
     {
 
-        public static Random Rand { get; } = new Random();
+        public static Random Random { get; } = new Random();
 
         /// <summary>
         /// Given two points in 2D space, get the angle between them.
@@ -96,7 +96,7 @@ namespace IsoEngine
         /// <returns>A random float value.</returns>
         public static float RandomFloat()
         {
-            double mantissa = Rand.NextDouble() * 2.0 - 1.0;
+            double mantissa = Random.NextDouble() * 2.0 - 1.0;
             return (float)System.Math.Abs(mantissa);
         }
 
@@ -108,7 +108,7 @@ namespace IsoEngine
         /// <returns>A random float value.</returns>
         public static float RandomFloat(float min, float max)
         {
-            double mantissa = Rand.NextDouble() * 2.0 - 1.0;
+            double mantissa = Random.NextDouble() * 2.0 - 1.0;
             float final = (float)System.Math.Abs(mantissa) * (max - min) + min;
             return final;
         }
