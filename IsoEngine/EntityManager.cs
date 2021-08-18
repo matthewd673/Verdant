@@ -476,6 +476,7 @@ namespace IsoEngine
         /// <summary>
         /// Update all Entities in a given list. Called by the Update function (which provides an appropriate list).
         /// </summary>
+        /// <param name="updateList">The list of Entities to update.</param>
         void UpdateList(List<Entity> updateList)
         {
             //update all
@@ -525,7 +526,11 @@ namespace IsoEngine
                     UpdateList(GetAllEntities());
                     break;
                 case UpdateMode.NearCamera: //update in rectangle near camera (with some padding to be safe)
-                    UpdateList(GetEntitiesInBounds(Renderer.Camera.Position.X - CellSize, Renderer.Camera.Position.Y - CellSize, Renderer.Camera.Width + (CellSize * 2), Renderer.Camera.Height + (CellSize * 2)));
+                    UpdateList(GetEntitiesInBounds(
+                        Renderer.Camera.Position.X - CellSize,
+                        Renderer.Camera.Position.Y - CellSize,
+                        Renderer.Camera.Width + (CellSize * 2),
+                        Renderer.Camera.Height + (CellSize * 2)));
                     break;
             }
         }

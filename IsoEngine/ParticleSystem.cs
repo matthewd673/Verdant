@@ -8,19 +8,40 @@ namespace IsoEngine
     {
 
         List<Particle> particles = new List<Particle>();
-        int particleSpreadRadius;
+        public int SpreadRadius { get; set; }
         bool autoRemove;
 
         /// <summary>
         /// Initialize a new ParticleSystem.
         /// </summary>
         /// <param name="pos">The position of the system.</param>
-        /// <param name="particleSpreadRadius">The radius that GetNewParticlePos will spawn within.</param>
+        /// <param name="spreadRadius">The radius that GetNewParticlePos will spawn within.</param>
         /// <param name="autoRemove">Determine if dead particles should be removed automatically.</param>
-        public ParticleSystem(Vec2 pos, int particleSpreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
+        public ParticleSystem(Vec2 pos, int spreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
         {
-            this.particleSpreadRadius = particleSpreadRadius;
+            SpreadRadius = spreadRadius;
             this.autoRemove = autoRemove;
+        }
+
+        public void SpawnParticle(ParticleConfiguration configuration)
+        {
+            //determine particle spawn values
+            Vec2 spawnPos = GetNewParticlePos();
+            RenderObject sprite = configuration.Sprites[Math.Random.Next(configuration.Sprites.Length)]; //pick a random sprite from the list
+            int width = Math.Random.Next(configuration.WidthRange[0], configuration.WidthRange[configuration.WidthRange.Length - 1]);
+            int height = Math.Random.Next(configuration.HeightRange[0], configuration.HeightRange[configuration.HeightRange.Length - 1]);
+            float angle = Math.RandomFloat(configuration.AngleRange[0], configuration.AngleRange[configuration.AngleRange.Length - 1]); //get random angle in range set by array
+            float velocityMagnitude = Math.RandomFloat(configuration.VelocityMagnitudeRange[0], configuration.VelocityMagnitudeRange[configuration.VelocityMagnitudeRange.Length - 1]);
+            float accelerationMagnitude = Math.RandomFloat(configuration.AccelerationMagnitudeRange[0], configuration.AccelerationMagnitudeRange[configuration.AccelerationMagnitudeRange.Length - 1]);
+            float friction = Math.RandomFloat(configuration.FrictionRange[0], configuration.FrictionRange[configuration.FrictionRange.Length - 1]);
+            int lifetime = Math.Random.Next(configuration.LifetimeRange[0], configuration.LifetimeRange[configuration.LifetimeRange.Length - 1]);
+
+            //create particle
+            Particle particle = new Particle(sprite, spawnPos, width, height, lifetime);
+            particle.Velocity = Math.Vec2FromAngle(angle) * velocityMagnitude;
+            particle.Acceleration = Math.Vec2FromAngle(angle) * accelerationMagnitude;
+            particle.Friction = friction;
+            particles.Add(particle);
         }
 
         /// <summary>
@@ -29,8 +50,8 @@ namespace IsoEngine
         /// <returns>A Vec2 representing a new possible spawn position.</returns>
         public Vec2 GetNewParticlePos()
         {
-            float pX = Position.X + Math.Random.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
-            float pY = Position.Y + Math.Random.Next(0, particleSpreadRadius * 2) - particleSpreadRadius;
+            float pX = Position.X + Math.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
+            float pY = Position.Y + Math.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
             return new Vec2(pX, pY);
         }
 
