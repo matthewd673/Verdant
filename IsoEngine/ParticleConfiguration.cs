@@ -26,5 +26,15 @@ namespace IsoEngine
             LifetimeRange = lifetimeRange;
         }
 
+        public static float SelectFloatFromRange(float[] range)
+        {
+            return Math.RandomFloat(range[0], range[range.Length - 1]);
+        }
+
+        public static int SelectIntFromRange(int[] range)
+        {
+            return Math.Random.Next(range[0], range[range.Length - 1]);
+        }
+
     }
 }

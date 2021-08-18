@@ -28,13 +28,13 @@ namespace IsoEngine
             //determine particle spawn values
             Vec2 spawnPos = GetNewParticlePos();
             RenderObject sprite = configuration.Sprites[Math.Random.Next(configuration.Sprites.Length)]; //pick a random sprite from the list
-            int width = Math.Random.Next(configuration.WidthRange[0], configuration.WidthRange[configuration.WidthRange.Length - 1]);
-            int height = Math.Random.Next(configuration.HeightRange[0], configuration.HeightRange[configuration.HeightRange.Length - 1]);
-            float angle = Math.RandomFloat(configuration.AngleRange[0], configuration.AngleRange[configuration.AngleRange.Length - 1]); //get random angle in range set by array
-            float velocityMagnitude = Math.RandomFloat(configuration.VelocityMagnitudeRange[0], configuration.VelocityMagnitudeRange[configuration.VelocityMagnitudeRange.Length - 1]);
-            float accelerationMagnitude = Math.RandomFloat(configuration.AccelerationMagnitudeRange[0], configuration.AccelerationMagnitudeRange[configuration.AccelerationMagnitudeRange.Length - 1]);
-            float friction = Math.RandomFloat(configuration.FrictionRange[0], configuration.FrictionRange[configuration.FrictionRange.Length - 1]);
-            int lifetime = Math.Random.Next(configuration.LifetimeRange[0], configuration.LifetimeRange[configuration.LifetimeRange.Length - 1]);
+            int width = ParticleConfiguration.SelectIntFromRange(configuration.WidthRange);
+            int height = ParticleConfiguration.SelectIntFromRange(configuration.HeightRange);
+            float angle = ParticleConfiguration.SelectFloatFromRange(configuration.AngleRange); //get random angle in range set by array
+            float velocityMagnitude = ParticleConfiguration.SelectFloatFromRange(configuration.VelocityMagnitudeRange);
+            float accelerationMagnitude = ParticleConfiguration.SelectFloatFromRange(configuration.AccelerationMagnitudeRange);
+            float friction = ParticleConfiguration.SelectFloatFromRange(configuration.FrictionRange);
+            int lifetime = ParticleConfiguration.SelectIntFromRange(configuration.LifetimeRange);
 
             //create particle
             Particle particle = new Particle(sprite, spawnPos, width, height, lifetime);
