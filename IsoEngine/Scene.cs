@@ -6,6 +6,8 @@ namespace IsoEngine
     public class Scene
     {
 
+        public int ID { get; private set; }
+
         public SceneManager Manager { get; set; }
 
         public EntityManager EntityManager { get; private set; }
@@ -14,7 +16,11 @@ namespace IsoEngine
         /// <summary>
         /// Create a new Scene. It will not be initialized immediately.
         /// </summary>
-        public Scene() { }
+        /// <param name="id">The ID of the Scene. Two Scenes in the same Manager cannot have the same ID.</param>
+        public Scene(int id)
+        {
+            ID = id;
+        }
 
         /// <summary>
         /// Perform basic initialization of the scene (create an EntityManager and UIManager). Can also be called to reset the scene.

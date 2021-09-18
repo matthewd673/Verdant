@@ -6,8 +6,11 @@ namespace IsoEngine
     public class SceneManager
     {
 
-        List<Scene> scenes = new List<Scene>();
-        public Scene Active { get; set; }
+        Dictionary<int, Scene> scenes = new Dictionary<int, Scene>();
+        public Scene ActiveScene { get { return scenes[ActiveID]; } }
+        public bool HasActive { get; private set; } = false;
+        private int _activeId;
+        public int ActiveID { get { return _activeId; } set { HasActive = true; _activeId = value; } }
 
         /// <summary>
         /// Initialize a new SceneManager.
@@ -34,13 +37,13 @@ namespace IsoEngine
         /// Initialize a new SceneManager with a group of Scenes, and specify one Scene to become the current active Scene.
         /// </summary>
         /// <param name="scenes">The list of Scenes to initialize with.</param>
-        /// <param name="activeScene">The Scene to be made active. It does not need to be included in the Scene list, but it should be.</param>
-        public SceneManager(List<Scene> scenes, Scene activeScene)
+        /// <param name="activeId">The ID of the Scene to be made active.</param>
+        public SceneManager(List<Scene> scenes, int activeId)
         {
             foreach (Scene s in scenes)
                 AddScene(s, automaticallyMakeActive: false);
 
-            Active = activeScene;
+            ActiveID = activeId;
         }
 
         /// <summary>
@@ -51,18 +54,20 @@ namespace IsoEngine
         public void AddScene(Scene s, bool automaticallyMakeActive = true)
         {
             s.Manager = this;
-            scenes.Add(s);
+            scenes.Add(s.ID, s);
             //set active scene if there isn't one
-            if (Active == null || scenes.Count == 1)
-                Active = s;
+            if (automaticallyMakeActive && (!HasActive || scenes.Count == 1))
+                ActiveID = s.ID;
         }
 
         /// <summary>
-        /// Update the active Scene.
+        /// Update the active Scene, if there is one.
         /// </summary>
         public void Update()
         {
-            Active.Update();
+            if (!HasActive)
+                return;
+            ActiveScene.Update();
         }
 
     }
