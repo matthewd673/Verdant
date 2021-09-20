@@ -28,6 +28,7 @@ namespace IsoEngine
 
         public bool HasPhysics { get; protected set; } = false;
         public bool MoveSafelyWithPhysics { get; protected set; } = false;
+        protected int PhysicsMovementDiscreteSteps { get; set; } = 4;
 
         public float Friction { get; set; } = 0f;
         public Vec2 Velocity { get; set; } = Vec2.Zero;
@@ -48,14 +49,22 @@ namespace IsoEngine
         /// </summary>
         /// <param name="sprite">The Entity's sprite.</param>
         /// <param name="pos">The position of the Entity.</param>
-        /// <param name="w">The width of the Entity.</param>
-        /// <param name="h">The height of the Entity.</param>
-        public Entity(RenderObject sprite, Vec2 pos, int w, int h)
+        /// <param name="w">The width of the Entity. Defaults to the width of the RenderObject.</param>
+        /// <param name="h">The height of the Entity. Defaults to the height of the RenderObject.</param>
+        public Entity(RenderObject sprite, Vec2 pos, int w = -1, int h = -1)
         {
             Sprite = sprite;
             Position = pos;
-            Width = w;
-            Height = h;
+
+            if (w > -1)
+                Width = w;
+            else
+                Width = sprite.Width;
+            if (h > -1)
+                Height = h;
+            else
+                Height = sprite.Height;
+
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             RotationOrigin = new Vec2Int(Width / 2, Height / 2);
@@ -128,12 +137,12 @@ namespace IsoEngine
         public virtual void Update()
         {
             //apply physics
-            if (HasPhysics && Velocity != Vec2.Zero)
+            if (HasPhysics)
             {
                 if (!MoveSafelyWithPhysics)
                     Position += Velocity;
                 else
-                    Move(Velocity.X, Velocity.Y);
+                    Move(Velocity.X, Velocity.Y, discreteSteps: PhysicsMovementDiscreteSteps);
                 
                 if (Acceleration != Vec2.Zero)
                 {
