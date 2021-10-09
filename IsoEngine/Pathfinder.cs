@@ -223,7 +223,7 @@ namespace IsoEngine
 
             foreach (Entity e in obstacles) //we need data that only Tiles have
             {
-                foreach (Collider c in e.GetColliders())
+                foreach (Collider c in e.Colliders)
                 {
                     obsColliders.Add(c);
 

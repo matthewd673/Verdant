@@ -281,7 +281,7 @@ namespace IsoEngine
                 if (b == e) //don't include self
                     continue;
 
-                foreach (Collider c in b.GetColliders())
+                foreach (Collider c in b.Colliders)
                 {
                     //filter out triggers/solids if necessary
                     if (onlySolids && c.Trigger)
@@ -300,7 +300,7 @@ namespace IsoEngine
                     }
                     else //no collider specified
                     {
-                        foreach (Collider a in e.GetColliders())
+                        foreach (Collider a in e.Colliders)
                         {
                             if (Math.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
                             {
@@ -334,7 +334,7 @@ namespace IsoEngine
                 if (b == (TEntity)e) //skip self
                     continue;
 
-                foreach (Collider c in b.GetColliders())
+                foreach (Collider c in b.Colliders)
                 {
                     //filter out triggers/solids if necessary
                     if (onlySolids && c.Trigger)
@@ -353,7 +353,7 @@ namespace IsoEngine
                     }
                     else //no collider specified
                     {
-                        foreach (Collider a in e.GetColliders())
+                        foreach (Collider a in e.Colliders)
                         {
                             if (Math.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
                             {
@@ -392,7 +392,7 @@ namespace IsoEngine
                         continue;
                 }
 
-                foreach (Collider c in b.GetColliders())
+                foreach (Collider c in b.Colliders)
                 {
                     //filter out triggers/solids if necessary
                     if (onlySolids && c.Trigger)
@@ -436,7 +436,7 @@ namespace IsoEngine
                         continue;
                 }
 
-                foreach (Collider c in b.GetColliders())
+                foreach (Collider c in b.Colliders)
                 {
                     //filter out triggers/solids if necessary
                     if (onlySolids && c.Trigger)

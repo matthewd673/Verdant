@@ -15,7 +15,7 @@ namespace IsoEngine
 
         static Sprite pixel;
 
-        public static bool SortEntities = true;
+        public static bool SortEntities { get; set; } = true;
 
         static IEnumerable<Entity> sortedQueue;
 

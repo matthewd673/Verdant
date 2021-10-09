@@ -8,6 +8,13 @@ namespace IsoEngine
     public class Entity
     {
 
+        public static PropertySet DefaultProperties { get; set; } = new PropertySet(
+            hasPhysics: false,
+            moveSafelyWithPhysics: false,
+            physicsMovementDiscreteSteps: 4,
+            setZIndexToBase: true
+            );
+
         EntityManager _manager;
         public EntityManager Manager
         {   get { return _manager; }
@@ -26,9 +33,9 @@ namespace IsoEngine
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public bool HasPhysics { get; protected set; } = false;
-        public bool MoveSafelyWithPhysics { get; protected set; } = false;
-        protected int PhysicsMovementDiscreteSteps { get; set; } = 4;
+        public bool HasPhysics { get; protected set; }
+        public bool MoveSafelyWithPhysics { get; protected set; }
+        protected int PhysicsMovementDiscreteSteps { get; set; }
 
         public float Friction { get; set; } = 0f;
         public Vec2 Velocity { get; set; } = Vec2.Zero;
@@ -37,9 +44,9 @@ namespace IsoEngine
         public float Rotation { get; set; } = 0f;
         protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
 
-        List<Collider> colliders = new List<Collider>();
+        public List<Collider> Colliders { get; set; } = new List<Collider>();
 
-        protected bool SetZIndexToBase { get; set; } = false;
+        protected bool SetZIndexToBase { get; set; }
         public int ZIndex { get; protected set; } = 0;
 
         bool forRemoval = false;
@@ -53,6 +60,12 @@ namespace IsoEngine
         /// <param name="h">The height of the Entity. Defaults to the height of the RenderObject.</param>
         public Entity(RenderObject sprite, Vec2 pos, int w = -1, int h = -1)
         {
+            //apply default properties
+            HasPhysics = DefaultProperties.HasPhysics;
+            MoveSafelyWithPhysics = DefaultProperties.MoveSafelyWithPhysics;
+            PhysicsMovementDiscreteSteps = DefaultProperties.PhysicsMovementDiscreteSteps;
+            SetZIndexToBase = DefaultProperties.SetZIndexToBase;
+
             Sprite = sprite;
             Position = pos;
 
@@ -93,42 +106,7 @@ namespace IsoEngine
         /// <param name="trigger">Determines if the Collider is a trigger or not.</param>
         public void AddSimpleCollider(bool trigger = false)
         {
-            AddCollider(new Collider(this, trigger: trigger, relativePos: true));
-        }
-
-        /// <summary>
-        /// Add a Collider to the Entity.
-        /// </summary>
-        /// <param name="c">The Collider to add.</param>
-        public void AddCollider(Collider c)
-        {
-            colliders.Add(c);
-        }
-
-        /// <summary>
-        /// Remove a Collider from the Entity.
-        /// </summary>
-        /// <param name="c">The Collider to remove.</param>
-        public void RemoveCollider(Collider c)
-        {
-            colliders.Remove(c);
-        }
-
-        /// <summary>
-        /// Remove all Colliders from the Entity.
-        /// </summary>
-        public void ClearColliders()
-        {
-            colliders.Clear();
-        }
-
-        /// <summary>
-        /// Get a list of all the Colliders currently attached to the Entity.
-        /// </summary>
-        /// <returns>A list of all Colliders on the Entity.</returns>
-        public List<Collider> GetColliders()
-        {
-            return colliders;
+            Colliders.Add(new Collider(this, trigger: trigger, relativePos: true));
         }
 
         /// <summary>
@@ -159,7 +137,7 @@ namespace IsoEngine
             }
 
             //update all colliders
-            foreach (Collider c in colliders)
+            foreach (Collider c in Colliders)
                 c.Update();
 
             //update z index
@@ -179,11 +157,11 @@ namespace IsoEngine
         public void Move(float xDelta, float yDelta, Collider moveCollider = null, int discreteSteps = 4, bool moveThroughIfColliding = false)
         {
 
-            if (colliders.Count == 0) //do nothing if there is no collider attached (while it could just move regardless, doing so would break the promise of not colliding imo, easier to debug too).
+            if (Colliders.Count == 0) //do nothing if there is no collider attached (while it could just move regardless, doing so would break the promise of not colliding imo, easier to debug too).
                 return;
 
             if (moveCollider == null)
-                moveCollider = colliders[0];
+                moveCollider = Colliders[0];
 
             float newX = moveCollider.Position.X;
             float newY = moveCollider.Position.Y;
@@ -295,7 +273,7 @@ namespace IsoEngine
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public void DrawColliders(SpriteBatch spriteBatch)
         {
-            foreach (Collider c in colliders)
+            foreach (Collider c in Colliders)
             {
                 //color code
                 Color color = Color.Yellow;
@@ -320,6 +298,23 @@ namespace IsoEngine
                 rightLineBounds.Width = 1;
                 spriteBatch.Draw(Renderer.GetPixel(), rightLineBounds, color);
             }
+        }
+
+        public struct PropertySet
+        {
+            public bool HasPhysics { get; set;  }
+            public bool MoveSafelyWithPhysics { get; set;  }
+            public int PhysicsMovementDiscreteSteps { get; set; }
+            public bool SetZIndexToBase { get; set; }
+
+            public  PropertySet(bool hasPhysics, bool moveSafelyWithPhysics, int physicsMovementDiscreteSteps, bool setZIndexToBase)
+            {
+                HasPhysics = hasPhysics;
+                MoveSafelyWithPhysics = moveSafelyWithPhysics;
+                PhysicsMovementDiscreteSteps = physicsMovementDiscreteSteps;
+                SetZIndexToBase = setZIndexToBase;
+            }
+
         }
 
     }
