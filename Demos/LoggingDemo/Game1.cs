@@ -13,7 +13,7 @@ namespace LoggingDemo
         SceneManager sceneManager;
         enum SceneType
         {
-            PLAY
+            Play
         }
 
         public Game1()
@@ -29,7 +29,7 @@ namespace LoggingDemo
 
             sceneManager = new SceneManager();
 
-            Scene playScene = new Scene((int)SceneType.PLAY);
+            Scene playScene = new Scene((int)SceneType.Play);
             playScene.Initialize();
 
             playScene.EntityManager.AddEntity(new Player());

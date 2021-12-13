@@ -35,24 +35,20 @@ namespace LogConsole
 
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
             byte[] data = new byte[1024];
-            data = server.Receive(ref sender);
-
-            //recieve first message (handshake)
-            if (Encoding.ASCII.GetString(data, 0, data.Length).Equals("__mdebug__")) //correct
-            {
-                Console.WriteLine("[CON] Debugging session started");
-            }
-            else
-            {
-                Console.WriteLine("[WRN] Unexpected client connected");
-            }
-
+            string message = null;
+            
             while (true)
             {
                 data = server.Receive(ref sender);
+                message = Encoding.ASCII.GetString(data, 0, data.Length);
 
-                Console.WriteLine(Encoding.ASCII.GetString(data, 0, data.Length));
-                server.Send(data, data.Length, sender);
+                if (message.Equals("__mdebug__"))
+                {
+                    Console.Clear();
+                    Console.WriteLine("[CON] Debug session started ({0})", sender.Address.ToString());
+                }
+                else
+                    Console.WriteLine("[LOG] {0}", message);
             }
         }
     }
