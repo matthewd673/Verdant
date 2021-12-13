@@ -9,29 +9,41 @@ namespace IsoEngine.Debugging
 
         /*
          * TODO
-         * - add option to auto-begin on first WriteLine
          * - add option to warn when connecting (so a game doesn't accidentally ship with the logger still going)
          */
 
-        static TcpClient client;
-        static NetworkStream stream;
+        static UdpClient client;
+        static bool connectionFailed = false;
 
-        public static void Begin(int port = 8085)
-        {
-            client = new TcpClient("127.0.0.1", port);
-            stream = client.GetStream();
-        }
-
+        /// <summary>
+        /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).
+        /// </summary>
+        /// <param name="message"></param>
         public static void WriteLine(string message)
         {
-            if (stream == null)
-                return;
 
-            stream.Write(
-                Encoding.ASCII.GetBytes(message),
-                0,
-                message.Length
-                );
+            if (connectionFailed) { return; } //only try to connect once
+
+            if (client == null)
+            {
+                client = new UdpClient(40425);
+                try
+                {
+                    client.Connect("127.0.0.1", 8085);
+                    //first message
+                    byte[] firstBytes = Encoding.ASCII.GetBytes("__mdebug__");
+                    client.Send(firstBytes, firstBytes.Length);
+                }
+                catch (Exception e)
+                {
+                    //fail silently for now
+                    connectionFailed = true;
+                    return;
+                }
+            }
+
+            byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+            client.Send(messageBytes, messageBytes.Length);
         }
 
     }

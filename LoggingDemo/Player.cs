@@ -10,7 +10,6 @@ namespace LoggingDemo
 
         public Player() : base(Sprites.player, new Vec2(100, 100))
         {
-            Log.Begin();
             Log.WriteLine("Player created");
         }
 

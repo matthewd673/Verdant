@@ -14,7 +14,6 @@ namespace LogConsole
          * - option to save output when session ends
          * - option to auto-reset every time a new client connects
          *      (presumably, this will only happen when the game is re-run)
-         * - add simple handshake to beginning so anything other than the Log class is discouraged from connecting
          */
 
         static void Main(string[] args)
@@ -27,34 +26,33 @@ namespace LogConsole
             StartServer();
         }
 
-        static void StartServer(int port = 8085)
+        static void StartServer()
         {
-            TcpListener server = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
-            server.Start();
-            Console.WriteLine("[CON] Listening on port {0}", port);
 
-            Byte[] bytes = new byte[256];
-            string data = null;
+            UdpClient server = new UdpClient(8085);
 
-            //listen loop
+            Console.WriteLine("[CON] Listening on port 8085");
+
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            byte[] data = new byte[1024];
+            data = server.Receive(ref sender);
+
+            //recieve first message (handshake)
+            if (Encoding.ASCII.GetString(data, 0, data.Length).Equals("__mdebug__")) //correct
+            {
+                Console.WriteLine("[CON] Debugging session started");
+            }
+            else
+            {
+                Console.WriteLine("[WRN] Unexpected client connected");
+            }
+
             while (true)
             {
-                TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("[CON] Client connected");
+                data = server.Receive(ref sender);
 
-                data = null;
-
-                NetworkStream stream = client.GetStream();
-
-                int i;
-                while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                {
-                    data = Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("[LOG] {0}", data);
-                }
-
-                client.Close();
-                Console.WriteLine("[CON] Client disconnected");
+                Console.WriteLine(Encoding.ASCII.GetString(data, 0, data.Length));
+                server.Send(data, data.Length, sender);
             }
         }
     }
