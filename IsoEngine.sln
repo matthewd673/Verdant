@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParticleToy", "Demos\Partic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{08794129-62AC-4308-8F61-2F24541A7B8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogConsole", "LogConsole\LogConsole.csproj", "{807C5442-D881-48DB-BCDD-20C7ABF694ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingDemo", "LoggingDemo\LoggingDemo.csproj", "{3D44760C-68C6-4678-BB28-936BDE8FD04C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +33,21 @@ Global
 		{B0973FB3-09E2-467D-B067-FAEFD23D23C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0973FB3-09E2-467D-B067-FAEFD23D23C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0973FB3-09E2-467D-B067-FAEFD23D23C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807C5442-D881-48DB-BCDD-20C7ABF694ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807C5442-D881-48DB-BCDD-20C7ABF694ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807C5442-D881-48DB-BCDD-20C7ABF694ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807C5442-D881-48DB-BCDD-20C7ABF694ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D44760C-68C6-4678-BB28-936BDE8FD04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D44760C-68C6-4678-BB28-936BDE8FD04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D44760C-68C6-4678-BB28-936BDE8FD04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D44760C-68C6-4678-BB28-936BDE8FD04C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0973FB3-09E2-467D-B067-FAEFD23D23C2} = {08794129-62AC-4308-8F61-2F24541A7B8E}
+		{3D44760C-68C6-4678-BB28-936BDE8FD04C} = {08794129-62AC-4308-8F61-2F24541A7B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE681C19-A937-4850-B479-5A8BC0B86A8F}

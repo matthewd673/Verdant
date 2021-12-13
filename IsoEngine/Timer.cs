@@ -16,9 +16,13 @@ namespace IsoEngine
         /// Initialize a new Timer.
         /// </summary>
         /// <param name="duration">The duration of the Timer (number of frames).</param>
-        public Timer(int duration)
+        public Timer(int duration, int startingTime = 0)
         {
             Duration = duration;
+
+            Time = startingTime;
+            if (Time > duration)
+                Time = duration;
         }
 
         /// <summary>
