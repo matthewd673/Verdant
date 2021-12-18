@@ -16,7 +16,7 @@ namespace IsoEngine.Debugging
         static bool connectionFailed = false;
 
         /// <summary>
-        /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).d
+        /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).
         /// </summary>
         /// <param name="message"></param>
         public static void WriteLine(string message)
@@ -34,7 +34,7 @@ namespace IsoEngine.Debugging
                     byte[] firstBytes = Encoding.ASCII.GetBytes("__mdebug__");
                     client.Send(firstBytes, firstBytes.Length);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //fail silently for now
                     connectionFailed = true;

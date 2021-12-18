@@ -10,8 +10,8 @@ namespace IsoEngine
 
         public SceneManager Manager { get; set; }
 
-        public EntityManager EntityManager { get; private set; }
-        public UIManager UIManager { get; private set; }
+        public EntityManager EntityManager { get; protected set; }
+        public UIManager UIManager { get; protected set; }
 
         /// <summary>
         /// Create a new Scene. It will not be initialized immediately.
