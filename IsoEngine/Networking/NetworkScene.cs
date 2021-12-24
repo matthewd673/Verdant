@@ -6,18 +6,33 @@ namespace IsoEngine.Networking
     public class NetworkScene : Scene
     {
 
-        public new EntityManager EntityManager
+        public bool Host { get; protected set; }
+
+        public NetworkManager NetworkManager
         {
-            get { return NetworkManager; }
+            get { return (NetworkManager) EntityManager; }
         }
-        public NetworkManager NetworkManager { get; protected set; }
 
-        public NetworkScene(int id) : base(id) { }
-
-        public virtual void Initialize()
+        public NetworkScene(int id, bool host) : base(id)
         {
-            NetworkManager = new NetworkManager();
+            Host = host;
+        }
+
+        public override void Initialize()
+        {
+            EntityManager = new NetworkManager();
             UIManager = new UIManager();
+
+            Start();
         }
+
+        public void Start()
+        {
+            if (Host)
+                NetworkManager.StartServer();
+            else
+                NetworkManager.StartClient("127.0.0.1"); //temp
+        }
+
     }
 }

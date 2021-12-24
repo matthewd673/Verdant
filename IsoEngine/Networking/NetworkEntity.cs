@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json.Serialization;
 
 namespace IsoEngine.Networking
 {
@@ -6,35 +8,46 @@ namespace IsoEngine.Networking
     public class NetworkEntity : Entity
     {
 
-        public byte[] NetId { get; }
-        public bool Managed { get; }
+        public string NetId { get; }
+        [JsonIgnore]
+        public bool Managed { get; internal set; } = true;
+        public string EntityType { get; }
 
-        public NetworkEntity(RenderObject sprite, Vec2 pos, bool managed = true, int w = -1, int h = -1) : base(sprite, pos, w, h)
+        public NetworkEntity(string entityType, RenderObject sprite, Vec2 position, int width = -1, int height = -1) : base(sprite, position, width, height)
         {
-            NetId = Guid.NewGuid().ToByteArray();
-            Managed = managed;
+            NetId = Guid.NewGuid().ToString();
+            EntityType = entityType;
         }
 
-        public void StartServer()
+        [JsonConstructor]
+        public NetworkEntity(string netId, string entityType, Vec2 position, int width = -1, int height = -1) : base(null, position, width, height)
         {
-            Server server = new Server();
-            server.Start();
+            NetId = netId;
+            EntityType = entityType;
         }
 
-        public void StartClient(string ip)
+        protected static byte[] CombineByteArrays(params byte[][] arrays)
         {
-            Client client = new Client();
-            client.Connect(ip, 30508);
+            byte[] combined = new byte[arrays.Length * 8];
+            for (int i = 0; i < combined.Length; i++)
+            {
+                int arrIndex = (int)System.Math.Floor((double)i / 8.0);
+                combined[i] = arrays[arrIndex][arrIndex + (i % 8)];
+            }
 
+            return combined;
         }
 
         public override void Update()
         {
             if (Managed)
             {
+                //float oldX = Position.X;
+                //float oldY = Position.Y;
                 base.Update();
 
                 //transmit changes over network (if managed)
+                ((NetworkManager)Manager).SendNetworkEntityPosition(NetId, Position);
             }
         }
 

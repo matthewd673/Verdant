@@ -15,6 +15,9 @@ namespace IsoEngine
 
         static Sprite pixel;
 
+        public static Sprite Cursor { get; set; } = null;
+        public static bool ShowCursor { get; set; } = true;
+
         public static bool SortEntities { get; set; } = true;
 
         static IEnumerable<Entity> sortedQueue;
@@ -86,6 +89,18 @@ namespace IsoEngine
             foreach (UIElement e in uiManager.GetElements())
             {
                 e.Draw(spriteBatch);
+            }
+
+            //render cursor
+            if (ShowCursor && Cursor != null)
+            {
+                spriteBatch.Draw(Cursor.Get(),
+                    new Rectangle(InputHandler.MouseX - (Cursor.Width / 2 * Scale),
+                        InputHandler.MouseY - (Cursor.Height / 2 * Scale),
+                        Cursor.Width * Scale,
+                        Cursor.Height * Scale
+                    ),
+                    Color.White);
             }
         }
         /// <summary>

@@ -18,6 +18,9 @@ namespace IsoEngine
         List<Entity> addQueue = new List<Entity>();
         List<Entity> removeQueue = new List<Entity>();
 
+        public int EntityCount { get; private set; }
+        public int EntityUpdateCount { get; private set; }
+
         /// <summary>
         /// Initialize a new EntityManager.
         /// </summary>
@@ -68,14 +71,17 @@ namespace IsoEngine
         /// <summary>
         /// Force the Entities in the add and remove queues to be added/removed to the manager. DO NOT USE WITHIN UPDATE LOOP.
         /// </summary>
-        public void ForceApplyQueues()
+        public void ApplyQueues()
         {
             //remove marked
             foreach (Entity e in removeQueue)
             {
                 e.Manager = null;
                 if (entityTable.ContainsKey(e.Key))
+                {
                     entityTable[e.Key].Remove(e);
+                    EntityCount--; //keep track
+                }
             }
             //add marked
             foreach (Entity e in addQueue)
@@ -86,6 +92,7 @@ namespace IsoEngine
                     entityTable[e.Key].Add(e);
                 else
                     entityTable.Add(e.Key, new List<Entity>() { e });
+                EntityCount++; //keep track
             }
 
             addQueue.Clear();
@@ -479,10 +486,14 @@ namespace IsoEngine
         /// <param name="updateList">The list of Entities to update.</param>
         void UpdateList(List<Entity> updateList)
         {
+            EntityUpdateCount = 0;
+
             //update all
             foreach (Entity e in updateList)
             {
                 e.Update();
+                EntityUpdateCount++; //keep track
+
                 //remove marked entities
                 if (e.IsForRemoval())
                 {
@@ -493,25 +504,7 @@ namespace IsoEngine
                     MoveEntityCell(e);
             }
 
-            //remove marked
-            foreach (Entity e in removeQueue)
-            {
-                e.Manager = null;
-                entityTable[e.Key].Remove(e);
-            }
-            //add marked
-            foreach (Entity e in addQueue)
-            {
-                e.Manager = this;
-                //add to appropriate list in table (create if necessary)
-                if (entityTable.ContainsKey(e.Key))
-                    entityTable[e.Key].Add(e);
-                else
-                    entityTable.Add(e.Key, new List<Entity>() { e });
-            }
-
-            addQueue.Clear();
-            removeQueue.Clear();
+            ApplyQueues();
         }
 
         /// <summary>

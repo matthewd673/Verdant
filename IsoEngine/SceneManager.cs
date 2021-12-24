@@ -10,7 +10,15 @@ namespace IsoEngine
         public Scene ActiveScene { get { return scenes[ActiveID]; } }
         public bool HasActive { get; private set; } = false;
         private int _activeId;
-        public int ActiveID { get { return _activeId; } set { HasActive = true; _activeId = value; } }
+        public int ActiveID {
+            get { return _activeId; }
+            set
+            {
+                HasActive = true;
+                _activeId = value;
+                scenes[_activeId].Initialize();
+            }
+        }
 
         /// <summary>
         /// Initialize a new SceneManager.

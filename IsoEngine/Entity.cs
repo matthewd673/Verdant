@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Text.Json.Serialization;
 
 namespace IsoEngine
 {
+
+    [Serializable]
     public class Entity
     {
 
@@ -15,7 +18,9 @@ namespace IsoEngine
             setZIndexToBase: true
             );
 
+        [JsonIgnore]
         EntityManager _manager;
+        [JsonIgnore]
         public EntityManager Manager
         {   get { return _manager; }
             set
@@ -29,6 +34,7 @@ namespace IsoEngine
         public string PreviousKey { get; private set; } = "";
 
         public Vec2 Position { get; set; }
+        [JsonIgnore]
         public RenderObject Sprite { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -44,6 +50,7 @@ namespace IsoEngine
         public float Rotation { get; set; } = 0f;
         protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
 
+        [JsonIgnore]
         public List<Collider> Colliders { get; set; } = new List<Collider>();
 
         protected bool SetZIndexToBase { get; set; }
@@ -55,10 +62,10 @@ namespace IsoEngine
         /// Initialize a new Entity.
         /// </summary>
         /// <param name="sprite">The Entity's sprite.</param>
-        /// <param name="pos">The position of the Entity.</param>
-        /// <param name="w">The width of the Entity. Defaults to the width of the RenderObject.</param>
-        /// <param name="h">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        public Entity(RenderObject sprite, Vec2 pos, int w = -1, int h = -1)
+        /// <param name="position">The position of the Entity.</param>
+        /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
+        /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
+        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1)
         {
             //apply default properties
             HasPhysics = DefaultProperties.HasPhysics;
@@ -67,14 +74,14 @@ namespace IsoEngine
             SetZIndexToBase = DefaultProperties.SetZIndexToBase;
 
             Sprite = sprite;
-            Position = pos;
+            Position = position;
 
-            if (w > -1)
-                Width = w;
+            if (width > -1)
+                Width = width;
             else
                 Width = sprite.Width;
-            if (h > -1)
-                Height = h;
+            if (height > -1)
+                Height = height;
             else
                 Height = sprite.Height;
 
@@ -256,6 +263,9 @@ namespace IsoEngine
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
+            if (Sprite == null)
+                return;
+
             if (Rotation == 0f) //no rotation, simple draw
                 spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
             else

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace IsoEngine
 {
+    [Serializable]
     public class Vec2Int
     {
 
