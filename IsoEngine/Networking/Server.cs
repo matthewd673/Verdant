@@ -66,7 +66,7 @@ namespace IsoEngine.Networking
                         Connected.Remove(sender);
                         break;
                     case NetworkManager.MessageType.CreateEntity:
-                        NetworkEntity createdEntity = NetworkManager.DeserializeNetworkEntity(inData);
+                        NetworkEntity createdEntity = manager.DeserializeNetworkEntity(inData);
                         createdEntity.Managed = false;
                         manager.AddNetworkEntity(manager.ProcessIncomingEntity(createdEntity));
                         break;

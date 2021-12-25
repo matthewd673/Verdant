@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Text.Json.Serialization;
 
 namespace IsoEngine.Networking
@@ -8,22 +7,27 @@ namespace IsoEngine.Networking
     public class NetworkEntity : Entity
     {
 
-        public string NetId { get; }
+        public new NetworkManager Manager
+        {
+            get { return (NetworkManager)base.Manager; }
+            set { base.Manager = value; }
+        }
+
+        public string NetId { get; internal set; }
         [JsonIgnore]
         public bool Managed { get; internal set; } = true;
-        public string EntityType { get; }
+        public int NetworkEntityType { get; internal set; } = -1;
 
-        public NetworkEntity(string entityType, RenderObject sprite, Vec2 position, int width = -1, int height = -1) : base(sprite, position, width, height)
+        public NetworkEntity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) : base(sprite, position, width, height)
         {
             NetId = Guid.NewGuid().ToString();
-            EntityType = entityType;
         }
 
         [JsonConstructor]
-        public NetworkEntity(string netId, string entityType, Vec2 position, int width = -1, int height = -1) : base(null, position, width, height)
+        public NetworkEntity(string netId, int networkEntityType, Vec2 position, int width = -1, int height = -1) : base(null, position, width, height)
         {
             NetId = netId;
-            EntityType = entityType;
+            NetworkEntityType = networkEntityType;
         }
 
         protected static byte[] CombineByteArrays(params byte[][] arrays)
@@ -40,21 +44,16 @@ namespace IsoEngine.Networking
 
         public override void Update()
         {
-            if (Managed)
-            {
-                //float oldX = Position.X;
-                //float oldY = Position.Y;
-                base.Update();
+            float oldX = Position.X;
+            float oldY = Position.Y;
+            base.Update();
 
-                //transmit changes over network (if managed)
-                ((NetworkManager)Manager).SendNetworkEntityPosition(NetId, Position);
-            }
+            //transmit changes over network
+            //if (oldX != Position.X || oldY != Position.Y)
+                Manager.SendNetworkEntityPosition(NetId, Position);
         }
 
-        public void ApplyChanges()
-        {
-
-        }
+        public virtual void UnmanagedUpdate() { }
 
     }
 }

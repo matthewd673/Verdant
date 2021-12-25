@@ -18,8 +18,8 @@ namespace IsoEngine
         List<Entity> addQueue = new List<Entity>();
         List<Entity> removeQueue = new List<Entity>();
 
-        public int EntityCount { get; private set; }
-        public int EntityUpdateCount { get; private set; }
+        public int EntityCount { get; protected set; }
+        public int EntityUpdateCount { get; protected set; }
 
         /// <summary>
         /// Initialize a new EntityManager.
@@ -466,7 +466,7 @@ namespace IsoEngine
         /// Move an Entity from one cell in the table to another. The Entity will be moved from its PreviousKey to its Key. Called by Update if it detects that an Entity's key has changed.
         /// </summary>
         /// <param name="e">The Entity to move.</param>
-        void MoveEntityCell(Entity e)
+        protected void MoveEntityCell(Entity e)
         {
             if (entityTable.ContainsKey(e.PreviousKey))
             {
@@ -484,7 +484,7 @@ namespace IsoEngine
         /// Update all Entities in a given list. Called by the Update function (which provides an appropriate list).
         /// </summary>
         /// <param name="updateList">The list of Entities to update.</param>
-        void UpdateList(List<Entity> updateList)
+        protected virtual void UpdateList(List<Entity> updateList)
         {
             EntityUpdateCount = 0;
 

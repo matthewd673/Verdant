@@ -36,8 +36,8 @@ namespace IsoEngine.Networking
         Server server;
         Client client;
 
+        public Type[] NetworkEntityTypes { get; set; } = new Type[0];
         Dictionary<string, NetworkEntity> networkEntitySet = new Dictionary<string, NetworkEntity>();
-        int networkEntityCt = 0;
 
         public int ConnectedClients
         {
@@ -80,6 +80,8 @@ namespace IsoEngine.Networking
             }
         }
 
+        static JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { IncludeFields = true };
+
         public void StartServer()
         {
             server = new Server(this);
@@ -92,65 +94,80 @@ namespace IsoEngine.Networking
             client.Connect(ip);
         }
 
-        public void AddNetworkEntity(NetworkEntity e)
+        public void AddNetworkEntity<TNetworkEntity>(TNetworkEntity e) where TNetworkEntity : NetworkEntity
         {
             AddEntity(e); //add entity to normal manager
             networkEntitySet.Add(e.NetId, e); //and to special manager
 
-            if (e.Managed)
-            {
-                //broadcast change
+            if (e.Managed) //broadcast change
                 SendMessage(new Server.Message(MessageType.CreateEntity, SerializeNetworkEntity(e), incoming: false));
-            }
+        }
+
+        void SetNetworkEntityType(NetworkEntity e)
+        {
+            if (e.GetType() == typeof(NetworkEntity))
+                e.NetworkEntityType = 0;
             else
             {
-                //incoming entity
+                int i = 0;
+                foreach (Type t in NetworkEntityTypes)
+                {
+                    if (e.GetType() == t)
+                        e.NetworkEntityType = i + 1;
+                    i++;
+                }
             }
+        }
+
+        Type GetNetworkEntityType(NetworkEntity e)
+        {
+            if (e.NetworkEntityType == 0)
+                return typeof(NetworkEntity);
+
+            if (e.NetworkEntityType == -1)
+                return null;
+            if (e.NetworkEntityType > NetworkEntityTypes.Length + 1)
+                return null;
+
+            return NetworkEntityTypes[e.NetworkEntityType - 1];
         }
 
         void SendMessage(Server.Message message)
         {
+            if (!HasConnection)
+                return;
+
             if (server != null)
                 server.Broadcast(message);
             if (client != null)
                 client.Send(message);
         }
 
-        public static byte[] SerializeNetworkEntity<TValue>(TValue e) where TValue : NetworkEntity
+        public byte[] SerializeNetworkEntity(NetworkEntity e)
         {
-            //SurrogateSelector surrogateSelector = new SurrogateSelector();
-            //surrogateSelector.AddSurrogate(
-            //    e.GetType(),
-            //    new StreamingContext(StreamingContextStates.All),
-            //    new NetworkEntitySerializationSurrogate()
-            //);
-
-            //MemoryStream stream = new MemoryStream();
-            //IFormatter serializer = new BinaryFormatter();
-            //serializer.SurrogateSelector = surrogateSelector;
-            //serializer.Serialize(stream, e);
-
-            //return stream.ToArray();
-
-            string json = JsonSerializer.Serialize<TValue>(e);
-            System.IO.File.WriteAllText("C:\\Users\\Matthew\\Desktop\\isomultiplayer.txt", json); //TEMP!
+            SetNetworkEntityType(e);
+            string json = JsonSerializer.Serialize<object>(e, serializerOptions);
             return Encoding.ASCII.GetBytes(json);
 
         }
 
-        public static NetworkEntity DeserializeNetworkEntity(byte[] array)
+        public NetworkEntity DeserializeNetworkEntity(byte[] array)
         {
-            //MemoryStream stream = new MemoryStream(array);
-            //NetworkEntity e = (NetworkEntity)new BinaryFormatter().Deserialize(stream);
-            //stream.Close();
-            //return e;
             string json = Encoding.ASCII.GetString(array);
             NetworkEntity genericEntity = (NetworkEntity) JsonSerializer.Deserialize(json, typeof(NetworkEntity));
-            return genericEntity;
+            Type entityType = GetNetworkEntityType(genericEntity);
+            if (entityType == null)
+                return null;
+            NetworkEntity e = (NetworkEntity) JsonSerializer.Deserialize(json, entityType);
+            e.NetId = genericEntity.NetId;
+            return e;
         }
 
         internal void RecieveNetworkEntityPosition(Server.EntityPositionInfo info)
         {
+            if (!networkEntitySet.ContainsKey(info.NetId))
+                return;
+
             NetworkEntity e = networkEntitySet[info.NetId];
             if (e == null)
                 return;
@@ -177,10 +194,49 @@ namespace IsoEngine.Networking
             );
         }
 
-        //weirdo strategy
         public virtual NetworkEntity ProcessIncomingEntity(NetworkEntity e)
         {
             return e;
+        }
+
+        protected override void UpdateList(List<Entity> updateList)
+        {
+            EntityUpdateCount = 0;
+
+            //update all
+            foreach (Entity e in updateList)
+            {
+                if (e.GetType() == typeof(NetworkEntity) || e.GetType().IsSubclassOf(typeof(NetworkEntity)))
+                {
+                    NetworkEntity n = (NetworkEntity)e;
+                    if (n.Managed)
+                    {
+                        n.Update();
+                        EntityUpdateCount++;
+                    }
+                    else
+                    {
+                        n.UnmanagedUpdate();
+                        EntityUpdateCount++;
+                    }
+                }
+                else
+                {
+                    e.Update();
+                    EntityUpdateCount++; //keep track
+                }
+
+                //remove marked entities
+                if (e.IsForRemoval())
+                {
+                    RemoveEntity(e);
+                    continue; //don't bother with anything else if being removed
+                }
+                if (!e.Key.Equals(e.PreviousKey))
+                    MoveEntityCell(e);
+            }
+
+            ApplyQueues();
         }
 
         //EVENTS

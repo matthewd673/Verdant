@@ -69,7 +69,7 @@ namespace IsoEngine.Networking
                         manager.OnClientConnectionConfirmed();
                         break;
                     case NetworkManager.MessageType.CreateEntity:
-                        NetworkEntity createdEntity = NetworkManager.DeserializeNetworkEntity(inData);
+                        NetworkEntity createdEntity = manager.DeserializeNetworkEntity(inData);
                         createdEntity.Managed = false;
                         manager.AddEntity(createdEntity);
                         break;
