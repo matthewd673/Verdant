@@ -171,11 +171,14 @@ namespace IsoEngine.Networking
             NetworkEntity e = networkEntitySet[info.NetId];
             if (e == null)
                 return;
+            
             e.Position.X = info.Position.X;
             e.Position.Y = info.Position.Y;
+            e.Velocity.X = info.Velocity.X;
+            e.Velocity.Y = info.Velocity.Y;
         }
 
-        public void SendNetworkEntityPosition(string netId, Vec2 pos)
+        public void SendNetworkEntityPosition(string netId, Vec2 pos, Vec2 vel)
         {
             //it goes without saying that this is temporary
             SendMessage(new Server.Message(
@@ -184,7 +187,8 @@ namespace IsoEngine.Networking
                     JsonSerializer.Serialize(
                         new Server.EntityPositionInfo(
                             netId,
-                            pos
+                            pos,
+                            vel
                             ),
                         typeof(Server.EntityPositionInfo)
                         )

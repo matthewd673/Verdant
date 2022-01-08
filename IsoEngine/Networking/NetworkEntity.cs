@@ -18,9 +18,23 @@ namespace IsoEngine.Networking
         public bool Managed { get; internal set; } = true;
         public int NetworkEntityType { get; internal set; } = -1;
 
+        int _networkUpdateFrequency = 5;
+        public int NetworkUpdateFrequency
+        {
+            get { return _networkUpdateFrequency; }
+            protected set
+            {
+                _networkUpdateFrequency = value;
+                networkUpdateTimer = new Timer(60 / _networkUpdateFrequency);
+            }
+        }
+
+        Timer networkUpdateTimer;
+
         public NetworkEntity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) : base(sprite, position, width, height)
         {
             NetId = Guid.NewGuid().ToString();
+            networkUpdateTimer = new Timer(60 / NetworkUpdateFrequency);
         }
 
         [JsonConstructor]
@@ -28,6 +42,7 @@ namespace IsoEngine.Networking
         {
             NetId = netId;
             NetworkEntityType = networkEntityType;
+            networkUpdateTimer = new Timer(60 / NetworkUpdateFrequency);
         }
 
         protected static byte[] CombineByteArrays(params byte[][] arrays)
@@ -35,7 +50,7 @@ namespace IsoEngine.Networking
             byte[] combined = new byte[arrays.Length * 8];
             for (int i = 0; i < combined.Length; i++)
             {
-                int arrIndex = (int)System.Math.Floor((double)i / 8.0);
+                int arrIndex = (int)System.Math.Floor(i / 8.0);
                 combined[i] = arrays[arrIndex][arrIndex + (i % 8)];
             }
 
@@ -44,16 +59,19 @@ namespace IsoEngine.Networking
 
         public override void Update()
         {
-            float oldX = Position.X;
-            float oldY = Position.Y;
             base.Update();
 
             //transmit changes over network
-            //if (oldX != Position.X || oldY != Position.Y)
-                Manager.SendNetworkEntityPosition(NetId, Position);
+            networkUpdateTimer.Tick();
+            if (networkUpdateTimer.Consume())
+                Manager.SendNetworkEntityPosition(NetId, Position, Velocity);
         }
 
-        public virtual void UnmanagedUpdate() { }
+        public virtual void UnmanagedUpdate()
+        {
+            Position.X += Velocity.X;
+            Position.Y += Velocity.Y;
+        }
 
     }
 }

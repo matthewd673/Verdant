@@ -219,11 +219,13 @@ namespace IsoEngine.Networking
         {
             public string NetId { get; set; }
             public Vec2 Position { get; set; }
+            public Vec2 Velocity { get; set; }
 
-            public EntityPositionInfo(string netId, Vec2 position)
+            public EntityPositionInfo(string netId, Vec2 position, Vec2 velocity)
             {
                 NetId = netId;
                 Position = position;
+                Velocity = velocity;
             }
         }
     }
