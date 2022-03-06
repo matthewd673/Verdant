@@ -18,6 +18,7 @@ namespace LogConsole
 
         static void Main(string[] args)
         {
+            Console.Title = "IsoEngine Log";
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("IsoEngine Debugging Log Console");

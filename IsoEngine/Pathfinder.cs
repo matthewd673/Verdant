@@ -41,7 +41,7 @@ namespace IsoEngine
         public List<Vec2> UpdatePath(Entity walker, Entity target, Collider walkerCollider, Collider targetCollider)
         {
             //ensure that the target is within the appropriate range before finding a path
-            if (Math.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
+            if (GameMath.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
             {
                 List<PathCell> path = FindPath(walkerCollider, targetCollider);
                 List<Vec2> pathPoints = new List<Vec2>();
@@ -164,7 +164,7 @@ namespace IsoEngine
         /// <returns>The h value.</returns>
         int CalculateH(PathCell cell, PathCell goal)
         {
-            return System.Math.Abs(goal.X - cell.X) + System.Math.Abs(goal.Y - cell.Y);
+            return Math.Abs(goal.X - cell.X) + Math.Abs(goal.Y - cell.Y);
         }
 
         /// <summary>

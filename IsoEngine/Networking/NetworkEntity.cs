@@ -50,7 +50,7 @@ namespace IsoEngine.Networking
             byte[] combined = new byte[arrays.Length * 8];
             for (int i = 0; i < combined.Length; i++)
             {
-                int arrIndex = (int)System.Math.Floor(i / 8.0);
+                int arrIndex = (int)Math.Floor(i / 8.0);
                 combined[i] = arrays[arrIndex][arrIndex + (i % 8)];
             }
 

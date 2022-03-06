@@ -51,6 +51,43 @@ namespace IsoEngine
             return (X == o.X && Y == o.Y);
         }
 
+        public override string ToString()
+        {
+            return "(" + X + ", " + Y + ")";
+        }
+
+        public float Magnitude()
+        {
+            return (float) Math.Sqrt(X * X + Y * Y);
+        }
+
+        public Vec2 Unit()
+        {
+            float mag = Magnitude();
+            if (mag == 0)
+                return new Vec2(0, 0);
+            return new Vec2(X / mag, Y / mag);
+        }
+
+        public Vec2 Normal()
+        {
+            //a faster way to achieve: return new Vec2(-Y, X).Unit();
+            float mag = Magnitude();
+            if (mag == 0)
+                return new Vec2(0, 0);
+            return new Vec2(-Y / mag, X / mag);
+        }
+
+        public static float Dot(Vec2 a, Vec2 b)
+        {
+            return a.X * b.X + a.Y * b.Y;
+        }
+
+        public static float Cross(Vec2 a, Vec2 b)
+        {
+            return a.X * b.Y - a.Y * b.X;
+        }
+
         public static bool operator ==(Vec2 a, Vec2 b) => a.Equals(b);
         public static bool operator !=(Vec2 a, Vec2 b) => !a.Equals(b);
 

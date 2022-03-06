@@ -231,7 +231,7 @@ namespace IsoEngine.Networking
                 }
 
                 //remove marked entities
-                if (e.IsForRemoval())
+                if (e.ForRemoval)
                 {
                     RemoveEntity(e);
                     continue; //don't bother with anything else if being removed

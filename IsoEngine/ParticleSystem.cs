@@ -27,7 +27,7 @@ namespace IsoEngine
         {
             //determine particle spawn values
             Vec2 spawnPos = GetNewParticlePos();
-            RenderObject sprite = configuration.Sprites[Math.Random.Next(configuration.Sprites.Length)]; //pick a random sprite from the list
+            RenderObject sprite = configuration.Sprites[GameMath.Random.Next(configuration.Sprites.Length)]; //pick a random sprite from the list
             int width = ParticleConfiguration.SelectIntFromRange(configuration.WidthRange);
             int height = ParticleConfiguration.SelectIntFromRange(configuration.HeightRange);
             float angle = ParticleConfiguration.SelectFloatFromRange(configuration.AngleRange); //get random angle in range set by array
@@ -38,8 +38,8 @@ namespace IsoEngine
 
             //create particle
             Particle particle = new Particle(sprite, spawnPos, width, height, lifetime);
-            particle.Velocity = Math.Vec2FromAngle(angle) * velocityMagnitude;
-            particle.Acceleration = Math.Vec2FromAngle(angle) * accelerationMagnitude;
+            particle.Velocity = GameMath.Vec2FromAngle(angle) * velocityMagnitude;
+            particle.Acceleration = GameMath.Vec2FromAngle(angle) * accelerationMagnitude;
             particle.Friction = friction;
             particles.Add(particle);
         }
@@ -50,8 +50,8 @@ namespace IsoEngine
         /// <returns>A Vec2 representing a new possible spawn position.</returns>
         public Vec2 GetNewParticlePos()
         {
-            float pX = Position.X + Math.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
-            float pY = Position.Y + Math.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
+            float pX = Position.X + GameMath.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
+            float pY = Position.Y + GameMath.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
             return new Vec2(pX, pY);
         }
 
@@ -81,7 +81,7 @@ namespace IsoEngine
             }
 
             if (autoRemove && particles.Count == 0)
-                MarkForRemoval();
+                ForRemoval = true;
 
             base.Update();
         }

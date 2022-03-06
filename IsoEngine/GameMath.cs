@@ -2,7 +2,7 @@
 
 namespace IsoEngine
 {
-    public static class Math
+    public static class GameMath
     {
 
         public static Random Random { get; } = new Random();
@@ -16,10 +16,10 @@ namespace IsoEngine
         /// <returns>A float representing the angle between the two points.</returns>
         public static float AngleBetweenPoints(Vec2 a, Vec2 target, bool easyAdjust = false)
         {
-            float angle = (float)System.Math.Atan2(target.X - a.X, target.Y - a.Y);
+            float angle = (float)Math.Atan2(target.X - a.X, target.Y - a.Y);
 
             if (easyAdjust)
-                return -angle + (float)System.Math.PI / 2;
+                return -angle + (float)Math.PI / 2;
             return angle;
         }
 
@@ -30,7 +30,7 @@ namespace IsoEngine
         /// <returns>A Vec2 with a magnitude of 1, pointing in the direction of the angle.</returns>
         public static Vec2 Vec2FromAngle(float angle)
         {
-            return new Vec2((float)System.Math.Sin(angle), (float)System.Math.Cos(angle));
+            return new Vec2((float)Math.Sin(angle), (float)Math.Cos(angle));
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace IsoEngine
         /// <returns>The distance between the two points.</returns>
         public static float GetDistance(Vec2 a, Vec2 b)
         {
-            return (float)System.Math.Sqrt(System.Math.Pow(b.Y - a.Y, 2) + System.Math.Pow(b.X - a.X, 2));
+            return (float)Math.Sqrt(Math.Pow(b.Y - a.Y, 2) + Math.Pow(b.X - a.X, 2));
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace IsoEngine
         public static float RandomFloat()
         {
             double mantissa = Random.NextDouble() * 2.0 - 1.0;
-            return (float)System.Math.Abs(mantissa);
+            return (float)Math.Abs(mantissa);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace IsoEngine
         public static float RandomFloat(float min, float max)
         {
             double mantissa = Random.NextDouble() * 2.0 - 1.0;
-            float final = (float)System.Math.Abs(mantissa) * (max - min) + min;
+            float final = (float)Math.Abs(mantissa) * (max - min) + min;
             return final;
         }
 

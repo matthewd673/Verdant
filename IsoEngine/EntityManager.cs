@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IsoEngine.Physics;
 
 namespace IsoEngine
 {
@@ -195,10 +196,10 @@ namespace IsoEngine
             List<Entity> boundedEntities = new List<Entity>();
 
             //calculate cell bounds
-            int minCellX = (int)System.Math.Floor(x / (double)CellSize);
-            int minCellY = (int)System.Math.Floor(y / (double)CellSize);
-            int maxCellX = (int)System.Math.Floor((x + w) / (double)CellSize);
-            int maxCellY = (int)System.Math.Floor((y + h) / (double)CellSize);
+            int minCellX = (int)Math.Floor(x / (double)CellSize);
+            int minCellY = (int)Math.Floor(y / (double)CellSize);
+            int maxCellX = (int)Math.Floor((x + w) / (double)CellSize);
+            int maxCellY = (int)Math.Floor((y + h) / (double)CellSize);
 
             //loop through all cells in bounds
             for (int i = minCellX; i <= maxCellX; i++)
@@ -236,10 +237,10 @@ namespace IsoEngine
             List<TEntity> boundedEntities = new List<TEntity>();
 
             //calculate cell bounds
-            int minCellX = (int)System.Math.Floor(x / (double)CellSize);
-            int minCellY = (int)System.Math.Floor(y / (double)CellSize);
-            int maxCellX = (int)System.Math.Floor((x + w) / (double)CellSize);
-            int maxCellY = (int)System.Math.Floor((y + h) / (double)CellSize);
+            int minCellX = (int)Math.Floor(x / (double)CellSize);
+            int minCellY = (int)Math.Floor(y / (double)CellSize);
+            int maxCellX = (int)Math.Floor((x + w) / (double)CellSize);
+            int maxCellY = (int)Math.Floor((y + h) / (double)CellSize);
 
             //loop through all cells in bounds
             for (int i = minCellX; i <= maxCellX; i++)
@@ -288,35 +289,35 @@ namespace IsoEngine
                 if (b == e) //don't include self
                     continue;
 
-                foreach (Collider c in b.Colliders)
-                {
-                    //filter out triggers/solids if necessary
-                    if (onlySolids && c.Trigger)
-                        continue;
-                    if (onlyTriggers && !c.Trigger)
-                        continue;
+                //foreach (Collider c in b.Colliders)
+                //{
+                //    //filter out triggers/solids if necessary
+                //    if (onlySolids && c.Trigger)
+                //        continue;
+                //    if (onlyTriggers && !c.Trigger)
+                //        continue;
 
-                    //check against only one collider, if specified
-                    if (specificCollider != null)
-                    {
-                        if (Math.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
-                        {
-                            colliding.Add(b);
-                            break; //don't bother with any more of this entity's colliders
-                        }
-                    }
-                    else //no collider specified
-                    {
-                        foreach (Collider a in e.Colliders)
-                        {
-                            if (Math.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
-                            {
-                                colliding.Add(b);
-                                break;
-                            }
-                        }
-                    }
-                }
+                //    //check against only one collider, if specified
+                //    if (specificCollider != null)
+                //    {
+                //        if (GameMath.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
+                //        {
+                //            colliding.Add(b);
+                //            break; //don't bother with any more of this entity's colliders
+                //        }
+                //    }
+                //    else //no collider specified
+                //    {
+                //        foreach (Collider a in e.Colliders)
+                //        {
+                //            if (GameMath.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
+                //            {
+                //                colliding.Add(b);
+                //                break;
+                //            }
+                //        }
+                //    }
+                //}
             }
 
             return colliding;
@@ -352,7 +353,7 @@ namespace IsoEngine
                     //check against only one collider, if specified
                     if (specificCollider != null)
                     {
-                        if (Math.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
+                        if (GameMath.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
                         {
                             colliding.Add(b);
                             break; //don't bother with any more of this entity's colliders
@@ -362,7 +363,7 @@ namespace IsoEngine
                     {
                         foreach (Collider a in e.Colliders)
                         {
-                            if (Math.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
+                            if (GameMath.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
                             {
                                 colliding.Add(b);
                                 break;
@@ -407,7 +408,7 @@ namespace IsoEngine
                     if (onlyTriggers && !c.Trigger)
                         continue;
 
-                    if (Math.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
+                    if (GameMath.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
                     {
                         colliding.Add(b);
                         break;
@@ -451,7 +452,7 @@ namespace IsoEngine
                     if (onlyTriggers && !c.Trigger)
                         continue;
 
-                    if (Math.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
+                    if (GameMath.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
                     {
                         colliding.Add(b);
                         break;
@@ -480,6 +481,51 @@ namespace IsoEngine
             }
         }
 
+        protected void PhysicsLoop(List<Entity> updateList)
+        {
+
+            List<CollisionData> collisions = new List<CollisionData>();
+
+            foreach (Entity e in updateList)
+            {
+                //TODO: accept input
+                e.Move();
+            }
+
+            int i = 0;
+            foreach (Entity e in updateList)
+            {
+                for (int j = i + 1; j < updateList.Count; j++)
+                {
+                    PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+
+                    for (int k = 0; k < updateList[i].Components.Length; k++)
+                    {
+                        for (int l = 0; l < updateList[j].Components.Length; l++)
+                        {
+                            PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(updateList[i].Components[k], updateList[j].Components[l]);
+                            if (currentSAT.Penetration > bestSAT.Penetration)
+                            {
+                                bestSAT = currentSAT;
+                            }
+                        }
+                    }
+
+                    if (bestSAT.Penetration != float.MinValue)
+                        collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+
+                }
+
+                i++;
+            }
+
+            foreach (CollisionData c in collisions)
+            {
+                c.PenetrationResolution();
+                c.CollisionResolution();
+            }
+        }
+
         /// <summary>
         /// Update all Entities in a given list. Called by the Update function (which provides an appropriate list).
         /// </summary>
@@ -488,6 +534,8 @@ namespace IsoEngine
         {
             EntityUpdateCount = 0;
 
+            PhysicsLoop(updateList);
+
             //update all
             foreach (Entity e in updateList)
             {
@@ -495,7 +543,7 @@ namespace IsoEngine
                 EntityUpdateCount++; //keep track
 
                 //remove marked entities
-                if (e.IsForRemoval())
+                if (e.ForRemoval)
                 {
                     RemoveEntity(e);
                     continue; //don't bother with anything else if being removed
@@ -511,7 +559,7 @@ namespace IsoEngine
         /// Update the EntityManager.
         /// </summary>
         /// <param name="updateMode">The UpdateMode to use.</param>
-        public void Update(UpdateMode updateMode = UpdateMode.NearCamera)
+        public void Update(UpdateMode updateMode = UpdateMode.All)
         {
             switch (updateMode)
             {

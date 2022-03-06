@@ -206,8 +206,8 @@ namespace IsoEngine
         /// </summary>
         void ApplyShake()
         {
-            offsetX = shakeStrength * Math.RandomFloat();
-            offsetY = shakeStrength * Math.RandomFloat();
+            offsetX = shakeStrength * GameMath.RandomFloat();
+            offsetY = shakeStrength * GameMath.RandomFloat();
         }
 
         /// <summary>

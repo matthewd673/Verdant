@@ -22,6 +22,8 @@ namespace IsoEngine
 
         static IEnumerable<Entity> sortedQueue;
 
+        static GraphicsDevice graphicsDevice;
+
         /// <summary>
         /// Get a Texture2D containing a single white pixel.
         /// </summary>
@@ -42,6 +44,7 @@ namespace IsoEngine
         /// <param name="scale">The render scale.</param>
         public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
         {
+            Renderer.graphicsDevice = graphicsDevice;
             Camera = new Camera(new Vec2(), screenWidth, screenHeight);
             Scale = scale;
 
@@ -112,6 +115,50 @@ namespace IsoEngine
         public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeColliders = false)
         {
             Render(spriteBatch, scene.EntityManager, scene.UIManager, visualizeColliders: visualizeColliders);
+        }
+
+        public static void DrawLine(SpriteBatch spriteBatch, Vec2 start, Vec2 end, Color color)
+        {
+            Vec2 diff = end - start;
+            float angle = (float)Math.Atan2(diff.Y, diff.X);
+
+            Vec2 worldStart = Camera.WorldToScreenPos(start);
+            Vec2 worldEnd = Camera.WorldToScreenPos(end);
+
+            spriteBatch.Draw(GetPixel(),
+                new Rectangle((int)worldStart.X, (int)worldStart.Y, (int)diff.Magnitude(), 1),
+                null,
+                color,
+                angle,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                0
+                );
+        }
+
+        public static Sprite GenerateCircleTexture(float radius, Color c)
+        {
+            int diam = (int)(radius * 2);
+            int rSqr = (int)(radius * radius);
+
+            Texture2D circleTex = new Texture2D(graphicsDevice, diam, diam);
+            Color[] colorData = new Color[diam * diam];
+
+            for (int i = 0; i < diam; i++)
+            {
+                for (int j = 0; j < diam; j++)
+                {
+                    int colorIndex = i * diam + j;
+                    float distFromCenter = (new Vec2(i, j) - new Vec2(radius, radius)).Magnitude();
+                    if (Math.Abs(distFromCenter) <= radius)
+                        colorData[colorIndex] = Color.White;
+                    else
+                        colorData[colorIndex] = Color.Transparent;
+                }
+            }
+
+            circleTex.SetData(colorData);
+            return new Sprite(circleTex);
         }
 
     }
