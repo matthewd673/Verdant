@@ -74,8 +74,6 @@ namespace IsoEngine
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             RotationOrigin = new Vec2Int(Width / 2, Height / 2);
-
-            InitializeBody();
         }
 
         protected virtual void InitializeBody() { }

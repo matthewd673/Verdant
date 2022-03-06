@@ -15,7 +15,7 @@ namespace IsoEngine.Physics
             Vec2 recVec2 = circle1.Position + ((
                 circle2.Position - circle1.Position).Unit().Normal() * r);
 
-            Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * r, 2 * r);
+            Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * r);
 
             Mass = m;
             Inertia = Mass * (

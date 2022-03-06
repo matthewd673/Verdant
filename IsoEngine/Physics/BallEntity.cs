@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace IsoEngine.Physics
@@ -14,14 +16,12 @@ namespace IsoEngine.Physics
         public BallEntity(RenderObject sprite, Vec2 position, float r, float mass)
             : base(sprite, position, (int)(r * 2), (int)(r * 2))
         {
-
-            //overwrite sprite
-            Sprite = Renderer.GenerateCircleTexture(r, Microsoft.Xna.Framework.Color.Yellow);
-
             _bodyX = position.X;
             _bodyY = position.Y;
             _bodyR = r;
             _bodyMass = mass;
+
+            InitializeBody();
         }
 
         protected override void InitializeBody()
@@ -38,12 +38,8 @@ namespace IsoEngine.Physics
             ((Circle)Components[0]).Position += Velocity;
         }
 
-        public override void Update()
+        public void SimpleInput()
         {
-
-            Speed = 0.5f; //temp
-            Friction = 0.05f;
-
             bool up = InputHandler.KeyboardState.IsKeyDown(Keys.W);
             bool down = InputHandler.KeyboardState.IsKeyDown(Keys.S);
             bool left = InputHandler.KeyboardState.IsKeyDown(Keys.A);
@@ -55,8 +51,30 @@ namespace IsoEngine.Physics
             if (down) Acceleration.Y = Speed;
             if (!left && !right) Acceleration.X = 0;
             if (!up && !down) Acceleration.Y = 0;
+        }
+
+        public override void Update()
+        {
+
+            //TODO: none of this input should be default behavior
+            //its just easier to test for right now
+            Speed = 0.5f; //temp
+            Friction = 0.05f;
+
+            SimpleInput();
 
             base.Update();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Sprite circleTexture = Renderer.GenerateCircleTexture(_bodyR, Color.Red);
+
+            spriteBatch.Draw(
+                circleTexture.Get(),
+                Renderer.Camera.GetRenderBounds(Position - new Vec2(_bodyR, _bodyR), circleTexture.Width, circleTexture.Height),
+                Color.White
+                );
         }
 
     }

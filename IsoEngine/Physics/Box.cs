@@ -7,7 +7,7 @@ namespace IsoEngine.Physics
 
         public Box(float x1, float y1, float x2, float y2, float w, float h, float m) : base()
         {
-            Rectangle rectangle1 = new Rectangle(x1, y1, x2, y2, w, h);
+            Rectangle rectangle1 = new Rectangle(x1, y1, x2, y2, w);
 
             Mass = m;
             Inertia = Mass * (

@@ -13,7 +13,7 @@ namespace IsoEngine.Physics
         public float Angle { get; set; }
         Matrix rotMat;
 
-        public Rectangle(float x1, float y1, float x2, float y2, float w, float h)
+        public Rectangle(float x1, float y1, float x2, float y2, float w)
         {
             Vertices = new Vec2[4];
             Vertices[0] = new Vec2(x1, y1);
@@ -21,8 +21,8 @@ namespace IsoEngine.Physics
 
             Dir = (Vertices[1] - Vertices[0]).Unit();
             refDir = Dir.Copy();
-            //Length = (Vertices[1] - Vertices[0]).Magnitude();
-            Length = h;
+            Length = (Vertices[1] - Vertices[0]).Magnitude();
+            //Length = h;
 
             Width = w;
 

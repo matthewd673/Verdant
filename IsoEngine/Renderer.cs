@@ -136,7 +136,7 @@ namespace IsoEngine
                 );
         }
 
-        public static Sprite GenerateCircleTexture(float radius, Color c)
+        public static Sprite GenerateCircleTexture(float radius, Color color)
         {
             int diam = (int)(radius * 2);
             int rSqr = (int)(radius * radius);
@@ -151,7 +151,7 @@ namespace IsoEngine
                     int colorIndex = i * diam + j;
                     float distFromCenter = (new Vec2(i, j) - new Vec2(radius, radius)).Magnitude();
                     if (Math.Abs(distFromCenter) <= radius)
-                        colorData[colorIndex] = Color.White;
+                        colorData[colorIndex] = color;
                     else
                         colorData[colorIndex] = Color.Transparent;
                 }

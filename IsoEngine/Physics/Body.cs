@@ -12,7 +12,7 @@ namespace IsoEngine.Physics
             {
                 if (Components.Length == 1)
                     return Components[0].Position;
-                return null;
+                return new Vec2(0, 0); //TODO: very very temp
             }
             set
             {
