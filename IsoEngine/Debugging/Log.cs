@@ -22,6 +22,7 @@ namespace IsoEngine.Debugging
         public static void WriteLine(string message)
         {
 
+#if DEBUG
             if (connectionFailed) { return; } //only try to connect once
 
             if (client == null)
@@ -44,6 +45,8 @@ namespace IsoEngine.Debugging
 
             byte[] messageBytes = Encoding.ASCII.GetBytes(message);
             client.Send(messageBytes, messageBytes.Length);
+#endif
+
         }
 
     }

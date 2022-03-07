@@ -22,7 +22,7 @@ namespace IsoEngine.Physics
 
         public void PenetrationResolution()
         {
-            var penResolution = normal * pen / (a.InvMass + b.InvMass);
+            Vec2 penResolution = normal * pen / (a.InvMass + b.InvMass);
             a.Components[0].Position = a.Components[0].Position + (penResolution * a.InvMass);
             b.Components[0].Position = b.Components[0].Position + (penResolution * -b.InvMass);
         }
@@ -43,7 +43,7 @@ namespace IsoEngine.Physics
             float impAug2 = Vec2.Cross(colArm2, normal);
             impAug2 = impAug2 * b.InvInertia * impAug2;
 
-            Vec2 relVel = a.Velocity - b.Velocity;
+            Vec2 relVel = closVel1 - closVel2;
             float sepVel = Vec2.Dot(relVel, normal);
             float newSepVel = -sepVel * Math.Min(a.Elasticity, b.Elasticity);
             float vSepDiff = newSepVel - sepVel;

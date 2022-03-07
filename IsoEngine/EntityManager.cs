@@ -491,38 +491,41 @@ namespace IsoEngine
                 e.Update(); //move & accept input
             }
 
-            //int i = 0;
-            //foreach (Entity e in updateList)
-            //{
-            //    for (int j = i + 1; j < updateList.Count; j++)
-            //    {
-            //        PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+            int i = 0;
+            foreach (Entity e in updateList)
+            {
+                for (int j = i + 1; j < updateList.Count; j++)
+                {
+                    PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
 
-            //        for (int k = 0; k < updateList[i].Components.Length; k++)
-            //        {
-            //            for (int l = 0; l < updateList[j].Components.Length; l++)
-            //            {
-            //                PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(updateList[i].Components[k], updateList[j].Components[l]);
-            //                if (currentSAT.Penetration > bestSAT.Penetration)
-            //                {
-            //                    bestSAT = currentSAT;
-            //                }
-            //            }
-            //        }
+                    for (int k = 0; k < updateList[i].Components.Length; k++)
+                    {
+                        for (int l = 0; l < updateList[j].Components.Length; l++)
+                        {
+                            PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(updateList[i].Components[k], updateList[j].Components[l]);
+                            if (currentSAT.Penetration > bestSAT.Penetration)
+                            {
+                                bestSAT = currentSAT;
+                            }
+                        }
+                    }
 
-            //        if (bestSAT.Penetration != float.MinValue)
-            //            collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+                    if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
+                        collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
 
-            //    }
+                }
 
-            //    i++;
-            //}
+                i++;
+            }
 
             foreach (CollisionData c in collisions)
             {
                 c.PenetrationResolution();
                 c.CollisionResolution();
             }
+
+            //Debugging.Log.WriteLine("Collisions: " + collisions.Count);
+
         }
 
         /// <summary>

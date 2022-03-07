@@ -22,7 +22,6 @@ namespace IsoEngine.Physics
             Dir = (Vertices[1] - Vertices[0]).Unit();
             refDir = Dir.Copy();
             Length = (Vertices[1] - Vertices[0]).Magnitude();
-            //Length = h;
 
             Width = w;
 
@@ -38,8 +37,6 @@ namespace IsoEngine.Physics
         {
             rotMat = PhysicsMath.CalculateRotMatrix(Angle);
             Dir = (rotMat * refDir).Unit();
-
-            Debugging.Log.WriteLine(refDir + "\t" + Dir);
 
             Vertices[0] = Position + (Dir * -Length / 2) + (Dir.Normal() * Width / 2);
             Vertices[1] = Position + (Dir * -Length / 2) + (Dir.Normal() * -Width / 2);

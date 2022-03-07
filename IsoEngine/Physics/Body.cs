@@ -10,9 +10,9 @@ namespace IsoEngine.Physics
         {
             get
             {
-                if (Components.Length == 1)
+                if (Components.Length > 0) //the important one is always at index 0
                     return Components[0].Position;
-                return new Vec2(0, 0); //TODO: very very temp
+                return null;
             }
             set
             {
@@ -61,7 +61,7 @@ namespace IsoEngine.Physics
         public float AngleSpeed { get; set; }
         public float AngleFriction { get; set; }
 
-        public float Elasticity { get; set; }
+        public float Elasticity { get; set; } = 1;
 
         public Body() { }
         

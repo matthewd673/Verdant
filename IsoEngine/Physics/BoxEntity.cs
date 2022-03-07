@@ -32,15 +32,23 @@ namespace IsoEngine.Physics
             float y1 = _bodyY;
             float x2 = x1;
             float y2 = y1 + _bodyH;
+            float r = _bodyW / 2;
 
-            Rectangle rectangle1 = new Rectangle(x1, y1, x2, y2, _bodyW);
+            Vec2 top = new Vec2(x1, y1);
+            Vec2 bottom = new Vec2(x2, y2);
+
+            Vec2 recVec1 = bottom + (bottom - top).Unit().Normal() * r;
+            Vec2 recVec2 = top + (bottom - top).Unit().Normal() * r;
+
+            Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * r);
+            rectangle1.CalculateVertices();
 
             Components = new Shape[] { rectangle1 };
-
             Mass = _bodyM;
+
             Inertia = Mass * (
-                (float) Math.Pow(rectangle1.Width, 2) +
-                (float) Math.Pow(rectangle1.Length, 2)
+                (float)Math.Pow(2 * rectangle1.Width, 2) +
+                (float)Math.Pow(_bodyH + 2 * rectangle1.Width, 2)
                 ) / 12;
         }
 
@@ -68,7 +76,7 @@ namespace IsoEngine.Physics
 
             Components[0].Position += Velocity;
 
-            AngleSpeed *= AngleFriction;
+            AngleSpeed *= 1 - AngleFriction;
             ((Rectangle)Components[0]).Angle += AngleSpeed;
             ((Rectangle)Components[0]).CalculateVertices();
         }
@@ -80,7 +88,7 @@ namespace IsoEngine.Physics
             Friction = 0.05f;
             AngleFriction = 0.1f;
 
-            SimpleInput();
+            //SimpleInput();
 
             base.Update();
         }
@@ -89,6 +97,10 @@ namespace IsoEngine.Physics
         {
             Rectangle rectangle1 = (Rectangle)Components[0];
 
+            spriteBatch.Draw(Renderer.GetPixel(), new Vector2((_bodyX + _bodyW / 2), _bodyY), Color.Red);
+            spriteBatch.Draw(Renderer.GetPixel(), new Vector2((_bodyX + _bodyW / 2), _bodyY + _bodyH), Color.Red);
+
+            spriteBatch.Draw(Renderer.GetPixel(), new Vector2(rectangle1.Position.X, rectangle1.Position.Y), Color.White);
             Renderer.DrawLine(spriteBatch, rectangle1.Vertices[0], rectangle1.Vertices[1], Color.Blue);
             Renderer.DrawLine(spriteBatch, rectangle1.Vertices[1], rectangle1.Vertices[2], Color.Blue);
             Renderer.DrawLine(spriteBatch, rectangle1.Vertices[2], rectangle1.Vertices[3], Color.Blue);

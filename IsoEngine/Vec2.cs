@@ -58,7 +58,7 @@ namespace IsoEngine
 
         public float Magnitude()
         {
-            return (float) Math.Sqrt(X * X + Y * Y);
+            return (float) Math.Sqrt(X*X + Y*Y);
         }
 
         public Vec2 Unit()
@@ -72,10 +72,11 @@ namespace IsoEngine
         public Vec2 Normal()
         {
             //a faster way to achieve: return new Vec2(-Y, X).Unit();
-            float mag = Magnitude();
-            if (mag == 0)
-                return new Vec2(0, 0);
-            return new Vec2(-Y / mag, X / mag);
+            //float mag = Magnitude();
+            //if (mag == 0)
+            //    return new Vec2(0, 0);
+            //return new Vec2(-Y / mag, X / mag);
+            return new Vec2(-Y, X).Unit();
         }
 
         public static float Dot(Vec2 a, Vec2 b)

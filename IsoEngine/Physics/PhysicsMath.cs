@@ -8,7 +8,7 @@ namespace IsoEngine.Physics
 
         internal static ShapeProjection ProjectShapeOntoAxis(Vec2 axis, Shape shape)
         {
-            SetVerticesAlongAxis(axis, shape);
+            SetCircleVerticesAlongAxis(axis, shape);
 
             float min = Vec2.Dot(axis, shape.Vertices[0]);
             float max = min;
@@ -49,12 +49,13 @@ namespace IsoEngine.Physics
             return 2; //rectangle
         }
 
-        internal static void SetVerticesAlongAxis(Vec2 axis, Shape shape)
+        internal static void SetCircleVerticesAlongAxis(Vec2 axis, Shape shape)
         {
             if (shape.GetType() == typeof(Circle))
             {
                 Circle circle = (Circle)shape;
                 circle.Vertices[0] = circle.Position + axis.Unit() * -circle.Radius;
+                circle.Vertices[1] = circle.Position + axis.Unit() * circle.Radius;
             }
         }
 
@@ -82,6 +83,7 @@ namespace IsoEngine.Physics
             if (a.GetType() == typeof(Circle) && b.GetType() == typeof(Circle))
             {
                 axes.Add((b.Position - a.Position).Unit());
+
                 return axes.ToArray();
             }
             if (a.GetType() == typeof(Circle))

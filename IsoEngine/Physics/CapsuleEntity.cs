@@ -33,20 +33,13 @@ namespace IsoEngine.Physics
             float x2 = x1;
             float y2 = y1 + _bodyH;
 
-            Debugging.Log.WriteLine("width, height");
-            Debugging.Log.WriteLine(Width + ", " + Height);
-
             Circle circle1 =  new Circle(x1, y1, _bodyR);
             Circle circle2 = new Circle(x2, y2, _bodyR);
             Vec2 recVec1 = circle2.Position + (circle2.Position - circle1.Position).Unit().Normal() * _bodyR;
             Vec2 recVec2 = circle1.Position + (circle2.Position - circle1.Position).Unit().Normal() * _bodyR;
 
-            Debugging.Log.WriteLine("x1,y1 x2,y2: ");
-            Debugging.Log.WriteLine(x1 + "," + y1 + " " + x2 + "," + y2);
-            Debugging.Log.WriteLine("circle1 & 2 pos: ");
-            Debugging.Log.WriteLine(circle1.Position + " , " + circle2.Position);
-
             Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * _bodyR);
+            rectangle1.CalculateVertices();
 
             Components = new Shape[] { rectangle1, circle1, circle2 };
             Mass = _bodyM;
@@ -95,7 +88,7 @@ namespace IsoEngine.Physics
             Friction = 0.05f;
             AngleFriction = 0.1f;
 
-            SimpleInput();
+            //SimpleInput();
 
             base.Update();
         }
@@ -105,8 +98,8 @@ namespace IsoEngine.Physics
             Sprite circleTexture = Renderer.GenerateCircleTexture(_bodyR, Color.Green);
 
             Rectangle rectangle1 = (Rectangle)Components[0];
-            Circle circle1 = (Circle) Components[1];
-            Circle circle2 = (Circle) Components[2];
+            Circle circle1 = (Circle)Components[1];
+            Circle circle2 = (Circle)Components[2];
 
 
             spriteBatch.Draw(
