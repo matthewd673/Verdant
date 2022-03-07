@@ -5,7 +5,7 @@ namespace IsoEngine.Physics
     public class Body
     {
 
-        public Shape[] Components { get; set; }
+        public Shape[] Components { get; set; } = new Shape[0];
         public Vec2 Position
         {
             get
@@ -16,8 +16,6 @@ namespace IsoEngine.Physics
             }
             set
             {
-                if (Components == null)
-                    return;
                 if (Components.Length == 1)
                     Components[0].Position = value;
             }
@@ -63,13 +61,18 @@ namespace IsoEngine.Physics
 
         public float Elasticity { get; set; } = 1;
 
+        public bool Trigger { get; set; }
+        public Entity BodyParent { get; protected set; }
+
         public Body() { }
-        
+
         public virtual void Move()
         {
             Acceleration = Acceleration.Unit() * Speed;
             Velocity += Acceleration;
             Velocity *= 1 - Friction;
+
+            Components[0].Position += Velocity;
         }
 
     }

@@ -22,6 +22,8 @@ namespace IsoEngine
         public int EntityCount { get; protected set; }
         public int EntityUpdateCount { get; protected set; }
 
+        static List<CollisionData> collisions = new List<CollisionData>();
+
         /// <summary>
         /// Initialize a new EntityManager.
         /// </summary>
@@ -279,45 +281,42 @@ namespace IsoEngine
         /// <param name="onlyTriggers">If true, only Colliders marked as triggers will be checked.</param>
         /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
         /// <returns>A list containing all colliding Entities.</returns>
-        public List<Entity> GetAllColliding(Entity e, Collider specificCollider = null, bool onlyTriggers = false, bool onlySolids = false)
+        public List<Entity> GetAllColliding(Entity e, bool onlyTriggers = false, bool onlySolids = false)
         {
             List<Entity> colliding = new List<Entity>();
 
-            foreach (Entity b in GetNearEntities(e)) //slow, but good enough for now
+            foreach (CollisionData c in collisions)
             {
+                if (c.a == e)
+                {
+                    if (onlyTriggers && c.b.Trigger)
+                    {
+                        colliding.Add(c.b.BodyParent);
+                        continue;
+                    }
+                    else if (onlySolids && !c.b.Trigger)
+                    {
+                        colliding.Add(c.b.BodyParent);
+                        continue;
+                    }
+                    
+                    colliding.Add(c.b.BodyParent);
+                }
+                else if (c.b == e)
+                {
+                    if (onlyTriggers && c.a.Trigger)
+                    {
+                        colliding.Add(c.a.BodyParent);
+                        continue;
+                    }
+                    else if (onlySolids && !c.a.Trigger)
+                    {
+                        colliding.Add(c.a.BodyParent);
+                        continue;
+                    }
 
-                if (b == e) //don't include self
-                    continue;
-
-                //foreach (Collider c in b.Colliders)
-                //{
-                //    //filter out triggers/solids if necessary
-                //    if (onlySolids && c.Trigger)
-                //        continue;
-                //    if (onlyTriggers && !c.Trigger)
-                //        continue;
-
-                //    //check against only one collider, if specified
-                //    if (specificCollider != null)
-                //    {
-                //        if (GameMath.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
-                //        {
-                //            colliding.Add(b);
-                //            break; //don't bother with any more of this entity's colliders
-                //        }
-                //    }
-                //    else //no collider specified
-                //    {
-                //        foreach (Collider a in e.Colliders)
-                //        {
-                //            if (GameMath.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
-                //            {
-                //                colliding.Add(b);
-                //                break;
-                //            }
-                //        }
-                //    }
-                //}
+                    colliding.Add(c.a.BodyParent);
+                }
             }
 
             return colliding;
@@ -333,43 +332,47 @@ namespace IsoEngine
         /// <param name="onlyTriggers">If true, only Colliders marked as triggers will be checked.</param>
         /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
         /// <returns>A list containing all colliding Entities.</returns>
-        public List<TEntity> GetAllCollidingOfType<TEntity>(Entity e, Collider specificCollider = null, bool onlyTriggers = false, bool onlySolids = false) where TEntity : Entity //largely copied from GetAllColliding
+        public List<TEntity> GetAllCollidingOfType<TEntity>(Entity e, bool onlyTriggers = false, bool onlySolids = false) where TEntity : Entity //largely copied from GetAllColliding
         {
             List<TEntity> colliding = new List<TEntity>();
 
-            foreach (TEntity b in GetNearEntitiesOfType<TEntity>(e))
+            foreach (CollisionData c in collisions)
             {
-                if (b == (TEntity)e) //skip self
-                    continue;
-
-                foreach (Collider c in b.Colliders)
+                if (c.a == e)
                 {
-                    //filter out triggers/solids if necessary
-                    if (onlySolids && c.Trigger)
-                        continue;
-                    if (onlyTriggers && !c.Trigger)
+                    if (c.b.GetType() != typeof(TEntity))
                         continue;
 
-                    //check against only one collider, if specified
-                    if (specificCollider != null)
+                    if (onlyTriggers && c.b.Trigger)
                     {
-                        if (GameMath.CheckRectIntersection(specificCollider.Position, specificCollider.Width, specificCollider.Height, c.Position, c.Width, c.Height))
-                        {
-                            colliding.Add(b);
-                            break; //don't bother with any more of this entity's colliders
-                        }
+                        colliding.Add((TEntity) c.b.BodyParent);
+                        continue;
                     }
-                    else //no collider specified
+                    else if (onlySolids && !c.b.Trigger)
                     {
-                        foreach (Collider a in e.Colliders)
-                        {
-                            if (GameMath.CheckRectIntersection(a.Position, a.Width, a.Height, c.Position, c.Width, c.Height))
-                            {
-                                colliding.Add(b);
-                                break;
-                            }
-                        }
+                        colliding.Add((TEntity) c.b.BodyParent);
+                        continue;
                     }
+
+                    colliding.Add((TEntity) c.b.BodyParent);
+                }
+                else if (c.b == e)
+                {
+                    if (c.a.GetType() != typeof(TEntity))
+                        continue;
+
+                    if (onlyTriggers && c.a.Trigger)
+                    {
+                        colliding.Add((TEntity) c.a.BodyParent);
+                        continue;
+                    }
+                    else if (onlySolids && !c.a.Trigger)
+                    {
+                        colliding.Add((TEntity) c.a.BodyParent);
+                        continue;
+                    }
+
+                    colliding.Add((TEntity) c.a.BodyParent);
                 }
             }
 
@@ -391,29 +394,30 @@ namespace IsoEngine
         {
             List<Entity> colliding = new List<Entity>();
 
-            foreach (Entity b in GetEntitiesInBounds(x, y, w, h)) //slow, but good enough for now
+            List<Entity> searchList = GetEntitiesInBounds(x, y, w, h);
+            Rectangle bounds = new Rectangle(x, y, x + w, x + h, w);
+
+            foreach (Entity e in searchList)
             {
 
-                if (ignoreList != null)
+                if (onlyTriggers && !e.Trigger)
+                    continue;
+                if (onlySolids && e.Trigger)
+                    continue;
+                if (ignoreList != null && ignoreList.Contains(e))
+                    continue;
+
+                PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+
+                for (int k = 0; k < e.Components.Length; k++)
                 {
-                    if (ignoreList.Contains(b))
-                        continue;
+                    PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(bounds, e.Components[k]);
+                    if (currentSAT.Penetration > bestSAT.Penetration)
+                        bestSAT = currentSAT;
                 }
 
-                foreach (Collider c in b.Colliders)
-                {
-                    //filter out triggers/solids if necessary
-                    if (onlySolids && c.Trigger)
-                        continue;
-                    if (onlyTriggers && !c.Trigger)
-                        continue;
-
-                    if (GameMath.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
-                    {
-                        colliding.Add(b);
-                        break;
-                    }
-                }
+                if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
+                    colliding.Add(e);
             }
 
             return colliding;
@@ -435,29 +439,30 @@ namespace IsoEngine
         {
             List<TEntity> colliding = new List<TEntity>();
 
-            foreach (TEntity b in GetEntitiesInBoundsOfType<TEntity>(x, y, w, h))
+            List<TEntity> searchList = GetEntitiesInBoundsOfType<TEntity>(x, y, w, h);
+            Rectangle bounds = new Rectangle(x, y, x + w, x + h, w);
+
+            foreach (TEntity e in searchList)
             {
 
-                if (ignoreList != null)
+                if (onlyTriggers && !e.Trigger)
+                    continue;
+                if (onlySolids && e.Trigger)
+                    continue;
+                if (ignoreList != null && ignoreList.Contains(e))
+                    continue;
+
+                PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+
+                for (int k = 0; k < e.Components.Length; k++)
                 {
-                    if (ignoreList.Contains(b))
-                        continue;
+                    PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(bounds, e.Components[k]);
+                    if (currentSAT.Penetration > bestSAT.Penetration)
+                        bestSAT = currentSAT;
                 }
 
-                foreach (Collider c in b.Colliders)
-                {
-                    //filter out triggers/solids if necessary
-                    if (onlySolids && c.Trigger)
-                        continue;
-                    if (onlyTriggers && !c.Trigger)
-                        continue;
-
-                    if (GameMath.CheckRectIntersection(x, y, w, h, c.Position.X, c.Position.Y, c.Width, c.Height))
-                    {
-                        colliding.Add(b);
-                        break;
-                    }
-                }
+                if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
+                    colliding.Add(e);
             }
 
             return colliding;
@@ -484,7 +489,7 @@ namespace IsoEngine
         protected void PhysicsLoop(List<Entity> updateList)
         {
 
-            List<CollisionData> collisions = new List<CollisionData>();
+            collisions.Clear();
 
             foreach (Entity e in updateList)
             {
@@ -520,11 +525,12 @@ namespace IsoEngine
 
             foreach (CollisionData c in collisions)
             {
+                if (c.a.Trigger || c.b.Trigger) //skip triggers
+                    continue;
+
                 c.PenetrationResolution();
                 c.CollisionResolution();
             }
-
-            //Debugging.Log.WriteLine("Collisions: " + collisions.Count);
 
         }
 

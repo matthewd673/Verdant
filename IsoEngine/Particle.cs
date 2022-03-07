@@ -19,7 +19,6 @@ namespace IsoEngine
         public Particle(RenderObject sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
         {
             this.lifetime = lifetime;
-            HasPhysics = true;
         }
 
         /// <summary>

@@ -5,8 +5,8 @@ namespace IsoEngine.Physics
     internal class CollisionData
     {
 
-        Body a;
-        Body b;
+        internal Body a;
+        internal Body b;
         Vec2 normal;
         float pen;
         Vec2 cp;

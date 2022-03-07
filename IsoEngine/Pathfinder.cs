@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IsoEngine.Physics;
 
 namespace IsoEngine
 {
@@ -38,7 +39,7 @@ namespace IsoEngine
         /// <param name="walkerCollider">The specific Collider on the walker Entity to check against.</param>
         /// <param name="targetCollider">The specific Collider on the target Entity to check against.</param>
         /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
-        public List<Vec2> UpdatePath(Entity walker, Entity target, Collider walkerCollider, Collider targetCollider)
+        public List<Vec2> UpdatePath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider)
         {
             //ensure that the target is within the appropriate range before finding a path
             if (GameMath.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
@@ -59,11 +60,11 @@ namespace IsoEngine
         /// Find a path between the origin and the target goal.
         /// </summary>
         /// <returns>A list of all PathCells in the path (closest point to target at index 0).</returns>
-        List<PathCell> FindPath(Collider walkerCollider, Collider targetCollider)
+        List<PathCell> FindPath(Shape walkerCollider, Shape targetCollider)
         {
             //define start & goal
-            Collider walkerC = walkerCollider;
-            Collider targetC = targetCollider;
+            Shape walkerC = walkerCollider;
+            Shape targetC = targetCollider;
             PathCell start = new PathCell((int)(walkerC.Position.X / cellW), (int)(walkerC.Position.Y / cellH));
             PathCell goal = new PathCell((int)(targetC.Position.X / cellW), (int)(targetC.Position.Y / cellH));
 
@@ -216,22 +217,44 @@ namespace IsoEngine
             List<T> obstacles = entityManager.GetAllEntitiesOfType<T>();
 
             //create a list of colliders for all obstacles
-            List<Collider> obsColliders = new List<Collider>();
+            List<Shape> obsColliders = new List<Shape>();
 
             int maxX = 0;
             int maxY = 0;
 
             foreach (Entity e in obstacles) //we need data that only Tiles have
             {
-                foreach (Collider c in e.Colliders)
+                foreach (Shape s in e.Components)
                 {
-                    obsColliders.Add(c);
+                    obsColliders.Add(s);
 
-                    if (c.Position.X + c.Width > maxX)
-                        maxX = (int)c.Position.X + c.Width;
+                    float x = s.Position.X;
+                    float y = s.Position.Y;
+                    float width = 0;
+                    float height = 0;
+                    
+                    //lines won't work (because pathfinding off of lines makes no sense)
+                    if (s.GetType() == typeof(Rectangle))
+                    {
+                        width = ((Rectangle)s).Width;
+                        height = ((Rectangle)s).Length;
+                    }
+                    if (s.GetType() == typeof(Circle))
+                    {
+                        float r = ((Circle)s).Radius;
 
-                    if (c.Position.Y + c.Height > maxY)
-                        maxY = (int)c.Position.Y + c.Height;
+                        x -= r; //because circle's origin is at the center
+                        y -= r;
+                        width = ((Circle)s).Radius * 2;
+                        height = ((Circle)s).Radius * 2;
+                    }
+
+
+                    if (x + width > maxX)
+                        maxX = (int)(x + width);
+
+                    if (y + height > maxY)
+                        maxY = (int)(y + height);
                 }
             }
 

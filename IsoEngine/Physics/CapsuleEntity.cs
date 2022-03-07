@@ -14,14 +14,14 @@ namespace IsoEngine.Physics
         private float _bodyR;
         private float _bodyM;
 
-        public CapsuleEntity(RenderObject sprite, Vec2 position, int r, int height, float m)
-            : base(sprite, position, r * 2, height)
+        public CapsuleEntity(RenderObject sprite, Vec2 position, int radius, int height, float mass)
+            : base(sprite, position, radius * 2, height)
         {
             _bodyX = position.X;
             _bodyY = position.Y;
-            _bodyR = r;
+            _bodyR = radius;
             _bodyH = height;
-            _bodyM = m;
+            _bodyM = mass;
 
             InitializeBody();
         }
@@ -57,7 +57,7 @@ namespace IsoEngine.Physics
             bool left = InputHandler.KeyboardState.IsKeyDown(Keys.A);
             bool right = InputHandler.KeyboardState.IsKeyDown(Keys.D);
 
-            Vec2 dir = ((Rectangle)Components[0]).Dir;
+            Vec2 dir = Components[0].Dir;
             if (up) Acceleration = dir * -Speed;
             if (down) Acceleration = dir * Speed;
             if (!up && !down) Acceleration = new Vec2(0, 0);
@@ -68,18 +68,15 @@ namespace IsoEngine.Physics
 
         public override void Move()
         {
-            Acceleration = Acceleration.Unit() * Speed;
-            Velocity += Acceleration;
-            Velocity *= 1 - Friction;
-
-            Components[0].Position += Velocity;
+            base.Move();
 
             AngleSpeed *= 1 - AngleFriction;
             ((Rectangle)Components[0]).Angle += AngleSpeed;
             ((Rectangle)Components[0]).CalculateVertices();
 
-            Components[1].Position = Components[0].Position + ((Rectangle)Components[0]).Dir * -((Rectangle)Components[0]).Length / 2;
-            Components[2].Position = Components[0].Position + ((Rectangle)Components[0]).Dir * ((Rectangle)Components[0]).Length / 2;
+            float length = ((Rectangle)Components[0]).Length;
+            Components[1].Position = Components[0].Position + Components[0].Dir * -length / 2;
+            Components[2].Position = Components[0].Position + Components[0].Dir * length / 2;
         }
 
         public override void Update()

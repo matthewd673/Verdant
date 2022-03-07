@@ -26,31 +26,21 @@ namespace IsoEngine
         }
         public string Key { get; private set; }
         public string PreviousKey { get; private set; } = "";
-
-        //public Vec2 Position { get; set; }
+        
         [JsonIgnore]
         public RenderObject Sprite { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public bool HasPhysics { get; protected set; }
-        //public bool MoveSafelyWithPhysics { get; protected set; }
-        //protected int PhysicsMovementDiscreteSteps { get; set; }
-
-        //public float Friction { get; set; } = 0f;
-        //public Vec2 Velocity { get; set; } = Vec2.Zero;
-        //public Vec2 Acceleration { get; set; } = Vec2.Zero;
-
         public float Rotation { get; set; } = 0f;
         protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
-
-        [JsonIgnore]
-        public List<Collider> Colliders { get; set; } = new List<Collider>();
 
         protected bool SetZIndexToBase { get; set; }
         public int ZIndex { get; protected set; } = 0;
 
         public bool ForRemoval { get; set; } = false;
+
+        private float _bodyM;
 
         /// <summary>
         /// Initialize a new Entity.
@@ -59,11 +49,10 @@ namespace IsoEngine
         /// <param name="position">The position of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width, int height) :
+        public Entity(RenderObject sprite, Vec2 position, int width, int height, float mass = 1f) :
             base()
         {
             //apply default properties
-            HasPhysics = false;
             SetZIndexToBase = true;
 
             Sprite = sprite;
@@ -71,12 +60,48 @@ namespace IsoEngine
             Width = width;
             Height = height;
 
+            BodyParent = this;
+
+            _bodyM = mass;
+
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             RotationOrigin = new Vec2Int(Width / 2, Height / 2);
+
+            InitializeBody();
         }
 
-        protected virtual void InitializeBody() { }
+        //by default, entities are boxes (that don't rotate)
+        protected virtual void InitializeBody()
+        {
+            float x1 = Position.X;
+            float y1 = Position.Y;
+            float x2 = x1;
+            float y2 = y1 + Height;
+            float r = Width / 2;
+
+            Vec2 top = new Vec2(x1, y1);
+            Vec2 bottom = new Vec2(x2, y2);
+
+            Vec2 recVec1 = bottom + (bottom - top).Unit().Normal() * r;
+            Vec2 recVec2 = top + (bottom - top).Unit().Normal() * r;
+
+            Physics.Rectangle rectangle1 = new Physics.Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * r);
+            rectangle1.CalculateVertices();
+
+            Components = new Shape[] { rectangle1 };
+            Mass = _bodyM;
+
+            Inertia = Mass * (
+                (float)Math.Pow(2 * rectangle1.Width, 2) +
+                (float)Math.Pow(Height + 2 * rectangle1.Width, 2)
+                ) / 12;
+        }
+
+        public override void Move()
+        {
+            base.Move();
+        }
 
         /// <summary>
         /// Create a Collider encompassing the Entity's bounding box.
@@ -92,21 +117,6 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
-            //apply physics
-            //if (HasPhysics)
-            //{
-            //    if (!MoveSafelyWithPhysics)
-            //        Position += Velocity;
-            //    else
-            //        Move(Velocity.X, Velocity.Y, discreteSteps: PhysicsMovementDiscreteSteps);
-
-            //    if (Acceleration != Vec2.Zero)
-            //    {
-            //        Velocity += Acceleration - (Velocity * Friction);
-            //        Acceleration *= Friction;
-            //    }
-            //}
-
             //move body
             Move();
 
@@ -116,10 +126,6 @@ namespace IsoEngine
                 PreviousKey = Key;
                 Key = Manager.GetKeyFromPos(Position);
             }
-
-            //update all colliders
-            //foreach (Collider c in Colliders)
-            //    c.Update();
 
             //update z index
             if (SetZIndexToBase)

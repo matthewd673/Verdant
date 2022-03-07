@@ -14,14 +14,14 @@ namespace IsoEngine.Physics
         private float _bodyH;
         private float _bodyM;
 
-        public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float m)
+        public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float mass)
             : base(sprite, position, width, height)
         {
             _bodyX = position.X;
             _bodyY = position.Y;
             _bodyW = width;
             _bodyH = height;
-            _bodyM = m;
+            _bodyM = mass;
 
             InitializeBody();
         }
@@ -59,7 +59,7 @@ namespace IsoEngine.Physics
             bool left = InputHandler.KeyboardState.IsKeyDown(Keys.A);
             bool right = InputHandler.KeyboardState.IsKeyDown(Keys.D);
 
-            Vec2 dir = ((Rectangle)Components[0]).Dir;
+            Vec2 dir = Components[0].Dir;
             if (up) Acceleration = dir * -Speed;
             if (down) Acceleration = dir * Speed;
             if (!up && !down) Acceleration = new Vec2(0, 0);
@@ -70,11 +70,7 @@ namespace IsoEngine.Physics
 
         public override void Move()
         {
-            Acceleration = Acceleration.Unit() * Speed;
-            Velocity += Acceleration;
-            Velocity *= 1 - Friction;
-
-            Components[0].Position += Velocity;
+            base.Move();
 
             AngleSpeed *= 1 - AngleFriction;
             ((Rectangle)Components[0]).Angle += AngleSpeed;

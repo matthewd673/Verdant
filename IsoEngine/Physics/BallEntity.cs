@@ -13,12 +13,12 @@ namespace IsoEngine.Physics
         private float _bodyR = 0f;
         private float _bodyMass = 0f;
 
-        public BallEntity(RenderObject sprite, Vec2 position, float r, float mass)
-            : base(sprite, position, (int)(r * 2), (int)(r * 2))
+        public BallEntity(RenderObject sprite, Vec2 position, float radius, float mass)
+            : base(sprite, position, (int)(radius * 2), (int)(radius * 2))
         {
             _bodyX = position.X;
             _bodyY = position.Y;
-            _bodyR = r;
+            _bodyR = radius;
             _bodyMass = mass;
 
             InitializeBody();
@@ -34,8 +34,6 @@ namespace IsoEngine.Physics
         public override void Move()
         {
             base.Move();
-
-            ((Circle)Components[0]).Position += Velocity;
         }
 
         public void SimpleInput()
