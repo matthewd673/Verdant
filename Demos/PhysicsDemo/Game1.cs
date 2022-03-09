@@ -63,7 +63,7 @@ namespace PhysicsDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
+            Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: true);
             _spriteBatch.End();
 
             base.Draw(gameTime);

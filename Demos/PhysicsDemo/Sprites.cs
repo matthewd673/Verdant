@@ -9,10 +9,14 @@ namespace PhysicsDemo
     {
 
         public static Sprite Crate;
+        public static Sprite BoxEntity;
+        public static Sprite CapsuleEntity;
 
         public static void LoadSprites(ContentManager content)
         {
             Crate = content.Load<Texture2D>("crate");
+            BoxEntity = content.Load<Texture2D>("boxentity");
+            CapsuleEntity = content.Load<Texture2D>("capsuleentity");
         }
 
     }

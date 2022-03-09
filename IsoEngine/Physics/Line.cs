@@ -10,7 +10,7 @@ namespace IsoEngine.Physics
             Vertices[0] = new Vec2(x1, y1);
             Vertices[1] = new Vec2(x2, y2);
             Dir = (Vertices[1] - Vertices[0]).Unit();
-            Position = new Vec2((Vertices[0].X + Vertices[1].X) / 2, (Vertices[0].Y + Vertices[1].Y) / 2);
+            Position = new Vec2((Vertices[0].X + Vertices[1].X) / 2f, (Vertices[0].Y + Vertices[1].Y) / 2f);
         }
     }
 }

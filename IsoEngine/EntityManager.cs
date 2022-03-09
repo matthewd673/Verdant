@@ -491,11 +491,6 @@ namespace IsoEngine
 
             collisions.Clear();
 
-            foreach (Entity e in updateList)
-            {
-                e.Update(); //move & accept input
-            }
-
             int i = 0;
             foreach (Entity e in updateList)
             {
@@ -532,6 +527,8 @@ namespace IsoEngine
                 c.CollisionResolution();
             }
 
+            Debugging.Log.WriteLine("collisions: " + collisions.Count);
+
         }
 
         /// <summary>
@@ -542,12 +539,11 @@ namespace IsoEngine
         {
             EntityUpdateCount = 0;
 
-            PhysicsLoop(updateList);
-
             //update all
             foreach (Entity e in updateList)
             {
                 e.Update();
+                e.Move();
                 EntityUpdateCount++; //keep track
 
                 //remove marked entities
@@ -559,6 +555,8 @@ namespace IsoEngine
                 if (!e.Key.Equals(e.PreviousKey))
                     MoveEntityCell(e);
             }
+
+            PhysicsLoop(updateList);
 
             ApplyQueues();
         }

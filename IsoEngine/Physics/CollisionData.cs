@@ -22,9 +22,9 @@ namespace IsoEngine.Physics
 
         public void PenetrationResolution()
         {
-            Vec2 penResolution = normal * pen / (a.InvMass + b.InvMass);
-            a.Components[0].Position = a.Components[0].Position + (penResolution * a.InvMass);
-            b.Components[0].Position = b.Components[0].Position + (penResolution * -b.InvMass);
+            Vec2 penResolution = normal * (pen / (a.InvMass + b.InvMass));
+            a.Components[0].Position += (penResolution * a.InvMass);
+            b.Components[0].Position += (penResolution * -b.InvMass);
         }
 
         public void CollisionResolution()

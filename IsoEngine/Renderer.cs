@@ -61,8 +61,8 @@ namespace IsoEngine
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="entityManager">The EntityManager to draw from.</param>
         /// <param name="uiManager">The UIManager to draw from.</param>
-        /// <param name="visualizeColliders">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeColliders = false)
+        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
+        public static void Render(SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeBodies = false)
         {
             //update camera
             Camera.Update();
@@ -74,8 +74,8 @@ namespace IsoEngine
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
-                    if (visualizeColliders)
-                        e.DrawColliders(spriteBatch);
+                    if (visualizeBodies)
+                        e.DrawBody(spriteBatch);
                 }
             }
             else
@@ -83,8 +83,8 @@ namespace IsoEngine
                 foreach (Entity e in entityManager.GetAllEntities())
                 {
                     e.Draw(spriteBatch);
-                    if (visualizeColliders)
-                        e.DrawColliders(spriteBatch);
+                    if (visualizeBodies)
+                        e.DrawBody(spriteBatch);
                 }
             }
 
@@ -111,19 +111,19 @@ namespace IsoEngine
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="scene">The Scene to draw from.</param>
-        /// <param name="visualizeColliders">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeColliders = false)
+        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
+        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
         {
-            Render(spriteBatch, scene.EntityManager, scene.UIManager, visualizeColliders: visualizeColliders);
+            Render(spriteBatch, scene.EntityManager, scene.UIManager, visualizeBodies: visualizeBodies);
         }
 
         public static void DrawLine(SpriteBatch spriteBatch, Vec2 start, Vec2 end, Color color)
         {
-            Vec2 diff = end - start;
-            float angle = (float)Math.Atan2(diff.Y, diff.X);
-
             Vec2 worldStart = Camera.WorldToScreenPos(start);
             Vec2 worldEnd = Camera.WorldToScreenPos(end);
+            
+            Vec2 diff = worldEnd - worldStart;
+            float angle = (float)Math.Atan2(diff.Y, diff.X);
 
             spriteBatch.Draw(GetPixel(),
                 new Rectangle((int)worldStart.X, (int)worldStart.Y, (int)diff.Magnitude(), 1),
@@ -136,7 +136,7 @@ namespace IsoEngine
                 );
         }
 
-        public static Sprite GenerateCircleTexture(float radius, Color color)
+        public static Sprite GenerateCircleSprite(float radius, Color color) //TODO: this is far from perfect
         {
             int diam = (int)(radius * 2);
             int rSqr = (int)(radius * radius);
@@ -150,7 +150,7 @@ namespace IsoEngine
                 {
                     int colorIndex = i * diam + j;
                     float distFromCenter = (new Vec2(i, j) - new Vec2(radius, radius)).Magnitude();
-                    if (Math.Abs(distFromCenter) <= radius)
+                    if (Math.Abs(distFromCenter - radius) <= 1f)
                         colorData[colorIndex] = color;
                     else
                         colorData[colorIndex] = Color.Transparent;

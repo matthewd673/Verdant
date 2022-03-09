@@ -120,6 +120,9 @@ namespace IsoEngine.Physics
 
         public static SATResult SAT(Shape a, Shape b)
         {
+            if (a == null || b == null)
+                return new SATResult(false, float.MaxValue, null, null);
+
             float minOverlap = float.MaxValue;
             Vec2 smallestAxis = null;
             Shape vertexShape = null;
@@ -172,6 +175,8 @@ namespace IsoEngine.Physics
                 }
             }
 
+            //if (vertexShape == null)
+            //    return new SATResult(false, float.MaxValue, null, null);
             Vec2 contactVertex = ProjectShapeOntoAxis(smallestAxis, vertexShape).ColVertex;
 
             if (vertexShape == b)

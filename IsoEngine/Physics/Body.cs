@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace IsoEngine.Physics
 {
@@ -25,7 +27,7 @@ namespace IsoEngine.Physics
         public float Mass
         {
             get { return _mass; }
-            protected set
+            set
             {
                 _mass = value;
                 if (value == 0)
@@ -34,13 +36,13 @@ namespace IsoEngine.Physics
                     InvMass = 1 / value;
             }
         }
-        internal float InvMass { get; set; }
+        internal float InvMass { get; private set; }
 
         private float _inertia;
         public float Inertia
         {
             get { return _inertia; }
-            protected set
+            set
             {
                 _inertia = value;
                 if (value == 0)
@@ -49,7 +51,7 @@ namespace IsoEngine.Physics
                     InvInertia = 1 / value;
             }
         }
-        internal float InvInertia { get; set; }
+        internal float InvInertia { get; private set; }
 
         public Vec2 Velocity { get; set; } = new Vec2(0, 0);
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
@@ -59,10 +61,11 @@ namespace IsoEngine.Physics
         public float AngleSpeed { get; set; }
         public float AngleFriction { get; set; }
 
-        public float Elasticity { get; set; } = 1;
+        public float Elasticity { get; set; } = 1f;
 
         public bool Trigger { get; set; }
         public Entity BodyParent { get; protected set; }
+        public Color BodyColor { get; set; } = Color.Yellow;
 
         public Body() { }
 
@@ -73,6 +76,62 @@ namespace IsoEngine.Physics
             Velocity *= 1 - Friction;
 
             Components[0].Position += Velocity;
+        }
+        
+        public virtual void DrawBody(SpriteBatch spriteBatch)
+        {
+            foreach (Shape s in Components)
+            {
+                if (s.GetType() == typeof(Rectangle))
+                {
+                    Rectangle r = (Rectangle)s;
+
+                    Renderer.DrawLine(spriteBatch,
+                        r.Vertices[0],
+                        r.Vertices[1],
+                        BodyColor
+                        );
+                    Renderer.DrawLine(spriteBatch,
+                        r.Vertices[1],
+                        r.Vertices[2],
+                        BodyColor
+                        );
+                    Renderer.DrawLine(spriteBatch,
+                        r.Vertices[2],
+                        r.Vertices[3],
+                        BodyColor
+                        );
+                    Renderer.DrawLine(spriteBatch,
+                        r.Vertices[3],
+                        r.Vertices[0],
+                        BodyColor
+                        );
+                }
+                else if (s.GetType() == typeof(Circle))
+                {
+                    Circle c = (Circle)s;
+
+                    spriteBatch.Draw(
+                        Renderer.GenerateCircleSprite(c.Radius * Renderer.Scale, Color.White).Get(),
+                        Renderer.Camera.GetRenderBounds(
+                            c.Position.X - c.Radius,
+                            c.Position.Y - c.Radius,
+                            (int)(c.Radius * 2),
+                            (int)(c.Radius * 2)),
+                        BodyColor
+                        );
+                }
+                else if (s.GetType() == typeof(Line))
+                {
+                    Line l = (Line)s;
+
+                    Renderer.DrawLine(spriteBatch,
+                        l.Vertices[0],
+                        l.Vertices[1],
+                        BodyColor
+                        );
+                }
+            }
         }
 
     }

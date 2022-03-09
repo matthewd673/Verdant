@@ -15,18 +15,36 @@ namespace PhysicsDemo
             base.Initialize();
 
             //EntityManager.AddEntity(new Crate(new Vec2(20, 20), 32, 32, 5));
-            BallEntity ball = new BallEntity(Sprites.Crate, new Vec2(50, 50), 16, 1);
+            BallController ball = new BallController(new Vec2(50, 50), 16, 2);
+            ball.Speed = 0.8f;
+            ball.Friction = 0.05f;
             EntityManager.AddEntity(ball);
 
-            WallEntity wall = new WallEntity(new Vec2(50, 300), new Vec2(450, 250), Color.Yellow);
-            wall.Elasticity = 1;
-            EntityManager.AddEntity(wall);
+            WallEntity wall = new WallEntity(new Vec2(50, 300), new Vec2(450, 250));
+            //EntityManager.AddEntity(wall);
 
-            CapsuleEntity capsule = new CapsuleEntity(Sprites.Crate, new Vec2(600, 200), 20, 120, 1);
+            CapsuleEntity capsule = new CapsuleEntity(Sprites.CapsuleEntity, new Vec2(600, 200), 20, 120, 1);
             EntityManager.AddEntity(capsule);
 
-            BoxEntity box = new BoxEntity(Sprites.Crate, new Vec2(200, 50), 40, 120, 1);
+            BoxEntity box = new BoxEntity(Sprites.BoxEntity, new Vec2(200, 50), 40, 120, 1);
+            box.Mass = 0;
+            box.AngleFriction = 0.5f;
             EntityManager.AddEntity(box);
+        }
+
+    }
+
+    class BallController : BallEntity
+    {
+
+        public BallController(Vec2 pos, float radius, float mass) : base(null, pos, radius, mass) { }
+
+        public override void Update()
+        {
+
+            SimpleInput();
+
+            base.Update();
         }
 
     }

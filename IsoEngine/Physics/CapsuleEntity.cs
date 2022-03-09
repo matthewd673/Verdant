@@ -79,43 +79,24 @@ namespace IsoEngine.Physics
             Components[2].Position = Components[0].Position + Components[0].Dir * length / 2;
         }
 
-        public override void Update()
-        {
-            Speed = 0.5f;
-            Friction = 0.05f;
-            AngleFriction = 0.1f;
-
-            //SimpleInput();
-
-            base.Update();
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Sprite circleTexture = Renderer.GenerateCircleTexture(_bodyR, Color.Green);
-
-            Rectangle rectangle1 = (Rectangle)Components[0];
-            Circle circle1 = (Circle)Components[1];
-            Circle circle2 = (Circle)Components[2];
-
-
+            Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
-                circleTexture.Get(),
-                Renderer.Camera.GetRenderBounds(circle1.Position - new Vec2(_bodyR, _bodyR), circleTexture.Width, circleTexture.Height),
-                Color.White
+                Sprite.Get(),
+                Renderer.Camera.GetRenderBounds(
+                    Position.X,
+                    Position.Y,
+                    Width,
+                    (int)(Height + 2*_bodyR)
+                    ),
+                null,
+                Color.White,
+                ((Rectangle)Components[0]).Angle,
+                (Vector2)origin,
+                SpriteEffects.None,
+                0
                 );
-
-            spriteBatch.Draw(
-                circleTexture.Get(),
-                Renderer.Camera.GetRenderBounds(circle2.Position - new Vec2(_bodyR, _bodyR), circleTexture.Width, circleTexture.Height),
-                Color.White
-                );
-
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[0], rectangle1.Vertices[1], Color.Green);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[1], rectangle1.Vertices[2], Color.Green);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[2], rectangle1.Vertices[3], Color.Green);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[3], rectangle1.Vertices[0], Color.Green);
         }
-
     }
 }

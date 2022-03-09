@@ -77,31 +77,24 @@ namespace IsoEngine.Physics
             ((Rectangle)Components[0]).CalculateVertices();
         }
 
-        public override void Update()
-        {
-
-            Speed = 0.5f;
-            Friction = 0.05f;
-            AngleFriction = 0.1f;
-
-            //SimpleInput();
-
-            base.Update();
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Rectangle rectangle1 = (Rectangle)Components[0];
-
-            spriteBatch.Draw(Renderer.GetPixel(), new Vector2((_bodyX + _bodyW / 2), _bodyY), Color.Red);
-            spriteBatch.Draw(Renderer.GetPixel(), new Vector2((_bodyX + _bodyW / 2), _bodyY + _bodyH), Color.Red);
-
-            spriteBatch.Draw(Renderer.GetPixel(), new Vector2(rectangle1.Position.X, rectangle1.Position.Y), Color.White);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[0], rectangle1.Vertices[1], Color.Blue);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[1], rectangle1.Vertices[2], Color.Blue);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[2], rectangle1.Vertices[3], Color.Blue);
-            Renderer.DrawLine(spriteBatch, rectangle1.Vertices[3], rectangle1.Vertices[0], Color.Blue);
+            Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
+            spriteBatch.Draw(
+                Sprite.Get(),
+                Renderer.Camera.GetRenderBounds(this),
+                null,
+                Color.White,
+                ((Rectangle)Components[0]).Angle,
+                (Vector2) origin,
+                SpriteEffects.None,
+                0
+                );
         }
 
+        public override void Update()
+        {
+            base.Update();
+        }
     }
 }

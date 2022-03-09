@@ -29,8 +29,29 @@ namespace IsoEngine
         
         [JsonIgnore]
         public RenderObject Sprite { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+
+        private int _width;
+        public int Width
+        {
+            get { return _width; }
+            set
+            {
+                _width = value;
+                HalfWidth = value / 2;
+            }
+        }
+        private int _height;
+        public int Height
+        {
+            get { return _height; }
+            set
+            {
+                _height = value;
+                HalfHeight = value / 2;
+            }
+        }
+        protected int HalfWidth { get; private set; }
+        protected int HalfHeight { get; private set; }
 
         public float Rotation { get; set; } = 0f;
         protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
@@ -40,6 +61,10 @@ namespace IsoEngine
 
         public bool ForRemoval { get; set; } = false;
 
+        private float _bodyX;
+        private float _bodyY;
+        private float _bodyW;
+        private float _bodyH;
         private float _bodyM;
 
         /// <summary>
@@ -62,6 +87,10 @@ namespace IsoEngine
 
             BodyParent = this;
 
+            _bodyX = position.X;
+            _bodyY = position.Y;
+            _bodyW = width;
+            _bodyH = height;
             _bodyM = mass;
 
             //set automatic rotation origin
@@ -74,11 +103,11 @@ namespace IsoEngine
         //by default, entities are boxes (that don't rotate)
         protected virtual void InitializeBody()
         {
-            float x1 = Position.X;
-            float y1 = Position.Y;
+            float x1 = _bodyX;
+            float y1 = _bodyY;
             float x2 = x1;
-            float y2 = y1 + Height;
-            float r = Width / 2;
+            float y2 = y1 + _bodyH;
+            float r = _bodyW / 2;
 
             Vec2 top = new Vec2(x1, y1);
             Vec2 bottom = new Vec2(x2, y2);
@@ -101,15 +130,9 @@ namespace IsoEngine
         public override void Move()
         {
             base.Move();
-        }
 
-        /// <summary>
-        /// Create a Collider encompassing the Entity's bounding box.
-        /// </summary>
-        /// <param name="trigger">Determines if the Collider is a trigger or not.</param>
-        public void AddSimpleCollider(bool trigger = false)
-        {
-            //Colliders.Add(new Collider(this, trigger: trigger, relativePos: true));
+            if (Components[0].GetType() == typeof(Physics.Rectangle))
+                ((Physics.Rectangle)Components[0]).CalculateVertices();
         }
 
         /// <summary>
@@ -117,9 +140,6 @@ namespace IsoEngine
         /// </summary>
         public virtual void Update()
         {
-            //move body
-            Move();
-
             //update key
             if (Manager != null) //only if a managed entity (not Particles, for example)
             {
@@ -132,97 +152,6 @@ namespace IsoEngine
                 ZIndex = (int)(Position.Y + Height);
 
         }
-
-        /// <summary>
-        /// Move the Entity with the given deltas until it hits a solid Collider. NOTE: The Entity must have at least one Collider (solid or trigger).
-        /// </summary>
-        /// <param name="xDelta">The distance to move on the x axis.</param>
-        /// <param name="yDelta">The distance to move on the y axis.</param>
-        /// <param name="moveCollider">The specific Collider to check against. Otherwise, the first Collider added will be used (whether it is a trigger or solid).</param>
-        /// <param name="discreteSteps">The number of discrete steps to take when checking collisions. Increase for fast objects.</param>
-        /// <param name="moveThroughIfColliding">If the Entity is already colliding with another Entity when it begins to move, allow the Entity to pass through it.</param>
-        //public void Move(float xDelta, float yDelta, Collider moveCollider = null, int discreteSteps = 4, bool moveThroughIfColliding = false)
-        //{
-
-        //    if (Colliders.Count == 0) //do nothing if there is no collider attached (while it could just move regardless, doing so would break the promise of not colliding imo, easier to debug too).
-        //        return;
-
-        //    if (moveCollider == null)
-        //        moveCollider = Colliders[0];
-
-        //    float newX = moveCollider.Position.X;
-        //    float newY = moveCollider.Position.Y;
-        //    float xInc = xDelta / discreteSteps;
-        //    float yInc = yDelta / discreteSteps;
-
-        //    float xTotalMove = 0f;
-        //    float yTotalMove = 0f;
-
-        //    bool collidedOnX = false;
-        //    bool collidedOnY = false;
-
-        //    List<Entity> preColliding = new List<Entity>();
-        //    if (moveThroughIfColliding)
-        //        preColliding = Manager.GetAllColliding(this, moveCollider, onlySolids: true);
-
-        //    for (int i = 0; i < discreteSteps; i++)
-        //    {
-        //        if (!collidedOnX) //all clear on X
-        //        {
-        //            List<Entity> collided = Manager.CheckRectCollisions(newX + xInc, newY, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreList: new List<Entity> { this });
-
-        //            if (!moveThroughIfColliding && collided.Count == 0)
-        //            {
-        //                newX += xInc;
-        //                xTotalMove += xInc;
-        //            }
-        //            else
-        //            {
-        //                foreach (Entity e in preColliding)
-        //                    collided.Remove(e);
-        //                if (collided.Count == 0)
-        //                {
-        //                    newX += xInc;
-        //                    xTotalMove += xInc;
-        //                }
-        //            }
-        //        }
-        //        else
-        //            collidedOnX = true;
-
-        //        if (!collidedOnY) //all clear on Y
-        //        {
-        //            List<Entity> collided = Manager.CheckRectCollisions(newX, newY + yInc, moveCollider.Width, moveCollider.Height, onlySolids: true, ignoreList: new List<Entity> { this });
-
-        //            if (!moveThroughIfColliding && collided.Count == 0)
-        //            {
-
-        //                newY += yInc;
-        //                yTotalMove += yInc;
-        //            }
-        //            else
-        //            {
-        //                foreach (Entity e in preColliding)
-        //                    collided.Remove(e);
-        //                if (collided.Count == 0)
-        //                {
-        //                    newY += yInc;
-        //                    yTotalMove += yInc;
-        //                }
-        //            }
-        //        }
-        //        else
-        //            collidedOnY = true;
-
-        //        //skip the rest if colliding on both
-        //        if (collidedOnX && collidedOnY)
-        //            break;
-        //    }
-
-        //    Position.X += xTotalMove;
-        //    Position.Y += yTotalMove;
-
-        //}
 
         /// <summary>
         /// Set the Entity's bounds and rotation to be equal to those of a given TransformState.
@@ -246,48 +175,19 @@ namespace IsoEngine
             if (Sprite == null)
                 return;
 
-            if (Rotation == 0f) //no rotation, simple draw
-                spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
-            else
-            {
-                Microsoft.Xna.Framework.Rectangle renderRect = Renderer.Camera.GetRenderBounds(this);
-                renderRect.X += RotationOrigin.X * Renderer.Scale;
-                renderRect.Y += RotationOrigin.Y * Renderer.Scale;
-                spriteBatch.Draw(Sprite.Get(), renderRect, null, Color.White, Rotation, (Vector2)RotationOrigin * Renderer.Scale, SpriteEffects.None, 0);
-            }
-        }
-
-        /// <summary>
-        /// Draws all of the Colliders attached to the Entity (for debug). Yellow = Solid, Green = Trigger.
-        /// </summary>
-        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
-        public void DrawColliders(SpriteBatch spriteBatch)
-        {
-            //foreach (Collider c in Colliders)
+            //if (Rotation == 0f) //no rotation, simple draw
+            //    spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
+            //else
             //{
-            //    //color code
-            //    Color color = Color.Yellow;
-            //    if (c.Trigger)
-            //        color = Color.LimeGreen;
-
-            //    //top line
-            //    Rectangle topLineBounds = Renderer.Camera.GetRenderBounds(c.Position, c.Width, c.Height);
-            //    topLineBounds.Height = 1;
-            //    spriteBatch.Draw(Renderer.GetPixel(), topLineBounds, color);
-            //    //bottom line
-            //    Rectangle bottomLineBounds = Renderer.Camera.GetRenderBounds(c.Position.X, c.Position.Y + c.Height, c.Width, 1);
-            //    bottomLineBounds.Width += 1;
-            //    bottomLineBounds.Height = 1;
-            //    spriteBatch.Draw(Renderer.GetPixel(), bottomLineBounds, color);
-            //    //left line
-            //    Rectangle leftLineBounds = Renderer.Camera.GetRenderBounds(c.Position, 1, c.Height);
-            //    leftLineBounds.Width = 1;
-            //    spriteBatch.Draw(Renderer.GetPixel(), leftLineBounds, color);
-            //    //right line
-            //    Rectangle rightLineBounds = Renderer.Camera.GetRenderBounds(c.Position.X + c.Width, c.Position.Y, 1, c.Height);
-            //    rightLineBounds.Width = 1;
-            //    spriteBatch.Draw(Renderer.GetPixel(), rightLineBounds, color);
+            //    Microsoft.Xna.Framework.Rectangle renderRect = Renderer.Camera.GetRenderBounds(this);
+            //    renderRect.X += RotationOrigin.X * Renderer.Scale;
+            //    renderRect.Y += RotationOrigin.Y * Renderer.Scale;
+            //    spriteBatch.Draw(Sprite.Get(), renderRect, null, Color.White, Rotation, (Vector2)RotationOrigin * Renderer.Scale, SpriteEffects.None, 0);
             //}
+
+            spriteBatch.Draw(Sprite.Get(),
+                Renderer.Camera.GetRenderBounds(Position.X - HalfWidth, Position.Y - HalfHeight, Width, Height), Color.White);
+
         }
 
     }

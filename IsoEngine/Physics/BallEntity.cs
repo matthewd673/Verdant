@@ -51,22 +51,9 @@ namespace IsoEngine.Physics
             if (!up && !down) Acceleration.Y = 0;
         }
 
-        public override void Update()
-        {
-
-            //TODO: none of this input should be default behavior
-            //its just easier to test for right now
-            Speed = 0.5f; //temp
-            Friction = 0.05f;
-
-            SimpleInput();
-
-            base.Update();
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Sprite circleTexture = Renderer.GenerateCircleTexture(_bodyR, Color.Red);
+            Sprite circleTexture = Renderer.GenerateCircleSprite(_bodyR, Color.Red);
 
             spriteBatch.Draw(
                 circleTexture.Get(),
