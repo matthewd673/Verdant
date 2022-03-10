@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace IsoEngine.Physics
 {
+    /// <summary>
+    /// An Entity with a Ball body.
+    /// </summary>
     public class BallEntity : Entity
     {
 
@@ -13,6 +16,13 @@ namespace IsoEngine.Physics
         private float _bodyR = 0f;
         private float _bodyMass = 0f;
 
+        /// <summary>
+        /// Initialize a new BallEntity.
+        /// </summary>
+        /// <param name="sprite">The Entity's sprite.</param>
+        /// <param name="position">The position of the center of the Entity.</param>
+        /// <param name="radius">The radius of the Entity's Ball. Also used to determine rendering width and height.</param>
+        /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public BallEntity(RenderObject sprite, Vec2 position, float radius, float mass)
             : base(sprite, position, (int)(radius * 2), (int)(radius * 2))
         {
@@ -31,11 +41,9 @@ namespace IsoEngine.Physics
             Mass = _bodyMass;
         }
 
-        public override void Move()
-        {
-            base.Move();
-        }
-
+        /// <summary>
+        /// Move according to WASD input. A basic template.
+        /// </summary>
         public void SimpleInput()
         {
             bool up = InputHandler.KeyboardState.IsKeyDown(Keys.W);

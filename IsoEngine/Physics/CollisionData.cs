@@ -11,6 +11,14 @@ namespace IsoEngine.Physics
         float pen;
         Vec2 cp;
 
+        /// <summary>
+        /// Initialize a new CollisionData.
+        /// </summary>
+        /// <param name="a">The first colliding Body.</param>
+        /// <param name="b">The second colliding Body.</param>
+        /// <param name="normal">The normal of the collision.</param>
+        /// <param name="pen">The penetration depth of the collision.</param>
+        /// <param name="cp">The contact point of the collision.</param>
         public CollisionData(Body a, Body b, Vec2 normal, float pen, Vec2 cp)
         {
             this.a = a;
@@ -20,6 +28,9 @@ namespace IsoEngine.Physics
             this.cp = cp;
         }
 
+        /// <summary>
+        /// Move the colliding bodies to resolve the penetration of the collision.
+        /// </summary>
         public void PenetrationResolution()
         {
             if (a.InvMass + b.InvMass == 0)
@@ -29,6 +40,9 @@ namespace IsoEngine.Physics
             b.Components[0].Position += (penResolution * -b.InvMass);
         }
 
+        /// <summary>
+        /// Move and rotate the colliding bodies to resolve the collision.
+        /// </summary>
         public void CollisionResolution()
         {
             //closing velocity

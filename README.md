@@ -7,7 +7,7 @@ designed to simplify the tedious parts of game development without restricting d
 
 ## Build Info
 
-Currently built on `.NET Framework 4.5.2` for compatibility with `MonoGame 3.x`.
+Currently built on `.NET 5.0` for compatibility with `MonoGame 3.x`.
 
 **For easiest use**
 1. Download the project files from GitHub
@@ -19,6 +19,18 @@ Currently built on `.NET Framework 4.5.2` for compatibility with `MonoGame 3.x`.
 
 MapTools is an included tool for creating simple map files built from images, which IsoEngine can parse. MapTools and its map files can be used entirely independently of IsoEngine. More info in the 
 [MapTools README](https://github.com/matthewd673/IsoEngine/blob/master/MapTools/README.md).
+
+## LogConsole
+
+LogConsole is a super simple client for the `Debugging.Log` API included in IsoEngine.
+After running LogConsole, begin debugging any project that uses `Debugging.Log` and the messages
+will appear LogConsole.
+
+## Demos
+
+- **LoggingDemo:** A simple game that makes use of `Debugging.Log` and the LogConsole.
+- **ParticleToy:** Tool to visualize `ParticleSystem` configurations. Entirely unfinished.
+- **PhysicsDemo:** Demonstrates all physics bodies to simplify debugging.
 
 ## [Documentation](https://github.com/matthewd673/IsoEngine/wiki)
 

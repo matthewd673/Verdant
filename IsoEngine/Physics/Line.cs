@@ -4,6 +4,14 @@ namespace IsoEngine.Physics
 {
     internal class Line : Shape
     {
+
+        /// <summary>
+        /// Initialize a new Line shape.
+        /// </summary>
+        /// <param name="x1">The X component of the Line's start position.</param>
+        /// <param name="y1">The Y component of the Line's start position.</param>
+        /// <param name="x2">The X component of the Line's end position.</param>
+        /// <param name="y2">The Y component of the Line's end position.</param>
         public Line(float x1, float y1, float x2, float y2)
         {
             Vertices = new Vec2[2];

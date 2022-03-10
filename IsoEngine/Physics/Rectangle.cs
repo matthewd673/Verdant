@@ -13,7 +13,15 @@ namespace IsoEngine.Physics
         public float Angle { get; set; }
         Matrix rotMat;
 
-        public Rectangle(float x1, float y1, float x2, float y2, float w)
+        /// <summary>
+        /// Initialize a new Rectangle shape.
+        /// </summary>
+        /// <param name="x1">The X component of the Rectangle's start position (centered).</param>
+        /// <param name="y1">The Y component of the Rectangle's start position.</param>
+        /// <param name="x2">The X component of the Rectangle's end position (centered).</param>
+        /// <param name="y2">The Y component of the Rectangle's end position.</param>
+        /// <param name="width">The width of the Rectangle.</param>
+        public Rectangle(float x1, float y1, float x2, float y2, float width)
         {
             Vertices = new Vec2[4];
             Vertices[0] = new Vec2(x1, y1);
@@ -23,7 +31,7 @@ namespace IsoEngine.Physics
             refDir = Dir.Copy();
             Length = (Vertices[1] - Vertices[0]).Magnitude();
 
-            Width = w;
+            Width = width;
 
             Vertices[2] = Vertices[1] + (Dir.Normal() * Width);
             Vertices[3] = Vertices[2] + (Dir.Normal() * -Length);
@@ -33,6 +41,9 @@ namespace IsoEngine.Physics
             rotMat = new Matrix(2, 2);
         }
 
+        /// <summary>
+        /// Update the Rectangle's vertices according to the current position and rotation.
+        /// </summary>
         public void CalculateVertices()
         {
             rotMat = PhysicsMath.CalculateRotMatrix(Angle);
@@ -42,14 +53,6 @@ namespace IsoEngine.Physics
             Vertices[1] = Position + (Dir * -Length / 2) + (Dir.Normal() * -Width / 2);
             Vertices[2] = Position + (Dir * Length / 2) + (Dir.Normal() * -Width / 2);
             Vertices[3] = Position + (Dir * Length / 2) + (Dir.Normal() * Width / 2);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            Renderer.DrawLine(spriteBatch, Vertices[0], Vertices[1], Color.Yellow);
-            Renderer.DrawLine(spriteBatch, Vertices[1], Vertices[2], Color.Yellow);
-            Renderer.DrawLine(spriteBatch, Vertices[2], Vertices[3], Color.Yellow);
-            Renderer.DrawLine(spriteBatch, Vertices[3], Vertices[0], Color.Yellow);
         }
 
     }

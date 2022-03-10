@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace IsoEngine.Physics
 {
+    /// <summary>
+    /// An Entity with a Box body.
+    /// </summary>
     public class BoxEntity : Entity
     {
 
@@ -14,6 +17,14 @@ namespace IsoEngine.Physics
         private float _bodyH;
         private float _bodyM;
 
+        /// <summary>
+        /// Initialize a new BoxEntity.
+        /// </summary>
+        /// <param name="sprite">The Entity's sprite.</param>
+        /// <param name="position">The position of the center of the Entity.</param>
+        /// <param name="width">The width of the Box.</param>
+        /// <param name="height">The height of the Box.</param>
+        /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float mass)
             : base(sprite, position, width, height)
         {
@@ -52,6 +63,9 @@ namespace IsoEngine.Physics
                 ) / 12;
         }
 
+        /// <summary>
+        /// Move according to WASD input. A basic template.
+        /// </summary>
         public void SimpleInput()
         {
             bool up = InputHandler.KeyboardState.IsKeyDown(Keys.W);
@@ -90,11 +104,6 @@ namespace IsoEngine.Physics
                 SpriteEffects.None,
                 0
                 );
-        }
-
-        public override void Update()
-        {
-            base.Update();
         }
     }
 }

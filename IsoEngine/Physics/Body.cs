@@ -67,8 +67,14 @@ namespace IsoEngine.Physics
         public Entity BodyParent { get; protected set; }
         public Color BodyColor { get; set; } = Color.Yellow;
 
+        /// <summary>
+        /// Initialize a new Body.
+        /// </summary>
         public Body() { }
 
+        /// <summary>
+        /// Perform physics movement for the Body.
+        /// </summary>
         public virtual void Move()
         {
             Acceleration = Acceleration.Unit() * Speed;
@@ -78,6 +84,10 @@ namespace IsoEngine.Physics
             Components[0].Position += Velocity;
         }
         
+        /// <summary>
+        /// Visualize the Components of the Body according to the BodyColor.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void DrawBody(SpriteBatch spriteBatch)
         {
             foreach (Shape s in Components)

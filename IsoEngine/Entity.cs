@@ -53,9 +53,6 @@ namespace IsoEngine
         protected int HalfWidth { get; private set; }
         protected int HalfHeight { get; private set; }
 
-        public float Rotation { get; set; } = 0f;
-        protected Vec2Int RotationOrigin { get; set; } = Vec2Int.Zero;
-
         protected bool SetZIndexToBase { get; set; }
         public int ZIndex { get; protected set; } = 0;
 
@@ -71,9 +68,10 @@ namespace IsoEngine
         /// Initialize a new Entity.
         /// </summary>
         /// <param name="sprite">The Entity's sprite.</param>
-        /// <param name="position">The position of the Entity.</param>
+        /// <param name="position">The position of the center of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
+        /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public Entity(RenderObject sprite, Vec2 position, int width, int height, float mass = 1f) :
             base()
         {
@@ -95,13 +93,15 @@ namespace IsoEngine
 
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
-            RotationOrigin = new Vec2Int(Width / 2, Height / 2);
+            //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
 
             InitializeBody();
         }
 
-        //by default, entities are boxes (that don't rotate)
-        protected virtual void InitializeBody()
+        /// <summary>
+        /// Generate the Components and properties for the underlying physics body. By default, Entities are Boxes with 100% angular friction (cannot rotate).
+        /// </summary>
+        protected virtual void InitializeBody() //by default entities are boxes that don't rotate
         {
             float x1 = _bodyX;
             float y1 = _bodyY;
@@ -127,6 +127,9 @@ namespace IsoEngine
                 ) / 12;
         }
 
+        /// <summary>
+        /// Perform physics movement for the Entity, called in the EntityManager physics loop.
+        /// </summary>
         public override void Move()
         {
             base.Move();
@@ -136,7 +139,7 @@ namespace IsoEngine
         }
 
         /// <summary>
-        /// Perform the Entity's basic update loop: performing physics movement, updating child Colliders, and updating the z-index if appropriate.
+        /// Perform the Entity's basic update actions - a good place to look for input events. Called in the EntityManager update loop.
         /// </summary>
         public virtual void Update()
         {
@@ -163,7 +166,9 @@ namespace IsoEngine
             Position.Y = state.Y;
             Width = (int)state.Width;
             Height = (int)state.Height;
-            Rotation = state.Rotation;
+
+            if (Components[0].GetType() == typeof(Physics.Rectangle))
+                ((Physics.Rectangle)Components[0]).Angle = state.Rotation;
         }
 
         /// <summary>
@@ -175,19 +180,8 @@ namespace IsoEngine
             if (Sprite == null)
                 return;
 
-            //if (Rotation == 0f) //no rotation, simple draw
-            //    spriteBatch.Draw(Sprite.Get(), Renderer.Camera.GetRenderBounds(this), Color.White);
-            //else
-            //{
-            //    Microsoft.Xna.Framework.Rectangle renderRect = Renderer.Camera.GetRenderBounds(this);
-            //    renderRect.X += RotationOrigin.X * Renderer.Scale;
-            //    renderRect.Y += RotationOrigin.Y * Renderer.Scale;
-            //    spriteBatch.Draw(Sprite.Get(), renderRect, null, Color.White, Rotation, (Vector2)RotationOrigin * Renderer.Scale, SpriteEffects.None, 0);
-            //}
-
             spriteBatch.Draw(Sprite.Get(),
                 Renderer.Camera.GetRenderBounds(Position.X - HalfWidth, Position.Y - HalfHeight, Width, Height), Color.White);
-
         }
 
     }

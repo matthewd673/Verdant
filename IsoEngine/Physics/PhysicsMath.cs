@@ -118,6 +118,12 @@ namespace IsoEngine.Physics
             return axes.ToArray();
         }
 
+        /// <summary>
+        /// Check for intersection between two Bodies according to the Separate Axis Theorem.
+        /// </summary>
+        /// <param name="a">The first Body.</param>
+        /// <param name="b">The second Body.</param>
+        /// <returns></returns>
         public static SATResult SAT(Shape a, Shape b)
         {
             if (a == null || b == null)
@@ -185,6 +191,9 @@ namespace IsoEngine.Physics
             return new SATResult(true, minOverlap, smallestAxis, contactVertex);
         }
 
+        /// <summary>
+        /// The result of a SAT calculation.
+        /// </summary>
         public struct SATResult
         {
             public bool Overlap { get; set; }
@@ -192,6 +201,13 @@ namespace IsoEngine.Physics
             public Vec2 Axis { get; set; }
             public Vec2 Vertex { get; set; }
 
+            /// <summary>
+            /// Initialize a new SATResult.
+            /// </summary>
+            /// <param name="overlap">Indicates if the two Bodies are colliding.</param>
+            /// <param name="penetration">The penetration depth.</param>
+            /// <param name="axis">The axis.</param>
+            /// <param name="vertex">The contact vertex.</param>
             public SATResult(bool overlap, float penetration, Vec2 axis, Vec2 vertex)
             {
                 Overlap = overlap;

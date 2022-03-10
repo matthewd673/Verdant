@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace IsoEngine.Physics
 {
+    /// <summary>
+    /// An Entity with a Wall body. Doesn't render or move by default.
+    /// </summary>
     public class WallEntity : Entity
     {
 
@@ -12,6 +15,11 @@ namespace IsoEngine.Physics
         private float _bodyX2;
         private float _bodyY2;
 
+        /// <summary>
+        /// Initialize a new WallEntity.
+        /// </summary>
+        /// <param name="start">The start position of the Wall.</param>
+        /// <param name="end">The end position of the Wall.</param>
         public WallEntity(Vec2 start, Vec2 end)
             : base(null, new Vec2(0, 0), 0, 0)
         {

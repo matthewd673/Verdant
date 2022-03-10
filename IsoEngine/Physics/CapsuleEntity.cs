@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace IsoEngine.Physics
 {
+    /// <summary>
+    /// An Entity with a Capsule body.
+    /// </summary>
     public class CapsuleEntity : Entity
     {
 
@@ -14,6 +17,14 @@ namespace IsoEngine.Physics
         private float _bodyR;
         private float _bodyM;
 
+        /// <summary>
+        /// Initialize a new CapsuleEntity.
+        /// </summary>
+        /// <param name="sprite">The Entity's sprite.</param>
+        /// <param name="position">The position of the center of the Entity.</param>
+        /// <param name="radius">The radius of the Capsule (half the width of the Rectangle component).</param>
+        /// <param name="height">The height of the Rectangle component.</param>
+        /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public CapsuleEntity(RenderObject sprite, Vec2 position, int radius, int height, float mass)
             : base(sprite, position, radius * 2, height)
         {
@@ -50,6 +61,9 @@ namespace IsoEngine.Physics
                 ) / 12;
         }
 
+        /// <summary>
+        /// Move according to WASD input. A basic template.
+        /// </summary>
         public void SimpleInput()
         {
             bool up = InputHandler.KeyboardState.IsKeyDown(Keys.W);
