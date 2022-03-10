@@ -22,6 +22,8 @@ namespace IsoEngine.Physics
 
         public void PenetrationResolution()
         {
+            if (a.InvMass + b.InvMass == 0)
+                return;
             Vec2 penResolution = normal * (pen / (a.InvMass + b.InvMass));
             a.Components[0].Position += (penResolution * a.InvMass);
             b.Components[0].Position += (penResolution * -b.InvMass);
@@ -48,7 +50,9 @@ namespace IsoEngine.Physics
             float newSepVel = -sepVel * Math.Min(a.Elasticity, b.Elasticity);
             float vSepDiff = newSepVel - sepVel;
 
-            float impulse = vSepDiff / (a.InvMass + b.InvMass + impAug1 + impAug2);
+            float impulse = 0;
+            if (a.InvMass + b.InvMass != 0)
+                impulse = vSepDiff / (a.InvMass + b.InvMass + impAug1 + impAug2);
             Vec2 impulseVec = normal * impulse;
 
             //change velocities

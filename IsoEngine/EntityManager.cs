@@ -527,7 +527,7 @@ namespace IsoEngine
                 c.CollisionResolution();
             }
 
-            Debugging.Log.WriteLine("collisions: " + collisions.Count);
+            //Debugging.Log.WriteLine("collisions: " + collisions.Count);
 
         }
 

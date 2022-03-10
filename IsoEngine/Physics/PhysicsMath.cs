@@ -175,8 +175,8 @@ namespace IsoEngine.Physics
                 }
             }
 
-            //if (vertexShape == null)
-            //    return new SATResult(false, float.MaxValue, null, null);
+            if (vertexShape == null)
+                return new SATResult(false, float.MaxValue, null, null);
             Vec2 contactVertex = ProjectShapeOntoAxis(smallestAxis, vertexShape).ColVertex;
 
             if (vertexShape == b)
