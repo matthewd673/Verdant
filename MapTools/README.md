@@ -29,5 +29,7 @@ Build compact, highly customizable, easy-to-parse map files from images.
 aaaaabbaaaaccccccccccaabbbbbba`
 
 *(where `w` represents a wall and `.` represents a floor tile):*
-`24,24
-wwwwwwwwwwwwwwwwwwwwwwwwwwww................wwwwwwww................wwwwwwww................wwwww......................ww......................ww.....w..........w.....ww.....w...wwww...w.....ww.....ww.w....w.ww.....ww.....www......www.....ww......................ww......................ww......................ww......................ww.....www......www.....ww.....ww.w....w.ww.....ww.....w...wwww...w.....ww.....w..........w.....ww......................ww......................wwwww................wwwwwwww................wwwwwwww................wwwwwwwwwwwwwwwwwwwwwwwwwwww`
+```
+24,24
+wwwwwwwwwwwwwwwwwwwwwwwwwwww................wwwwwwww................wwwwwwww................wwwww......................ww......................ww.....w..........w.....ww.....w...wwww...w.....ww.....ww.w....w.ww.....ww.....www......www.....ww......................ww......................ww......................ww......................ww.....www......www.....ww.....ww.w....w.ww.....ww.....w...wwww...w.....ww.....w..........w.....ww......................ww......................wwwww................wwwwwwww................wwwwwwww................wwwwwwwwwwwwwwwwwwwwwwwwwwww
+```

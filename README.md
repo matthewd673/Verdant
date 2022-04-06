@@ -28,9 +28,9 @@ will appear LogConsole.
 
 ## Demos
 
-- **LoggingDemo:** A simple game that makes use of `Debugging.Log` and the LogConsole.
-- **ParticleToy:** Tool to visualize `ParticleSystem` configurations. Entirely unfinished.
-- **PhysicsDemo:** Demonstrates all physics bodies to simplify debugging.
+- **[LoggingDemo](https://github.com/matthewd673/IsoEngine/tree/master/Demos/LoggingDemo):** A simple game that makes use of `Debugging.Log` and the LogConsole.
+- **[ParticleToy](https://github.com/matthewd673/IsoEngine/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations. Entirely unfinished.
+- **[PhysicsDemo](https://github.com/matthewd673/IsoEngine/tree/master/Demos/PhysicsDemo):** Demonstrates all physics bodies to simplify debugging.
 
 ## [Documentation](https://github.com/matthewd673/IsoEngine/wiki)
 
