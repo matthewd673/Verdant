@@ -18,10 +18,10 @@ namespace LogConsole
 
         static void Main(string[] args)
         {
-            Console.Title = "IsoEngine Log";
+            Console.Title = "Verdant Log";
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("IsoEngine Debugging Log Console");
+            Console.WriteLine("Verdant Debugging Log Console");
             Console.ResetColor();
 
             StartServer();

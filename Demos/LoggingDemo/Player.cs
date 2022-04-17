@@ -1,6 +1,6 @@
 ﻿using System;
-using IsoEngine;
-using IsoEngine.Debugging;
+using Verdant;
+using Verdant.Debugging;
 using Microsoft.Xna.Framework.Input;
 
 namespace LoggingDemo
@@ -8,7 +8,7 @@ namespace LoggingDemo
     public class Player : Entity
     {
 
-        public Player() : base(Sprites.player, new Vec2(100, 100))
+        public Player() : base(Sprites.player, new Vec2(100, 100), 11, 10)
         {
             Log.WriteLine("Player created");
         }

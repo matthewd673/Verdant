@@ -1,4 +1,4 @@
-# IsoEngine MapTools
+# Verdant MapTools
 
 Build compact, highly customizable, easy-to-parse map files from images.
 

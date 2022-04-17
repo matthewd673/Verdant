@@ -13,7 +13,7 @@ namespace MapTools
 
         static void Main(string[] args)
         {
-            Console.WriteLine("IsoEngine MapTools");
+            Console.WriteLine("Verdant MapTools");
 
             ParseArguments(args);
         }

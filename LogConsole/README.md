@@ -1,4 +1,4 @@
-# IsoEngine LogConsole
+# Verdant LogConsole
 
 An easy-to-use debug console for games.
 
@@ -9,8 +9,8 @@ LogConsole must be running before the game first attempts to write to the log or
 This is due to performance constraints.
 
 The `Debugging.Log` class is used to print messages to LogConsole.
-[This wiki article](https://github.com/matthewd673/IsoEngine/wiki/Debugging.Log) covers the API more thoroughly.
-Calls to `WriteLine` will only trigger when IsoEngine is running under a debugger,
+[This wiki article](https://github.com/matthewd673/Verdant/wiki/Debugging.Log) covers the API more thoroughly.
+Calls to `WriteLine` will only trigger when Verdant is running under a debugger,
 but should still probably be removed from release builds.
 
 **NOTE:** The LogConsole tool and `Debugging.Log` APIs are only intended for local development use on ports that are not public-facing.

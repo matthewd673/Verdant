@@ -1,7 +1,7 @@
 ﻿using System;
-using IsoEngine;
-using IsoEngine.Debugging;
-using IsoEngine.Physics;
+using Verdant;
+using Verdant.Debugging;
+using Verdant.Physics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -49,7 +49,8 @@ namespace PhysicsDemo
             //if (((Rectangle) Components[0]).Angle == 0f)
             //Rotation = ((Rectangle)Components[0]).Angle;
             //base.Draw(spriteBatch);
-            ((Rectangle)Components[0]).Draw(spriteBatch);
+
+            //TODO: ((Rectangle)Components[0]).Draw(spriteBatch);
         }
 
     }

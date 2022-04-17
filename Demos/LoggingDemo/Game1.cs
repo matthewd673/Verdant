@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using IsoEngine;
+using Verdant;
 
 namespace LoggingDemo
 {
@@ -27,6 +27,8 @@ namespace LoggingDemo
         {
             base.Initialize();
 
+            Verdant.Debugging.Log.WriteLine("Initialize()");
+
             sceneManager = new SceneManager();
 
             Scene playScene = new Scene((int)SceneType.Play);
@@ -42,6 +44,8 @@ namespace LoggingDemo
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Verdant.Debugging.Log.WriteLine("LoadContent()");
 
             Sprites.LoadSprites(Content);
         }
@@ -62,6 +66,12 @@ namespace LoggingDemo
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
+
+            //if (Sprites.Loaded)
+            //{
+            //    Verdant.Debugging.SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Sprites.debugFont);
+            //}
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
