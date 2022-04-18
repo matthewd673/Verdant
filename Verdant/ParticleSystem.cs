@@ -9,7 +9,17 @@ namespace Verdant
 
         List<Particle> particles = new List<Particle>();
         public int SpreadRadius { get; set; }
-        bool autoRemove;
+        public bool AutoRemove { get; set; }
+
+        // particle settings
+        public RenderObject[] Sprites { get; set; }
+        int[] WidthRange;
+        int[] HeightRange;
+        float[] AngleRange;
+        float[] VelocityMagnitudeRange;
+        float[] AccelerationMagnitudeRange;
+        float[] FrictionRange;
+        int[] LifetimeRange;
 
         /// <summary>
         /// Initialize a new ParticleSystem.
@@ -20,21 +30,21 @@ namespace Verdant
         public ParticleSystem(Vec2 pos, int spreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
         {
             SpreadRadius = spreadRadius;
-            this.autoRemove = autoRemove;
+            AutoRemove = autoRemove;
         }
 
-        public void SpawnParticle(ParticleConfiguration configuration)
+        public void SpawnParticle()
         {
             //determine particle spawn values
             Vec2 spawnPos = GetNewParticlePos();
-            RenderObject sprite = configuration.Sprites[GameMath.Random.Next(configuration.Sprites.Length)]; //pick a random sprite from the list
-            int width = ParticleConfiguration.SelectIntFromRange(configuration.WidthRange);
-            int height = ParticleConfiguration.SelectIntFromRange(configuration.HeightRange);
-            float angle = ParticleConfiguration.SelectFloatFromRange(configuration.AngleRange); //get random angle in range set by array
-            float velocityMagnitude = ParticleConfiguration.SelectFloatFromRange(configuration.VelocityMagnitudeRange);
-            float accelerationMagnitude = ParticleConfiguration.SelectFloatFromRange(configuration.AccelerationMagnitudeRange);
-            float friction = ParticleConfiguration.SelectFloatFromRange(configuration.FrictionRange);
-            int lifetime = ParticleConfiguration.SelectIntFromRange(configuration.LifetimeRange);
+            RenderObject sprite = Sprites[GameMath.Random.Next(Sprites.Length)]; //pick a random sprite from the list
+            int width = SelectIntFromRange(WidthRange);
+            int height = SelectIntFromRange(HeightRange);
+            float angle = SelectFloatFromRange(AngleRange); //get random angle in range set by array
+            float velocityMagnitude = SelectFloatFromRange(VelocityMagnitudeRange);
+            float accelerationMagnitude = SelectFloatFromRange(AccelerationMagnitudeRange);
+            float friction = SelectFloatFromRange(FrictionRange);
+            int lifetime = SelectIntFromRange(LifetimeRange);
 
             //create particle
             Particle particle = new Particle(sprite, spawnPos, width, height, lifetime);
@@ -80,7 +90,7 @@ namespace Verdant
                 }
             }
 
-            if (autoRemove && particles.Count == 0)
+            if (AutoRemove && particles.Count == 0)
                 ForRemoval = true;
 
             base.Update();
@@ -94,6 +104,16 @@ namespace Verdant
         {
             foreach (Particle p in particles)
                 p.Draw(spriteBatch);
+        }
+
+        private static float SelectFloatFromRange(float[] range)
+        {
+            return GameMath.RandomFloat(range[0], range[range.Length - 1]);
+        }
+
+        private static int SelectIntFromRange(int[] range)
+        {
+            return GameMath.Random.Next(range[0], range[range.Length - 1]);
         }
 
     }

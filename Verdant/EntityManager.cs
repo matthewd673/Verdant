@@ -13,7 +13,7 @@ namespace Verdant
             NearCamera,
         }
 
-        Dictionary<string, List<Entity>> entityTable = new Dictionary<string, List<Entity>>();
+        readonly Dictionary<string, List<Entity>> entityTable = new();
         public int CellSize { get; }
 
         List<Entity> addQueue = new List<Entity>();

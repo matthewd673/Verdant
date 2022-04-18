@@ -6,11 +6,11 @@ namespace Verdant
     public class Animation : RenderObject
     {
 
-        SpriteSheet sheet;
+        readonly SpriteSheet sheet;
         FrameSet frameSet;
 
-        Timer animateCooldown;
-        bool looping;
+        readonly Timer animateCooldown;
+        public bool Looping { get; set; }
 
         int frameIndex;
 
@@ -28,7 +28,7 @@ namespace Verdant
             this.sheet = sheet;
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
             animateCooldown = new Timer(frameDelay);
-            this.looping = looping;
+            Looping = looping;
         }
         /// <summary>
         /// Initialize a new Animation.
@@ -42,7 +42,7 @@ namespace Verdant
             this.sheet = sheet;
             this.frameSet = frameSet;
             animateCooldown = new Timer(frameDelay);
-            this.looping = looping;
+            Looping = looping;
         }
         /// <summary>
         /// Initialize a new Animation directly from a Texture2D sheet.
@@ -57,7 +57,7 @@ namespace Verdant
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
             animateCooldown = new Timer(frameDelay);
-            this.looping = looping;
+            Looping = looping;
         }
         /// <summary>
         /// Initialize a new Animation directly from a Texture2D sheet.
@@ -73,7 +73,7 @@ namespace Verdant
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             this.frameSet = frameSet;
             animateCooldown = new Timer(frameDelay);
-            this.looping = looping;
+            Looping = looping;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Verdant
         /// <returns>Returns true if the Animation is complete.</returns>
         public bool IsComplete()
         {
-            if (!looping)
+            if (!Looping)
                 return settled;
             else
                 return hasLooped;
@@ -157,7 +157,7 @@ namespace Verdant
 
                 if (frameIndex >= frameSet.endFrame)
                 {
-                    if (looping)
+                    if (Looping)
                     {
                         frameIndex = frameSet.startFrame;
                         hasLooped = true;
@@ -193,7 +193,7 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(sheet, frameSet, animateCooldown.Duration, looping);
+            return new Animation(sheet, frameSet, animateCooldown.Duration, Looping);
         }
 
         public struct FrameSet
