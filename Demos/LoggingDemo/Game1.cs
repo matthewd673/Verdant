@@ -29,16 +29,14 @@ namespace LoggingDemo
 
             Verdant.Debugging.Log.WriteLine("Initialize()");
 
+            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 2);
+
             sceneManager = new SceneManager();
 
-            Scene playScene = new Scene((int)SceneType.Play);
+            Scene playScene = new PlayScene((int)SceneType.Play);
             playScene.Initialize();
 
-            playScene.EntityManager.AddEntity(new Player());
-
             sceneManager.AddScene(playScene);
-
-            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 2);
         }
 
         protected override void LoadContent()

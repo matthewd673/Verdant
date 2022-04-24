@@ -34,18 +34,5 @@ namespace PhysicsDemo
 
     }
 
-    class BallController : BallEntity
-    {
-
-        public BallController(Vec2 pos, float radius, float mass) : base(null, pos, radius, mass) { }
-
-        public override void Update()
-        {
-
-            SimpleInput();
-
-            base.Update();
-        }
-
-    }
+    
 }
