@@ -6,26 +6,37 @@ namespace Verdant.UI
 {
     public class UISprite : UIElement
     {
-        
+
+        public int Width { get; set; }
+        public int Height { get; set; }
+
         Texture2D[,] sprites;
         int spriteX = 0;
         int spriteY = 0;
 
-        public UISprite(Sprite sprite, Vec2 pos) : base(pos, sprite.Width, sprite.Height)
+        public UISprite(Sprite sprite, Vec2 pos) : base(pos)
         {
             sprites = new Texture2D[,] { { sprite.Get() } };
+            Width = sprite.Width;
+            Height = sprite.Height;
         }
-        public UISprite(Sprite sprite, Vec2 pos, int w, int h) : base(pos, w, h)
+        public UISprite(Sprite sprite, Vec2 pos, int w, int h) : base(pos)
         {
             sprites = new Texture2D[,] { { sprite.Get() } };
+            Width = w;
+            Height = h;
         }
-        public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos, sheet.Get().Width, sheet.Get().Height)
+        public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos)
         {
             sprites = sheet.GetFullSheet();
+            Width = sheet.Get().Width;
+            Height = sheet.Get().Height;
         }
-        public UISprite(SpriteSheet sheet, Vec2 pos, int w, int h) : base(pos, w, h)
+        public UISprite(SpriteSheet sheet, Vec2 pos, int w, int h) : base(pos)
         {
             sprites = sheet.GetFullSheet();
+            Width = w;
+            Height = h;
         }
 
         public void SetSpriteX(int x)

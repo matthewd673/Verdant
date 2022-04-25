@@ -14,9 +14,12 @@ namespace Verdant
         
         [JsonIgnore]
         EntityManager _manager;
+
+        // The EntityManager that manages this Entity.
         [JsonIgnore]
         public EntityManager Manager
-        {   get { return _manager; }
+        {
+            get { return _manager; }
             set
             {
                 _manager = value;
@@ -24,13 +27,17 @@ namespace Verdant
                     Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
             }
         }
+        // The key of the Entity within the manager's hash table.
         public string Key { get; private set; }
+        // The key of the Entity at the end of the last update.
         public string PreviousKey { get; private set; } = "";
         
+        // The RenderObject used to draw this Entity.
         [JsonIgnore]
         public RenderObject Sprite { get; set; }
 
         private int _width;
+        // The draw width of the Entity.
         public int Width
         {
             get { return _width; }
@@ -54,8 +61,11 @@ namespace Verdant
         protected int HalfHeight { get; private set; }
 
         protected bool SetZIndexToBase { get; set; }
+        // The z-index, used for sorting and depth-based rendering.
         public int ZIndex { get; protected set; } = 0;
 
+        // Determines if the Entity should be removed at the end of the
+        // next update loop.
         public bool ForRemoval { get; set; } = false;
 
         private float _bodyX;

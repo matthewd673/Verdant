@@ -9,16 +9,12 @@ namespace Verdant.UI
         public UIManager Manager { get; set; }
 
         public Vec2 Position { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
 
         bool forRemoval;
 
-        public UIElement(Vec2 pos, int w, int h)
+        public UIElement(Vec2 pos)
         {
             Position = pos;
-            Width = w;
-            Height = h;
         }
 
         public virtual void Update() { }

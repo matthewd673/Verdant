@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Verdant;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,6 +10,12 @@ namespace ParticleToy
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        enum SceneType
+        {
+            Play,
+        }
+        SceneManager sceneManager;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -18,16 +25,23 @@ namespace ParticleToy
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+
+            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
+
+            sceneManager = new SceneManager();
+
+            PlayScene playScene = new PlayScene((int)SceneType.Play);
+            playScene.Initialize();
+
+            sceneManager.AddScene(playScene);
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            Sprites.LoadSprites(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -35,7 +49,7 @@ namespace ParticleToy
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            sceneManager.Update();
 
             base.Update(gameTime);
         }
@@ -44,7 +58,11 @@ namespace ParticleToy
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+            Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

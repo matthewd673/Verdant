@@ -18,7 +18,13 @@ namespace Verdant.UI
             base.Update();
 
             //check for hover
-            if (GameMath.CheckPointOnRectIntersection((Vec2)InputHandler.MousePosition, Position.X * Renderer.Scale, Position.Y * Renderer.Scale, Width * Renderer.Scale, Height * Renderer.Scale))
+            if (GameMath.CheckPointOnRectIntersection(
+                (Vec2)InputHandler.MousePosition,
+                Position.X * Renderer.Scale,
+                Position.Y * Renderer.Scale,
+                Width * Renderer.Scale,
+                Height * Renderer.Scale
+                ))
             { //button is being hovered
                 if (!Hovered) //it wasn't hovered last time, so trigger
                     OnHover();
@@ -38,27 +44,21 @@ namespace Verdant.UI
         }
 
         public event EventHandler Hover;
-        public virtual void OnHover()
+        protected virtual void OnHover()
         {
-            EventHandler hoverEvent = Hover; //recommended to avoid null
-            if (hoverEvent != null)
-                hoverEvent(this, EventArgs.Empty);
+            Hover?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler HoverExit;
-        public virtual void OnHoverExit()
+        protected virtual void OnHoverExit()
         {
-            EventHandler hoverExitEvent = HoverExit; //recommended to avoid null
-            if (hoverExitEvent != null)
-                hoverExitEvent(this, EventArgs.Empty);
+            HoverExit?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler Click;
-        public virtual void OnClick()
+        protected virtual void OnClick()
         {
-            EventHandler clickEvent = Click; //recommended to avoid null
-            if (clickEvent != null)
-                clickEvent(this, EventArgs.Empty);
+            Click?.Invoke(this, EventArgs.Empty);
         }
 
     }
