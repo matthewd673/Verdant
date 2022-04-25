@@ -6,11 +6,11 @@ namespace Verdant
     public abstract class RenderObject
     {
 
-        public int Width { get { return Get().Width; } }
-        public int Height { get { return Get().Height; } }
+        public virtual int Width { get { return DrawIndex(0).Width; } }
+        public virtual int Height { get { return DrawIndex(0).Height; } }
 
-        public abstract Texture2D Get();
-        public abstract Texture2D GetIndex(int i, int j = 0);
+        public abstract Texture2D Draw();
+        public abstract Texture2D DrawIndex(int i, int j = 0);
 
     }
 }

@@ -28,7 +28,7 @@ namespace Verdant
         /// Get a Texture2D containing a single white pixel.
         /// </summary>
         /// <returns>A Texture2D pixel.</returns>
-        public static Texture2D GetPixel() { return pixel.Get(); }
+        public static Texture2D GetPixel() { return pixel.Draw(); }
         /// <summary>
         /// Get a Sprite containing a single white pixel.
         /// </summary>
@@ -97,7 +97,7 @@ namespace Verdant
             //render cursor
             if (ShowCursor && Cursor != null)
             {
-                spriteBatch.Draw(Cursor.Get(),
+                spriteBatch.Draw(Cursor.Draw(),
                     new Rectangle(InputHandler.MouseX - (Cursor.Width / 2 * Scale),
                         InputHandler.MouseY - (Cursor.Height / 2 * Scale),
                         Cursor.Width * Scale,

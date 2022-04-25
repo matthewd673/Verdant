@@ -8,10 +8,8 @@ namespace Verdant.UI
 
         public bool Hovered { get; private set; } = false;
 
-        public UIButton(Sprite sprite, Vec2 pos) : base(sprite, pos) { }
-        public UIButton(Sprite sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
-        public UIButton(SpriteSheet sheet, Vec2 pos) : base(sheet, pos) { }
-        public UIButton(SpriteSheet sheet, Vec2 pos, int w, int h) : base(sheet, pos, w, h) { }
+        public UIButton(RenderObject sprite, Vec2 pos) : base(sprite, pos) { }
+        public UIButton(RenderObject sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
 
         public override void Update()
         {

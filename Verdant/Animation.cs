@@ -77,10 +77,10 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Perform the next step of the Animation and return the current frame. Identical to the Get method implemented from IRenderObject.
+        /// Perform the next step of the Animation and return the current frame. Identical to the Draw method inherited from RenderObject.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D Animate() { return Get(); }
+        public Texture2D Animate() { return Draw(); }
 
         /// <summary>
         /// Get the current frame of the Animation (without animating further).
@@ -88,7 +88,7 @@ namespace Verdant
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
         public Texture2D GetCurrentFrame()
         {
-            return sheet.GetIndex(frameIndex, frameSet.row);
+            return sheet.DrawIndex(frameIndex, frameSet.row);
         }
 
         /// <summary>
@@ -144,10 +144,10 @@ namespace Verdant
         /// Perform the next step of the Animation and return the current frame.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override Texture2D Get()
+        public override Texture2D Draw()
         {
             if (settled) //skip other steps if settled
-                return sheet.GetIndex(frameIndex, frameSet.row);
+                return sheet.DrawIndex(frameIndex, frameSet.row);
 
             animateCooldown.Tick();
 
@@ -171,7 +171,7 @@ namespace Verdant
 
             }
 
-            return sheet.GetIndex(frameIndex, frameSet.row);
+            return sheet.DrawIndex(frameIndex, frameSet.row);
         }
 
         /// <summary>
@@ -180,11 +180,11 @@ namespace Verdant
         /// <param name="index">The frame index to pull from.</param>
         /// <param name="j">The row on the Animation sheet to pull from. By default, the appropriate row as defined by the FrameSet will be used.</param>
         /// <returns>The sprite at the specified index.</returns>
-        public override Texture2D GetIndex(int index, int j = -1)
+        public override Texture2D DrawIndex(int index, int j = -1)
         {
             if (j == -1)
                 j = frameSet.row;
-            return sheet.GetIndex(index + frameSet.startFrame, j);
+            return sheet.DrawIndex(index + frameSet.startFrame, j);
         }
 
         /// <summary>

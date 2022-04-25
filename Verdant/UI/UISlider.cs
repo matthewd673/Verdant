@@ -165,7 +165,7 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(BarSprite.Get(),
+            spriteBatch.Draw(BarSprite.Draw(),
                 new Rectangle(
                     (int)(Position.X * Renderer.Scale),
                     (int)(Position.Y * Renderer.Scale),
@@ -174,7 +174,7 @@ namespace Verdant.UI
                 Color.White
                 );
 
-            spriteBatch.Draw(IndicatorSprite.Get(),
+            spriteBatch.Draw(IndicatorSprite.Draw(),
                 new Rectangle(
                     (int)((IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale),
                     (int)((IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale),

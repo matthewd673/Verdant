@@ -122,7 +122,7 @@ namespace Verdant.Physics
                     Circle c = (Circle)s;
 
                     spriteBatch.Draw(
-                        Renderer.GenerateCircleSprite(c.Radius * Renderer.Scale, Color.White).Get(),
+                        Renderer.GenerateCircleSprite(c.Radius * Renderer.Scale, Color.White).Draw(),
                         Renderer.Camera.GetRenderBounds(
                             c.Position.X - c.Radius,
                             c.Position.Y - c.Radius,

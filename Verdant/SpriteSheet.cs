@@ -78,18 +78,18 @@ namespace Verdant
         /// <param name="x">The x position of the sprite.</param>
         /// <param name="y">The y position of the sprite. Defaults to 0 (first row).</param>
         /// <returns>The Texture2D sprite located at the given coordinates.</returns>
-        public override Texture2D GetIndex(int x, int y = 0)
+        public override Texture2D DrawIndex(int x, int y = 0)
         {
             return sprites[x, y];
         }
 
         /// <summary>
-        /// Get the first sprite on the sheet. SpriteSheet is intended to be used with GetIndex.
+        /// Get the first sprite on the sheet. SpriteSheet is intended to be used with DrawIndex.
         /// </summary>
         /// <returns>The Texture2D sprite located at (0, 0) on the sheet.</returns>
-        public override Texture2D Get()
+        public override Texture2D Draw()
         {
-            return GetIndex(0, 0);
+            return DrawIndex(0, 0);
         }
 
         /// <summary>

@@ -97,7 +97,7 @@ namespace Verdant.Physics
         {
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
-                Sprite.Get(),
+                Sprite.Draw(),
                 Renderer.Camera.GetRenderBounds(
                     Position.X,
                     Position.Y,

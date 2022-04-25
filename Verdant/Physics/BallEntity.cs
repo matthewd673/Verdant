@@ -64,7 +64,7 @@ namespace Verdant.Physics
             Sprite circleTexture = Renderer.GenerateCircleSprite(_bodyR, Color.Red);
 
             spriteBatch.Draw(
-                circleTexture.Get(),
+                circleTexture.Draw(),
                 Renderer.Camera.GetRenderBounds(Position - new Vec2(_bodyR, _bodyR), circleTexture.Width, circleTexture.Height),
                 Color.White
                 );

@@ -10,50 +10,25 @@ namespace Verdant.UI
         public int Width { get; set; }
         public int Height { get; set; }
 
-        Texture2D[,] sprites;
-        int spriteX = 0;
-        int spriteY = 0;
+        public RenderObject Sprite { get; set; }
+        public int SpriteIndex { get; set; } = 0;
 
-        public UISprite(Sprite sprite, Vec2 pos) : base(pos)
+        public UISprite(RenderObject sprite, Vec2 pos) : base(pos)
         {
-            sprites = new Texture2D[,] { { sprite.Get() } };
+            Sprite = sprite;
             Width = sprite.Width;
             Height = sprite.Height;
         }
-        public UISprite(Sprite sprite, Vec2 pos, int w, int h) : base(pos)
+        public UISprite(RenderObject sprite, Vec2 pos, int w, int h) : base(pos)
         {
-            sprites = new Texture2D[,] { { sprite.Get() } };
+            Sprite = sprite;
             Width = w;
             Height = h;
-        }
-        public UISprite(SpriteSheet sheet, Vec2 pos) : base(pos)
-        {
-            sprites = sheet.GetFullSheet();
-            Width = sheet.Get().Width;
-            Height = sheet.Get().Height;
-        }
-        public UISprite(SpriteSheet sheet, Vec2 pos, int w, int h) : base(pos)
-        {
-            sprites = sheet.GetFullSheet();
-            Width = w;
-            Height = h;
-        }
-
-        public void SetSpriteX(int x)
-        {
-            spriteX = x;
-            spriteY = 0;
-        }
-
-        public void SetSpriteCoords(int x, int y)
-        {
-            spriteX = x;
-            spriteY = y;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprites[spriteX, spriteY],
+            spriteBatch.Draw(Sprite.DrawIndex(SpriteIndex),
                 new Rectangle(
                     (int)(Position.X * Renderer.Scale),
                     (int)(Position.Y * Renderer.Scale),
