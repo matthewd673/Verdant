@@ -22,7 +22,7 @@ namespace Verdant.UI
         // The font used to draw the UIText.
         public SpriteFont Font { get; private set; }
         // The color of the text.
-        public Color Color { get; set; } = Color.White;
+        public Color Color { get; set; } = Color.Black;
 
         // The width of the current string rendered with the current SpriteFont.
         public float Width { get; private set; }
