@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
+
+    [Serializable]
     public class Body
     {
 
@@ -64,7 +67,10 @@ namespace Verdant.Physics
         public float Elasticity { get; set; } = 1f;
 
         public bool Trigger { get; set; }
+
+        [JsonIgnore]
         public Entity BodyParent { get; protected set; }
+
         public Color BodyColor { get; set; } = Color.Yellow;
 
         /// <summary>
