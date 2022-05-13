@@ -29,7 +29,14 @@ namespace Verdant.Networking
             }
         }
 
+        [JsonIgnore]
         Timer networkUpdateTimer;
+
+        [JsonIgnore]
+        private Vec2 _deserializePosition;
+        private int _deserializeWidth;
+        private int _deserializeHeight;
+        private float _deserializeMass;
 
         public NetworkEntity(RenderObject sprite, Vec2 position, int width = -1, int height = -1, float mass = 1) : base(sprite, position, width, height, mass)
         {
@@ -38,7 +45,11 @@ namespace Verdant.Networking
         }
 
         [JsonConstructor]
-        public NetworkEntity(string netId, int networkEntityType, Vec2 position, int width = -1, int height = -1) : base(null, position, width, height)
+        // public NetworkEntity(string netId, int networkEntityType, Vec2 _deserializePosition, int _deserializeWidth = -1, int _deserializeHeight = -1, float _deserializeMass = 1)
+        //     : base(null, _deserializePosition, _deserializeWidth, _deserializeHeight, _deserializeMass)
+        // {
+        public NetworkEntity(string netId, int networkEntityType) // TODO: temporary!
+            : base(null, new Vec2(20, 20), -1, -1)
         {
             NetId = netId;
             NetworkEntityType = networkEntityType;

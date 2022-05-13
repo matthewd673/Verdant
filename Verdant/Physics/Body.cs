@@ -71,6 +71,7 @@ namespace Verdant.Physics
         [JsonIgnore]
         public Entity BodyParent { get; protected set; }
 
+        [JsonIgnore]
         public Color BodyColor { get; set; } = Color.Yellow;
 
         /// <summary>

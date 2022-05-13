@@ -36,7 +36,7 @@ namespace Verdant.Networking
         Server server;
         Client client;
 
-        public Type[] NetworkEntityTypes { get; set; } = new Type[0];
+        public static Type[] NetworkEntityTypes { get; set; } = new Type[0];
         Dictionary<string, NetworkEntity> networkEntitySet = new Dictionary<string, NetworkEntity>();
 
         public int ConnectedClients
@@ -96,11 +96,13 @@ namespace Verdant.Networking
 
         public void AddNetworkEntity<TNetworkEntity>(TNetworkEntity e) where TNetworkEntity : NetworkEntity
         {
-            AddEntity(e); //add entity to normal manager
-            networkEntitySet.Add(e.NetId, e); //and to special manager
+            AddEntity(e); // add entity to normal manager
+            networkEntitySet.Add(e.NetId, e); // and to special manager
 
-            if (e.Managed) //broadcast change
+            if (e.Managed) // broadcast change
+            {
                 SendMessage(new Server.Message(MessageType.CreateEntity, SerializeNetworkEntity(e), incoming: false));
+            }
         }
 
         void SetNetworkEntityType(NetworkEntity e)
@@ -148,7 +150,6 @@ namespace Verdant.Networking
             SetNetworkEntityType(e);
             string json = JsonSerializer.Serialize<object>(e, serializerOptions);
             return Encoding.ASCII.GetBytes(json);
-
         }
 
         public NetworkEntity DeserializeNetworkEntity(byte[] array)

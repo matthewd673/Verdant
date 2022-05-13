@@ -82,7 +82,7 @@ namespace Verdant
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
         /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width, int height, float mass = 1f) :
+        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1, float mass = 1f) :
             base()
         {
             //apply default properties
@@ -90,8 +90,9 @@ namespace Verdant
 
             Sprite = sprite;
             Position = position;
-            Width = width;
-            Height = height;
+
+            Width = (width == -1) ? sprite.Width : width;
+            Height = (height == -1) ? sprite.Height : height;
 
             BodyParent = this;
 

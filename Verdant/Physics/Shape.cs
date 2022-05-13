@@ -2,6 +2,7 @@
 
 namespace Verdant.Physics
 {
+    [Serializable]
     public class Shape
     {
 
