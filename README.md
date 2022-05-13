@@ -7,7 +7,7 @@ designed to simplify the tedious parts of game development without restricting d
 
 ## Build Info
 
-Currently built on `.NET 5.0` for compatibility with `MonoGame 3.x`.
+Currently built on .NET 5.0 for compatibility with MonoGame 3.8.x. Note that current MonoGame templates generate projects targeting .NET Core 3.0. Within the .csproj file, set `TargetFramework` to `net5.0`.
 
 **For easiest use**
 1. Download the project files from GitHub
