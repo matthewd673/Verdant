@@ -45,7 +45,7 @@ namespace Verdant
         /// <summary>
         /// If the Timer has reached its duration, reset the time and return true.
         /// </summary>
-        /// <returns>Returnes true if the Timer has reached its duration. Otherwise, returns false.</returns>
+        /// <returns>Returns true if the Timer has reached its duration. Otherwise, returns false.</returns>
         public bool Consume()
         {
             bool ready = false;

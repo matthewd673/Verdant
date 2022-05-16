@@ -12,14 +12,14 @@ namespace Verdant
         public bool AutoRemove { get; set; }
 
         // particle settings
-        public RenderObject[] Sprites { get; set; }
-        int[] WidthRange;
-        int[] HeightRange;
-        float[] AngleRange;
-        float[] VelocityMagnitudeRange;
-        float[] AccelerationMagnitudeRange;
-        float[] FrictionRange;
-        int[] LifetimeRange;
+        protected RenderObject[] Sprites { get; set; }
+        protected int[] WidthRange;
+        protected int[] HeightRange;
+        protected float[] AngleRange;
+        protected float[] VelocityMagnitudeRange;
+        protected float[] AccelerationMagnitudeRange;
+        protected float[] FrictionRange;
+        protected int[] LifetimeRange;
 
         /// <summary>
         /// Initialize a new ParticleSystem.
