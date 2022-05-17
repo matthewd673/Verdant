@@ -21,7 +21,6 @@ namespace Verdant.Physics
         public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float mass)
             : base(sprite, position, width, height)
         {
-
             InitializeBody(position.X, position.Y, width, height, mass);
         }
 

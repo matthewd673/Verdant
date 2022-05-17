@@ -68,12 +68,6 @@ namespace Verdant
         // next update loop.
         public bool ForRemoval { get; set; } = false;
 
-        private float _bodyX;
-        private float _bodyY;
-        private float _bodyW;
-        private float _bodyH;
-        private float _bodyM;
-
         /// <summary>
         /// Initialize a new Entity.
         /// </summary>
@@ -96,29 +90,23 @@ namespace Verdant
 
             BodyParent = this;
 
-            _bodyX = position.X;
-            _bodyY = position.Y;
-            _bodyW = width;
-            _bodyH = height;
-            _bodyM = mass;
-
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
 
-            InitializeBody();
+            InitializeBody(position.X, position.Y, width, height, mass);
         }
 
         /// <summary>
         /// Generate the Components and properties for the underlying physics body. By default, Entities are Boxes with 100% angular friction (cannot rotate).
         /// </summary>
-        protected virtual void InitializeBody() //by default entities are boxes that don't rotate
+        protected void InitializeBody(float bodyX, float bodyY, float bodyW, float bodyH, float bodyM) //by default entities are boxes that don't rotate
         {
-            float x1 = _bodyX;
-            float y1 = _bodyY;
+            float x1 = bodyX;
+            float y1 = bodyY;
             float x2 = x1;
-            float y2 = y1 + _bodyH;
-            float r = _bodyW / 2;
+            float y2 = y1 + bodyH;
+            float r = bodyW / 2;
 
             Vec2 top = new Vec2(x1, y1);
             Vec2 bottom = new Vec2(x2, y2);
@@ -130,7 +118,7 @@ namespace Verdant
             rectangle1.CalculateVertices();
 
             Components = new Shape[] { rectangle1 };
-            Mass = _bodyM;
+            Mass = bodyM;
 
             Inertia = Mass * (
                 (float)Math.Pow(2 * rectangle1.Width, 2) +

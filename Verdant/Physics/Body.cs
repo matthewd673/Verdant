@@ -9,7 +9,6 @@ namespace Verdant.Physics
     [Serializable]
     public class Body
     {
-
         public Shape[] Components { get; set; } = new Shape[0];
         public Vec2 Position
         {

@@ -11,12 +11,6 @@ namespace Verdant.Physics
     public class CapsuleEntity : Entity
     {
 
-        private float _bodyX;
-        private float _bodyY;
-        private float _bodyH;
-        private float _bodyR;
-        private float _bodyM;
-
         /// <summary>
         /// Initialize a new CapsuleEntity.
         /// </summary>
@@ -28,36 +22,30 @@ namespace Verdant.Physics
         public CapsuleEntity(RenderObject sprite, Vec2 position, int radius, int height, float mass)
             : base(sprite, position, radius * 2, height)
         {
-            _bodyX = position.X;
-            _bodyY = position.Y;
-            _bodyR = radius;
-            _bodyH = height;
-            _bodyM = mass;
-
-            InitializeBody();
+            InitializeBody(position.X, position.Y, radius, height, mass);
         }
 
-        protected override void InitializeBody()
+        protected void InitializeBody(float bodyX, float bodyY, float bodyR, float bodyH, float bodyM)
         {
-            float x1 = _bodyX;
-            float y1 = _bodyY;
+            float x1 = bodyX;
+            float y1 = bodyY;
             float x2 = x1;
-            float y2 = y1 + _bodyH;
+            float y2 = y1 + bodyH;
 
-            Circle circle1 =  new Circle(x1, y1, _bodyR);
-            Circle circle2 = new Circle(x2, y2, _bodyR);
-            Vec2 recVec1 = circle2.Position + (circle2.Position - circle1.Position).Unit().Normal() * _bodyR;
-            Vec2 recVec2 = circle1.Position + (circle2.Position - circle1.Position).Unit().Normal() * _bodyR;
+            Circle circle1 =  new Circle(x1, y1, bodyR);
+            Circle circle2 = new Circle(x2, y2, bodyR);
+            Vec2 recVec1 = circle2.Position + (circle2.Position - circle1.Position).Unit().Normal() * bodyR;
+            Vec2 recVec2 = circle1.Position + (circle2.Position - circle1.Position).Unit().Normal() * bodyR;
 
-            Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * _bodyR);
+            Rectangle rectangle1 = new Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * bodyR);
             rectangle1.CalculateVertices();
 
             Components = new Shape[] { rectangle1, circle1, circle2 };
-            Mass = _bodyM;
+            Mass = bodyM;
 
             Inertia = Mass * (
                 (float) Math.Pow(2 * rectangle1.Width, 2) + 
-                (float) Math.Pow(_bodyH + 2 * rectangle1.Width, 2)
+                (float) Math.Pow(bodyH + 2 * rectangle1.Width, 2)
                 ) / 12;
         }
 
@@ -96,13 +84,15 @@ namespace Verdant.Physics
         public override void Draw(SpriteBatch spriteBatch)
         {
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
+            float rad = ((Circle)Components[1]).Radius;
+
             spriteBatch.Draw(
                 Sprite.Draw(),
                 Renderer.Camera.GetRenderBounds(
                     Position.X,
                     Position.Y,
                     Width,
-                    (int)(Height + 2*_bodyR)
+                    (int)(Height + 2*rad)
                     ),
                 null,
                 Color.White,
