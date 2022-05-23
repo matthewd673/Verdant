@@ -27,6 +27,16 @@ namespace Verdant
                     Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
             }
         }
+        public Scene Scene
+        {
+            get
+            {
+                if (Manager == null)
+                    return null;
+                return Manager.Scene;
+            }
+        }
+
         // The key of the Entity within the manager's hash table.
         public string Key { get; private set; }
         // The key of the Entity at the end of the last update.

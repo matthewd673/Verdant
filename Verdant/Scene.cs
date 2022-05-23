@@ -28,6 +28,7 @@ namespace Verdant
         public virtual void Initialize()
         {
             EntityManager = new EntityManager();
+            EntityManager.Scene = this;
             UIManager = new UIManager();
         }
 

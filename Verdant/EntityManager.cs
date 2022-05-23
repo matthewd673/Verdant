@@ -13,16 +13,18 @@ namespace Verdant
             NearCamera,
         }
 
-        readonly Dictionary<string, List<Entity>> entityTable = new();
+        public Scene Scene;
+
+        private readonly Dictionary<string, List<Entity>> entityTable = new();
         public int CellSize { get; }
 
-        List<Entity> addQueue = new List<Entity>();
-        List<Entity> removeQueue = new List<Entity>();
+        private List<Entity> addQueue = new List<Entity>();
+        private List<Entity> removeQueue = new List<Entity>();
 
         public int EntityCount { get; protected set; }
         public int EntityUpdateCount { get; protected set; }
 
-        static List<CollisionData> collisions = new List<CollisionData>();
+        private static List<CollisionData> collisions = new List<CollisionData>();
 
         /// <summary>
         /// Initialize a new EntityManager.
