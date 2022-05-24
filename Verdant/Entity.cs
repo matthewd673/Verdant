@@ -104,7 +104,7 @@ namespace Verdant
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
 
-            InitializeBody(position.X, position.Y, width, height, mass);
+            InitializeBody(position.X, position.Y, Width, Height, mass);
         }
 
         /// <summary>
