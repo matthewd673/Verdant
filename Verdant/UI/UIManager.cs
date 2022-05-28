@@ -21,6 +21,7 @@ namespace Verdant.UI
         /// <param name="e">The element to add.</param>
         public void AddElement(UIElement e)
         {
+            e.Manager = this;
             addQueue.Add(e);
         }
 
