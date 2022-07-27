@@ -25,8 +25,8 @@ namespace Verdant.UI
         public UISprite(RenderObject sprite, Vec2 pos) : base(pos)
         {
             Sprite = sprite;
-            Width = sprite.Width;
-            Height = sprite.Height;
+            Width = sprite.Width * Renderer.Scale;
+            Height = sprite.Height * Renderer.Scale;
         }
         /// <summary>
         /// Initialize a new UISprite.
@@ -48,8 +48,8 @@ namespace Verdant.UI
                 new Rectangle(
                     (int)(Position.X * Renderer.Scale),
                     (int)(Position.Y * Renderer.Scale),
-                    Width * Renderer.Scale,
-                    Height * Renderer.Scale),
+                    Width,
+                    Height),
                 Color.White);
         }
 

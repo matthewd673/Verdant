@@ -67,16 +67,5 @@ namespace Verdant
             if (automaticallyMakeActive && (!HasActive || scenes.Count == 1))
                 ActiveID = s.ID;
         }
-
-        /// <summary>
-        /// Update the active Scene, if there is one.
-        /// </summary>
-        public void Update()
-        {
-            if (!HasActive)
-                return;
-            ActiveScene.Update();
-        }
-
     }
 }

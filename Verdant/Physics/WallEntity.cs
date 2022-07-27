@@ -9,12 +9,6 @@ namespace Verdant.Physics
     /// </summary>
     public class WallEntity : Entity
     {
-
-        private float _bodyX1;
-        private float _bodyY1;
-        private float _bodyX2;
-        private float _bodyY2;
-
         /// <summary>
         /// Initialize a new WallEntity.
         /// </summary>
@@ -23,20 +17,15 @@ namespace Verdant.Physics
         public WallEntity(Vec2 start, Vec2 end)
             : base(null, new Vec2(0, 0), 0, 0)
         {
-            _bodyX1 = start.X;
-            _bodyY1 = start.Y;
-            _bodyX2 = end.X;
-            _bodyY2 = end.Y;
-
-            InitializeBody();
+            InitializeBody(start.X, start.Y, end.X, end.Y);
         }
 
-        protected override void InitializeBody()
+        protected void InitializeBody(float bodyX1, float bodyY1, float bodyX2, float bodyY2)
         {
-            Components = new Shape[] { new Line(_bodyX1, _bodyY1, _bodyX2, _bodyY2) };
+            Components = new Shape[] { new Line(bodyX1, bodyY1, bodyX2, bodyY2) };
             Position = new Vec2(
-                (_bodyX1 + _bodyX2) / 2f,
-                (_bodyY1 + _bodyY2) / 2f
+                (bodyX1 + bodyX2) / 2f,
+                (bodyY1 + bodyY2) / 2f
                 );
         }
 

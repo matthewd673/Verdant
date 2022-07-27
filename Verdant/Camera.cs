@@ -74,7 +74,7 @@ namespace Verdant
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
         /// <returns>A Vec2 representing the position in the world.</returns>
-        public Vec2 ScreenToWorldPos(float x, float y)
+        public Vec2 ScreenToWorldPos(int x, int y)
         {
             return new Vec2((x - Position.X) / Renderer.Scale, (y - Position.Y) / Renderer.Scale);
         }
@@ -83,7 +83,7 @@ namespace Verdant
         /// </summary>
         /// <param name="screenPos">The position on the screen.</param>
         /// <returns>A Vec2 representing the position in the world.</returns>
-        public Vec2 ScreenToWorldPos(Vec2 screenPos)
+        public Vec2 ScreenToWorldPos(Vec2Int screenPos)
         {
             return ScreenToWorldPos(screenPos.X, screenPos.Y);
         }

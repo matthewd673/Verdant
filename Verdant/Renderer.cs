@@ -70,7 +70,7 @@ namespace Verdant
             //render entities
             if (SortEntities)
             {
-                sortedQueue = entityManager.GetAllEntities().OrderBy(n => n.ZIndex);
+                sortedQueue = entityManager.GetEntitiesInBounds(Camera.Position, Camera.Width, Camera.Height).OrderBy(n => n.ZIndex);
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
@@ -80,7 +80,7 @@ namespace Verdant
             }
             else
             {
-                foreach (Entity e in entityManager.GetAllEntities())
+                foreach (Entity e in entityManager.GetEntitiesInBounds(Camera.Position, Camera.Width, Camera.Height))
                 {
                     e.Draw(spriteBatch);
                     if (visualizeBodies)

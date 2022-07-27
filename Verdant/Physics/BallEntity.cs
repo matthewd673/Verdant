@@ -11,10 +11,7 @@ namespace Verdant.Physics
     public class BallEntity : Entity
     {
 
-        private float _bodyX = 0f;
-        private float _bodyY = 0f;
-        private float _bodyR = 0f;
-        private float _bodyMass = 0f;
+        private Sprite circleTexture;
 
         /// <summary>
         /// Initialize a new BallEntity.
@@ -26,19 +23,15 @@ namespace Verdant.Physics
         public BallEntity(RenderObject sprite, Vec2 position, float radius, float mass)
             : base(sprite, position, (int)(radius * 2), (int)(radius * 2))
         {
-            _bodyX = position.X;
-            _bodyY = position.Y;
-            _bodyR = radius;
-            _bodyMass = mass;
-
-            InitializeBody();
+            InitializeBody(position.X, position.Y, radius, mass);
+            circleTexture = Renderer.GenerateCircleSprite(radius, Color.White);
         }
 
-        protected override void InitializeBody()
+        protected void InitializeBody(float bodyX, float bodyY, float bodyR, float bodyM)
         {
-            Components = new Shape[] { new Circle(_bodyX, _bodyY, _bodyR) };
-            Position = new Vec2(_bodyX, _bodyY);
-            Mass = _bodyMass;
+            Components = new Shape[] { new Circle(bodyX, bodyY, bodyR) };
+            Position = new Vec2(bodyX, bodyY);
+            Mass = bodyM;
         }
 
         /// <summary>
@@ -61,11 +54,10 @@ namespace Verdant.Physics
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Sprite circleTexture = Renderer.GenerateCircleSprite(_bodyR, Color.Red);
-
+            float rad = ((Circle)Components[0]).Radius;
             spriteBatch.Draw(
                 circleTexture.Draw(),
-                Renderer.Camera.GetRenderBounds(Position - new Vec2(_bodyR, _bodyR), circleTexture.Width, circleTexture.Height),
+                Renderer.Camera.GetRenderBounds(Position - new Vec2(rad, rad), circleTexture.Width, circleTexture.Height),
                 Color.White
                 );
         }
