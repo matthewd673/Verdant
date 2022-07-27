@@ -61,6 +61,16 @@ namespace Verdant
             return (float) Math.Sqrt(X*X + Y*Y);
         }
 
+        public float Direction()
+        {
+            return (float) Math.Atan2(Y, X);
+        }
+
+        public float DirectionOpposite()
+        {
+            return (float) Math.PI + Direction();
+        }
+
         public Vec2 Unit()
         {
             float mag = Magnitude();
