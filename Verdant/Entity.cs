@@ -95,8 +95,11 @@ namespace Verdant
             Sprite = sprite;
             Position = position;
 
-            Width = (width == -1) ? sprite.Width : width;
-            Height = (height == -1) ? sprite.Height : height;
+            if (sprite != null)
+            {
+                Width = (width == -1) ? sprite.Width : width;
+                Height = (height == -1) ? sprite.Height : height;
+            }
 
             BodyParent = this;
 
