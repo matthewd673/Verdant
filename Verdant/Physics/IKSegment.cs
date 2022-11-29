@@ -45,7 +45,7 @@ namespace Verdant.Physics
             Head = target + dir;
         }
 
-        public void Update()
+        public override void Update()
         {
             CalculateTail();
         }

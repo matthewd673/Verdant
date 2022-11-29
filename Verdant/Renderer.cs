@@ -22,7 +22,7 @@ namespace Verdant
 
         static IEnumerable<Entity> sortedQueue;
 
-        static GraphicsDevice graphicsDevice;
+        public static GraphicsDevice GraphicsDevice { get; private set; }
 
         /// <summary>
         /// Get a Texture2D containing a single white pixel.
@@ -44,7 +44,7 @@ namespace Verdant
         /// <param name="scale">The render scale.</param>
         public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
         {
-            Renderer.graphicsDevice = graphicsDevice;
+            Renderer.GraphicsDevice = graphicsDevice;
             Camera = new Camera(new Vec2(), screenWidth, screenHeight);
             Scale = scale;
 
@@ -141,7 +141,7 @@ namespace Verdant
             int diam = (int)(radius * 2);
             int rSqr = (int)(radius * radius);
 
-            Texture2D circleTex = new Texture2D(graphicsDevice, diam, diam);
+            Texture2D circleTex = new Texture2D(GraphicsDevice, diam, diam);
             Color[] colorData = new Color[diam * diam];
 
             for (int i = 0; i < diam; i++)

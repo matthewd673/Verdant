@@ -73,7 +73,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Get the sprite at the x position (and optionally y position) on the sheet.
+        /// Get the Texture2D of the sprite at the x position (and optionally y position) on the sheet.
         /// </summary>
         /// <param name="x">The x position of the sprite.</param>
         /// <param name="y">The y position of the sprite. Defaults to 0 (first row).</param>
@@ -81,6 +81,18 @@ namespace Verdant
         public override Texture2D DrawIndex(int x, int y = 0)
         {
             return sprites[x, y];
+        }
+
+        /// <summary>
+        /// Get a Sprite representing the Texture2D at the x position (and optionally y position) on the sheet.
+        /// NOTE: This function creates a new Sprite every time it is called, use DrawIndex() in a loop.
+        /// </summary>
+        /// <param name="x">The x position of the sprite.</param>
+        /// <param name="y">The y position of the sprite.</param>
+        /// <returns>A Sprite of the Texture2D located at the given coordinates.</returns>
+        public Sprite GetSprite(int x, int y = 0)
+        {
+            return new Sprite(sprites[x, y]);
         }
 
         /// <summary>
