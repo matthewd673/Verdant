@@ -53,7 +53,7 @@ namespace PhysicsDemo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            sceneManager.Update();
+            sceneManager.ActiveScene.Update();
 
             base.Update(gameTime);
         }

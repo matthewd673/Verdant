@@ -30,7 +30,6 @@ More info is available in the [LogConsole README](https://github.com/matthewd673
 - **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple game that makes use of `Debugging.Log` and the LogConsole.
 - **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations. Entirely unfinished.
 - **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates all physics bodies.
-- **[NetworkDemo](https://https://github.com/matthewd673/Verdant/tree/master/Demos/NetworkDemo):** A game with basic networking features *(Verdant's networking - and therefore, this demo - are in early development)*
 
 ## [Documentation](https://github.com/matthewd673/Verdant/wiki)
 
