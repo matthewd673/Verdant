@@ -3,13 +3,8 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
-    public class Camera
+    public class Camera : Entity
     {
-
-        public Vec2 Position { get; set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-
         float shakeStrength;
         Timer shakeCooldown;
         float offsetX;
@@ -20,12 +15,7 @@ namespace Verdant
         /// </summary>
         /// <param name="w">The width of the screen.</param>
         /// <param name="h">The height of the screen.</param>
-        public Camera(int w, int h)
-        {
-            Position = new Vec2();
-            Width = w;
-            Height = h;
-        }
+        public Camera(int w, int h) : base(RenderObject.None, new Vec2(), w, h) { }
 
         /// <summary>
         /// Initialize a new Camera.
@@ -33,12 +23,7 @@ namespace Verdant
         /// <param name="pos">The initial position of the Camera.</param>
         /// <param name="w">The width of the screen.</param>
         /// <param name="h">The height of the screen.</param>
-        public Camera(Vec2 pos, int w, int h)
-        {
-            Position = pos;
-            Width = w;
-            Height = h;
-        }
+        public Camera(Vec2 pos, int w, int h) : base(RenderObject.None, pos, w, h) { }
 
         /// <summary>
         /// Update the Camera, performing any animated effects (such as screen shake).

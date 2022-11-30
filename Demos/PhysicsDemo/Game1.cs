@@ -64,6 +64,7 @@ namespace PhysicsDemo
 
             _spriteBatch.Begin();
             Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: true);
+            SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Sprites.DebugFont);
             _spriteBatch.End();
 
             base.Draw(gameTime);
