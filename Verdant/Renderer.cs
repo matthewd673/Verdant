@@ -44,7 +44,7 @@ namespace Verdant
         /// <param name="scale">The render scale.</param>
         public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
         {
-            Renderer.GraphicsDevice = graphicsDevice;
+            GraphicsDevice = graphicsDevice;
             Camera = new Camera(new Vec2(), screenWidth, screenHeight);
             Scale = scale;
 
@@ -139,7 +139,6 @@ namespace Verdant
         public static Sprite GenerateCircleSprite(float radius, Color color) //TODO: this is far from perfect
         {
             int diam = (int)(radius * 2);
-            int rSqr = (int)(radius * radius);
 
             Texture2D circleTex = new Texture2D(GraphicsDevice, diam, diam);
             Color[] colorData = new Color[diam * diam];

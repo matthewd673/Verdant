@@ -86,13 +86,9 @@ namespace Verdant
                 Height = (height == -1) ? sprite.Height : height;
             }
 
-            //BodyParent = this;
-
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
-
-            //InitializeBody(position.X, position.Y, Width, Height, mass);
         }
 
         /// <summary>
@@ -100,14 +96,14 @@ namespace Verdant
         /// </summary>
         public virtual void Update()
         {
-            //update key
+            // update key
             if (Manager != null) //only if a managed entity (not Particles, for example)
             {
                 PreviousKey = Key;
                 Key = Manager.GetKeyFromPos(Position);
             }
 
-            //update z index
+            // update z index
             if (SetZIndexToBase)
                 ZIndex = (int)(Position.Y + Height);
         }
@@ -130,7 +126,7 @@ namespace Verdant
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            if (Sprite == null)
+            if (Sprite == RenderObject.None)
             {
                 return;
             }

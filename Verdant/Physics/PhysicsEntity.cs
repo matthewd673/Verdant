@@ -87,10 +87,6 @@ namespace Verdant.Physics
             Velocity *= 1 - Friction;
 
             Components[0].Position += Velocity;
-
-            // TODO: only necessary if hasn't been extended
-            //if (Components[0].GetType() == typeof(Rectangle))
-            //    ((Rectangle)Components[0]).CalculateVertices();
         }
         
         /// <summary>

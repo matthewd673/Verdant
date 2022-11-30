@@ -535,6 +535,7 @@ namespace Verdant
         protected virtual void UpdateList(List<Entity> updateList)
         {
             EntityUpdateCount = 0;
+            PhysicsEntityUpdateCount = 0;
             List<PhysicsEntity> physicsList = new();
 
             // update all

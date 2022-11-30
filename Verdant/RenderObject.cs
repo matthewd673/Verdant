@@ -5,6 +5,7 @@ namespace Verdant
 {
     public abstract class RenderObject
     {
+        public const RenderObject None = null;
 
         public virtual int Width { get { return DrawIndex(0).Width; } }
         public virtual int Height { get { return DrawIndex(0).Height; } }

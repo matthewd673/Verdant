@@ -19,7 +19,7 @@ namespace Verdant.Debugging
         /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).
         /// </summary>
         /// <param name="message"></param>
-        public static void WriteLine(string message)
+        public static void WriteLine(object value)
         {
 
 #if DEBUG
@@ -43,7 +43,7 @@ namespace Verdant.Debugging
                 }
             }
 
-            byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+            byte[] messageBytes = Encoding.ASCII.GetBytes(value.ToString());
             client.Send(messageBytes, messageBytes.Length);
 #endif
 
