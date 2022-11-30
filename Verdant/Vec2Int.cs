@@ -40,8 +40,10 @@ namespace Verdant
             return (X == o.X && Y == o.Y);
         }
 
-        public static bool operator ==(Vec2Int a, Vec2Int b) => a.Equals(b);
-        public static bool operator !=(Vec2Int a, Vec2Int b) => !a.Equals(b);
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
 
         public static Vec2Int operator +(Vec2Int a) => a;
         public static Vec2Int operator -(Vec2Int a) => -a;

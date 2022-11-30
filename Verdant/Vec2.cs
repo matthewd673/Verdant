@@ -49,6 +49,11 @@ namespace Verdant
             return (X == o.X && Y == o.Y);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
+
         public override string ToString()
         {
             return "(" + X + ", " + Y + ")";
@@ -96,9 +101,6 @@ namespace Verdant
         {
             return a.X * b.Y - a.Y * b.X;
         }
-
-        //public static bool operator ==(Vec2 a, Vec2 b) => a.Equals(b);
-        //public static bool operator !=(Vec2 a, Vec2 b) => !a.Equals(b);
 
         public static Vec2 operator +(Vec2 a) => a;
         public static Vec2 operator -(Vec2 a) => new Vec2(-a.X, -a.Y);
