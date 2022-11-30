@@ -74,8 +74,8 @@ namespace Verdant
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
-                    if (visualizeBodies)
-                        e.DrawBody(spriteBatch);
+                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
+                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
                 }
             }
             else
@@ -83,8 +83,8 @@ namespace Verdant
                 foreach (Entity e in entityManager.GetEntitiesInBounds(Camera.Position, Camera.Width, Camera.Height))
                 {
                     e.Draw(spriteBatch);
-                    if (visualizeBodies)
-                        e.DrawBody(spriteBatch);
+                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
+                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
                 }
             }
 

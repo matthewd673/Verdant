@@ -23,8 +23,9 @@ namespace Verdant
 
         public int EntityCount { get; protected set; }
         public int EntityUpdateCount { get; protected set; }
+        public int PhysicsEntityUpdateCount { get; protected set; }
 
-        private static List<CollisionData> collisions = new List<CollisionData>();
+        private List<CollisionData> collisions = new List<CollisionData>();
 
         /// <summary>
         /// Initialize a new EntityManager.
@@ -294,31 +295,31 @@ namespace Verdant
                 {
                     if (onlyTriggers && c.b.Trigger)
                     {
-                        colliding.Add(c.b.BodyParent);
+                        colliding.Add(c.b);
                         continue;
                     }
                     else if (onlySolids && !c.b.Trigger)
                     {
-                        colliding.Add(c.b.BodyParent);
+                        colliding.Add(c.b);
                         continue;
                     }
                     
-                    colliding.Add(c.b.BodyParent);
+                    colliding.Add(c.b);
                 }
                 else if (c.b == e)
                 {
                     if (onlyTriggers && c.a.Trigger)
                     {
-                        colliding.Add(c.a.BodyParent);
+                        colliding.Add(c.a);
                         continue;
                     }
                     else if (onlySolids && !c.a.Trigger)
                     {
-                        colliding.Add(c.a.BodyParent);
+                        colliding.Add(c.a);
                         continue;
                     }
 
-                    colliding.Add(c.a.BodyParent);
+                    colliding.Add(c.a);
                 }
             }
 
@@ -327,15 +328,14 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Get a list of all Entities of a given type currently colliding with the specified Entity.
+        /// Get a list of all PhysicsEntities of a given type currently colliding with the specified Entity.
         /// </summary>
-        /// <typeparam name="TEntity">The type of Entity to check for.</typeparam>
-        /// <param name="e">The Entity used to check collisions. By default, all of the Entity's colliders will be checked.</param>
-        /// <param name="specificCollider">Specify a single collider to check against. Useful if the Entity has more than one Collider attached to it.</param>
-        /// <param name="onlyTriggers">If true, only Colliders marked as triggers will be checked.</param>
-        /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
+        /// <typeparam name="TEntity">The type of PhysicsEntity to check for.</typeparam>
+        /// <param name="e">The PhysicsEntity used to check collisions against.</param>
+        /// <param name="onlyTriggers">If true, only PhysicsEntities marked as triggers will be checked.</param>
+        /// <param name="onlySolids">If true, only PhysicsEntities not marked as triggers will be checked.</param>
         /// <returns>A list containing all colliding Entities.</returns>
-        public List<TEntity> GetAllCollidingOfType<TEntity>(Entity e, bool onlyTriggers = false, bool onlySolids = false) where TEntity : Entity //largely copied from GetAllColliding
+        public List<TEntity> GetAllCollidingOfType<TEntity>(Entity e, bool onlyTriggers = false, bool onlySolids = false) where TEntity : PhysicsEntity // largely copied from GetAllColliding
         {
             List<TEntity> colliding = new List<TEntity>();
 
@@ -348,16 +348,16 @@ namespace Verdant
 
                     if (onlyTriggers && c.b.Trigger)
                     {
-                        colliding.Add((TEntity) c.b.BodyParent);
+                        colliding.Add((TEntity) c.b);
                         continue;
                     }
                     else if (onlySolids && !c.b.Trigger)
                     {
-                        colliding.Add((TEntity) c.b.BodyParent);
+                        colliding.Add((TEntity) c.b);
                         continue;
                     }
 
-                    colliding.Add((TEntity) c.b.BodyParent);
+                    colliding.Add((TEntity) c.b);
                 }
                 else if (c.b == e)
                 {
@@ -366,16 +366,16 @@ namespace Verdant
 
                     if (onlyTriggers && c.a.Trigger)
                     {
-                        colliding.Add((TEntity) c.a.BodyParent);
+                        colliding.Add((TEntity) c.a);
                         continue;
                     }
                     else if (onlySolids && !c.a.Trigger)
                     {
-                        colliding.Add((TEntity) c.a.BodyParent);
+                        colliding.Add((TEntity) c.a);
                         continue;
                     }
 
-                    colliding.Add((TEntity) c.a.BodyParent);
+                    colliding.Add((TEntity) c.a);
                 }
             }
 
@@ -389,20 +389,19 @@ namespace Verdant
         /// <param name="y">The y coordinate of the rectangle.</param>
         /// <param name="w">The width of the rectangle.</param>
         /// <param name="h">The height of the rectangle.</param>
-        /// <param name="onlyTriggers">If true, only Colliders marked as triggers will be checked.</param>
-        /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
-        /// <param name="ignoreList">A list of Entities to exclude from the check.</param>
-        /// <returns>A list of all colliding Entities of the given type.</returns>
-        public List<Entity> CheckRectCollisions(float x, float y, int w, int h, bool onlyTriggers = false, bool onlySolids = false, List<Entity> ignoreList = null) //mostly copy & paste from above...
+        /// <param name="onlyTriggers">If true, only PhysicsEntities marked as triggers will be checked.</param>
+        /// <param name="onlySolids">If true, only PhysicsEntities not marked as triggers will be checked.</param>
+        /// <param name="ignoreList">A list of PhysicsEntities to exclude from the check.</param>
+        /// <returns>A list of all colliding PhysicsEntities of the given type.</returns>
+        public List<PhysicsEntity> CheckRectCollisions(float x, float y, int w, int h, bool onlyTriggers = false, bool onlySolids = false, List<PhysicsEntity> ignoreList = null) // mostly copy & paste from above...
         {
-            List<Entity> colliding = new List<Entity>();
+            List<PhysicsEntity> colliding = new List<PhysicsEntity>();
 
-            List<Entity> searchList = GetEntitiesInBounds(x, y, w, h);
+            List<PhysicsEntity> searchList = GetEntitiesInBoundsOfType<PhysicsEntity>(x, y, w, h);
             Rectangle bounds = new Rectangle(x, y, x + w, x + h, w);
 
-            foreach (Entity e in searchList)
+            foreach (PhysicsEntity e in searchList)
             {
-
                 if (onlyTriggers && !e.Trigger)
                     continue;
                 if (onlySolids && e.Trigger)
@@ -438,7 +437,7 @@ namespace Verdant
         /// <param name="onlySolids">If true, only Colliders not marked as triggers will be checked.</param>
         /// <param name="ignoreList">A list of all Entities to exclude from the check.</param>
         /// <returns>A list of all colliding Entities of the given type.</returns>
-        public List<TEntity> CheckRectCollisionsWithType<TEntity>(float x, float y, int w, int h, bool onlyTriggers = false, bool onlySolids = false, List<TEntity> ignoreList = null) where TEntity : Entity //copied from CheckRectCollisions
+        public List<TEntity> CheckRectCollisionsWithType<TEntity>(float x, float y, int w, int h, bool onlyTriggers = false, bool onlySolids = false, List<TEntity> ignoreList = null) where TEntity : PhysicsEntity // copied from CheckRectCollisions
         {
             List<TEntity> colliding = new List<TEntity>();
 
@@ -447,7 +446,6 @@ namespace Verdant
 
             foreach (TEntity e in searchList)
             {
-
                 if (onlyTriggers && !e.Trigger)
                     continue;
                 if (onlySolids && e.Trigger)
@@ -479,8 +477,8 @@ namespace Verdant
         {
             if (entityTable.ContainsKey(e.PreviousKey))
             {
-                if (!entityTable[e.PreviousKey].Remove(e)) //attempt to remove
-                    return; //if it couldn't be removed for some reason, assume it has already been moved and stop to avoid dupllicates
+                if (!entityTable[e.PreviousKey].Remove(e)) // attempt to remove
+                    return; // if it couldn't be removed for some reason, assume it has already been moved and stop to avoid dupllicates
 
                 if (entityTable.ContainsKey(e.Key))
                     entityTable[e.Key].Add(e);
@@ -489,13 +487,12 @@ namespace Verdant
             }
         }
 
-        protected void PhysicsLoop(List<Entity> updateList)
+        protected void PhysicsLoop(List<PhysicsEntity> updateList)
         {
-
             collisions.Clear();
 
             int i = 0;
-            foreach (Entity e in updateList)
+            foreach (PhysicsEntity e in updateList)
             {
                 for (int j = i + 1; j < updateList.Count; j++)
                 {
@@ -523,15 +520,12 @@ namespace Verdant
 
             foreach (CollisionData c in collisions)
             {
-                if (c.a.Trigger || c.b.Trigger) //skip triggers
+                if (c.a.Trigger || c.b.Trigger) // skip triggers
                     continue;
 
                 c.PenetrationResolution();
                 c.CollisionResolution();
             }
-
-            //Debugging.Log.WriteLine("collisions: " + collisions.Count);
-
         }
 
         /// <summary>
@@ -541,25 +535,34 @@ namespace Verdant
         protected virtual void UpdateList(List<Entity> updateList)
         {
             EntityUpdateCount = 0;
+            List<PhysicsEntity> physicsList = new();
 
-            //update all
+            // update all
             foreach (Entity e in updateList)
             {
                 e.Update();
-                e.Move();
-                EntityUpdateCount++; //keep track
 
-                //remove marked entities
+                if (e.IsType(typeof(PhysicsEntity)))
+                {
+                    PhysicsEntity p = (PhysicsEntity) e;
+                    p.Move();
+                    physicsList.Add(p);
+                    PhysicsEntityUpdateCount++; // count physics updates
+                }
+
+                EntityUpdateCount++; // count entity updates
+
+                // remove marked entities
                 if (e.ForRemoval)
                 {
                     RemoveEntity(e);
-                    continue; //don't bother with anything else if being removed
+                    continue; // don't bother with anything else if being removed
                 }
                 if (!e.Key.Equals(e.PreviousKey))
                     MoveEntityCell(e);
             }
 
-            PhysicsLoop(updateList);
+            PhysicsLoop(physicsList);
 
             ApplyQueues();
         }

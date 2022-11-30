@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
-
-    [Serializable]
     public class Vec2
     {
 

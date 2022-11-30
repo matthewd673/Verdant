@@ -211,7 +211,7 @@ namespace Verdant
         /// </summary>
         /// <typeparam name="T">The type of Entity to treat as an obstacle.</typeparam>
         /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
-        public void BuildPathMap<T>(EntityManager entityManager) where T : Entity
+        public void BuildPathMap<T>(EntityManager entityManager) where T : PhysicsEntity
         {
             //get a list of obstacles (currently only walls)
             List<T> obstacles = entityManager.GetAllEntitiesOfType<T>();
@@ -222,7 +222,7 @@ namespace Verdant
             int maxX = 0;
             int maxY = 0;
 
-            foreach (Entity e in obstacles) //we need data that only Tiles have
+            foreach (PhysicsEntity e in obstacles) // we need data that only PhysicsEntities have
             {
                 foreach (Shape s in e.Components)
                 {
@@ -233,7 +233,7 @@ namespace Verdant
                     float width = 0;
                     float height = 0;
                     
-                    //lines won't work (because pathfinding off of lines makes no sense)
+                    // lines won't work (because pathfinding off of lines makes no sense)
                     if (s.GetType() == typeof(Rectangle))
                     {
                         width = ((Rectangle)s).Width;
@@ -243,7 +243,7 @@ namespace Verdant
                     {
                         float r = ((Circle)s).Radius;
 
-                        x -= r; //because circle's origin is at the center
+                        x -= r; // because circle's origin is at the center
                         y -= r;
                         width = ((Circle)s).Radius * 2;
                         height = ((Circle)s).Radius * 2;

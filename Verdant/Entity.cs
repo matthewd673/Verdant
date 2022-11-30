@@ -1,22 +1,16 @@
 ﻿using System;
-using Verdant.Physics;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Text.Json.Serialization;
 
 namespace Verdant
 {
 
-    [Serializable]
-    public class Entity : Body
+    public class Entity
     {
-        
-        [JsonIgnore]
+
         EntityManager _manager;
 
         // The EntityManager that manages this Entity.
-        [JsonIgnore]
         public EntityManager Manager
         {
             get { return _manager; }
@@ -27,15 +21,6 @@ namespace Verdant
                     Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
             }
         }
-        public Scene Scene
-        {
-            get
-            {
-                if (Manager == null)
-                    return null;
-                return Manager.Scene;
-            }
-        }
 
         // The key of the Entity within the manager's hash table.
         public string Key { get; private set; }
@@ -43,8 +28,9 @@ namespace Verdant
         public string PreviousKey { get; private set; } = "";
         
         // The RenderObject used to draw this Entity.
-        [JsonIgnore]
         public RenderObject Sprite { get; set; }
+
+        public Vec2 Position { get; set; }
 
         private int _width;
         // The draw width of the Entity.
@@ -72,7 +58,7 @@ namespace Verdant
 
         protected bool SetZIndexToBase { get; set; }
         // The z-index, used for sorting and depth-based rendering.
-        public int ZIndex { get; protected set; } = 0;
+        public int ZIndex { get; set; } = 0;
 
         // Determines if the Entity should be removed at the end of the
         // next update loop.
@@ -85,8 +71,7 @@ namespace Verdant
         /// <param name="position">The position of the center of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1, float mass = 1f) :
+        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) :
             base()
         {
             //apply default properties
@@ -101,53 +86,13 @@ namespace Verdant
                 Height = (height == -1) ? sprite.Height : height;
             }
 
-            BodyParent = this;
+            //BodyParent = this;
 
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
             //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
 
-            InitializeBody(position.X, position.Y, Width, Height, mass);
-        }
-
-        /// <summary>
-        /// Generate the Components and properties for the underlying physics body. By default, Entities are Boxes with 100% angular friction (cannot rotate).
-        /// </summary>
-        protected void InitializeBody(float bodyX, float bodyY, float bodyW, float bodyH, float bodyM) //by default entities are boxes that don't rotate
-        {
-            float x1 = bodyX;
-            float y1 = bodyY;
-            float x2 = x1;
-            float y2 = y1 + bodyH;
-            float r = bodyW / 2;
-
-            Vec2 top = new Vec2(x1, y1);
-            Vec2 bottom = new Vec2(x2, y2);
-
-            Vec2 recVec1 = bottom + (bottom - top).Unit().Normal() * r;
-            Vec2 recVec2 = top + (bottom - top).Unit().Normal() * r;
-
-            Physics.Rectangle rectangle1 = new Physics.Rectangle(recVec1.X, recVec1.Y, recVec2.X, recVec2.Y, 2 * r);
-            rectangle1.CalculateVertices();
-
-            Components = new Shape[] { rectangle1 };
-            Mass = bodyM;
-
-            Inertia = Mass * (
-                (float)Math.Pow(2 * rectangle1.Width, 2) +
-                (float)Math.Pow(Height + 2 * rectangle1.Width, 2)
-                ) / 12;
-        }
-
-        /// <summary>
-        /// Perform physics movement for the Entity, called in the EntityManager physics loop.
-        /// </summary>
-        public override void Move()
-        {
-            base.Move();
-
-            if (Components[0].GetType() == typeof(Physics.Rectangle))
-                ((Physics.Rectangle)Components[0]).CalculateVertices();
+            //InitializeBody(position.X, position.Y, Width, Height, mass);
         }
 
         /// <summary>
@@ -165,7 +110,6 @@ namespace Verdant
             //update z index
             if (SetZIndexToBase)
                 ZIndex = (int)(Position.Y + Height);
-
         }
 
         /// <summary>
@@ -178,9 +122,6 @@ namespace Verdant
             Position.Y = state.Y;
             Width = (int)state.Width;
             Height = (int)state.Height;
-
-            if (Components[0].GetType() == typeof(Physics.Rectangle))
-                ((Physics.Rectangle)Components[0]).Angle = state.Rotation;
         }
 
         /// <summary>
@@ -204,6 +145,16 @@ namespace Verdant
                     ),
                 Color.White
                 );
+        }
+
+        /// <summary>
+        /// Check if this Entity is of a given type.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <returns>True if the Entity is of the given type or is a subclass of the given type.</returns>
+        public bool IsType(Type t)
+        {
+            return GetType() == t || GetType().IsSubclassOf(t);
         }
 
     }

@@ -7,7 +7,7 @@ namespace Verdant.Physics
     /// <summary>
     /// An Entity with a Wall body. Doesn't render or move by default.
     /// </summary>
-    public class WallEntity : Entity
+    public class WallEntity : PhysicsEntity
     {
         /// <summary>
         /// Initialize a new WallEntity.
@@ -15,17 +15,13 @@ namespace Verdant.Physics
         /// <param name="start">The start position of the Wall.</param>
         /// <param name="end">The end position of the Wall.</param>
         public WallEntity(Vec2 start, Vec2 end)
-            : base(null, new Vec2(0, 0), 0, 0)
+            : base(null, new Vec2(0, 0), 0, 0, mass: 0)
         {
-            InitializeBody(start.X, start.Y, end.X, end.Y);
-        }
-
-        protected void InitializeBody(float bodyX1, float bodyY1, float bodyX2, float bodyY2)
-        {
-            Components = new Shape[] { new Line(bodyX1, bodyY1, bodyX2, bodyY2) };
+            //InitializeBody(start.X, start.Y, end.X, end.Y);
+            Components = new Shape[] { new Line(start.X, start.Y, end.X, end.Y) };
             Position = new Vec2(
-                (bodyX1 + bodyX2) / 2f,
-                (bodyY1 + bodyY2) / 2f
+                (start.X + end.X) / 2f,
+                (start.Y + end.Y) / 2f
                 );
         }
 

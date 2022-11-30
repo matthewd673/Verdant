@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Verdant.Physics;
+using System;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
-    public class Particle : Entity
+    public class Particle : PhysicsEntity
     {
 
         int lifetime;
@@ -16,7 +17,8 @@ namespace Verdant
         /// <param name="w">The width of the Particle.</param>
         /// <param name="h">The height of the Particle.</param>
         /// <param name="lifetime">The number of frames the Particle should live before being marked as dead.</param>
-        public Particle(RenderObject sprite, Vec2 pos, int w, int h, int lifetime) : base(sprite, pos, w, h)
+        public Particle(RenderObject sprite, Vec2 pos, int w, int h, int lifetime)
+                : base(sprite, pos, w, h, mass: 0)
         {
             this.lifetime = lifetime;
         }

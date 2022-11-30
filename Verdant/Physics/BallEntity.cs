@@ -8,7 +8,7 @@ namespace Verdant.Physics
     /// <summary>
     /// An Entity with a Ball body.
     /// </summary>
-    public class BallEntity : Entity
+    public class BallEntity : PhysicsEntity
     {
 
         private Sprite circleTexture;
@@ -18,20 +18,14 @@ namespace Verdant.Physics
         /// </summary>
         /// <param name="sprite">The Entity's sprite.</param>
         /// <param name="position">The position of the center of the Entity.</param>
-        /// <param name="radius">The radius of the Entity's Ball. Also used to determine rendering width and height.</param>
+        /// <param name="radius">The radius of the Entity's Ball. Also used to determine rendering width and height by default.</param>
         /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public BallEntity(RenderObject sprite, Vec2 position, float radius, float mass)
-            : base(sprite, position, (int)(radius * 2), (int)(radius * 2))
+            : base(sprite, position, (int)(radius * 2), (int)(radius * 2), mass)
         {
-            InitializeBody(position.X, position.Y, radius, mass);
-            circleTexture = Renderer.GenerateCircleSprite(radius, Color.White);
-        }
+            Components = new Shape[] { new Circle(position.X, position.Y, radius) };
 
-        protected void InitializeBody(float bodyX, float bodyY, float bodyR, float bodyM)
-        {
-            Components = new Shape[] { new Circle(bodyX, bodyY, bodyR) };
-            Position = new Vec2(bodyX, bodyY);
-            Mass = bodyM;
+            circleTexture = Renderer.GenerateCircleSprite(radius, Color.White);
         }
 
         /// <summary>

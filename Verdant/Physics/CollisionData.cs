@@ -5,8 +5,8 @@ namespace Verdant.Physics
     internal class CollisionData
     {
 
-        internal Body a;
-        internal Body b;
+        internal PhysicsEntity a;
+        internal PhysicsEntity b;
         Vec2 normal;
         float pen;
         Vec2 cp;
@@ -19,7 +19,7 @@ namespace Verdant.Physics
         /// <param name="normal">The normal of the collision.</param>
         /// <param name="pen">The penetration depth of the collision.</param>
         /// <param name="cp">The contact point of the collision.</param>
-        public CollisionData(Body a, Body b, Vec2 normal, float pen, Vec2 cp)
+        public CollisionData(PhysicsEntity a, PhysicsEntity b, Vec2 normal, float pen, Vec2 cp)
         {
             this.a = a;
             this.b = b;

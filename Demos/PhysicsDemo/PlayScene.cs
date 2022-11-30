@@ -21,9 +21,9 @@ namespace PhysicsDemo
             EntityManager.AddEntity(ball);
 
             WallEntity wall = new WallEntity(new Vec2(50, 300), new Vec2(450, 250));
-            //EntityManager.AddEntity(wall);
+            EntityManager.AddEntity(wall);
 
-            CapsuleEntity capsule = new CapsuleEntity(Sprites.CapsuleEntity, new Vec2(600, 200), 20, 120, 1);
+            CapsuleEntity capsule = new CapsuleEntity(Sprites.CapsuleEntity, new Vec2(600, 200), 20, 120, 5);
             EntityManager.AddEntity(capsule);
 
             BoxEntity box = new BoxEntity(Sprites.BoxEntity, new Vec2(200, 50), 40, 120, 1);

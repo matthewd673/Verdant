@@ -8,7 +8,7 @@ namespace Verdant.Physics
     /// <summary>
     /// An Entity with a Box body.
     /// </summary>
-    public class BoxEntity : Entity
+    public class BoxEntity : PhysicsEntity
     {
         /// <summary>
         /// Initialize a new BoxEntity.
@@ -19,18 +19,13 @@ namespace Verdant.Physics
         /// <param name="height">The height of the Box.</param>
         /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
         public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float mass)
-            : base(sprite, position, width, height)
+            : base(sprite, position, width, height, mass)
         {
-            InitializeBody(position.X, position.Y, width, height, mass);
-        }
-
-        protected void InitializeBody(float bodyX, float bodyY, int bodyW, int bodyH, float bodyM)
-        {
-            float x1 = bodyX;
-            float y1 = bodyY;
+            float x1 = position.X;
+            float y1 = position.Y;
             float x2 = x1;
-            float y2 = y1 + bodyH;
-            float r = bodyW / 2;
+            float y2 = y1 + height;
+            float r = width / 2;
 
             Vec2 top = new Vec2(x1, y1);
             Vec2 bottom = new Vec2(x2, y2);
@@ -42,11 +37,10 @@ namespace Verdant.Physics
             rectangle1.CalculateVertices();
 
             Components = new Shape[] { rectangle1 };
-            Mass = bodyM;
 
             Inertia = Mass * (
                 (float)Math.Pow(2 * rectangle1.Width, 2) +
-                (float)Math.Pow(bodyH + 2 * rectangle1.Width, 2)
+                (float)Math.Pow(height + 2 * rectangle1.Width, 2)
                 ) / 12;
         }
 
@@ -83,7 +77,12 @@ namespace Verdant.Physics
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
                 Sprite.Draw(),
-                Renderer.Camera.GetRenderBounds(this),
+                Renderer.Camera.GetRenderBounds(
+                    Position.X,
+                    Position.Y, // TODO: GetRenderBounds(this) renders the image a height/2 higher, why?
+                    Width,
+                    Height
+                    ),
                 null,
                 Color.White,
                 ((Rectangle)Components[0]).Angle,

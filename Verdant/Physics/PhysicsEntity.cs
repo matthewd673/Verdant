@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
-
-    [Serializable]
-    public class Body
+    
+    public class PhysicsEntity : Entity
     {
         public Shape[] Components { get; set; } = new Shape[0];
-        public Vec2 Position
+        public new Vec2 Position
         {
             get
             {
@@ -67,16 +65,17 @@ namespace Verdant.Physics
 
         public bool Trigger { get; set; }
 
-        [JsonIgnore]
-        public Entity BodyParent { get; protected set; }
-
-        [JsonIgnore]
         public Color BodyColor { get; set; } = Color.Yellow;
 
         /// <summary>
-        /// Initialize a new Body.
+        /// Initialize a new PhysicsEntity. By default, it will have a mass but no Components.
+        /// In most cases, it is more appropriate to use an extension like a BallEntity or BoxEntity.
         /// </summary>
-        public Body() { }
+        public PhysicsEntity(RenderObject sprite, Vec2 position, float width, float height, float mass)
+                : base(sprite, position, (int)width, (int)height)
+        {
+            Mass = mass;
+        }
 
         /// <summary>
         /// Perform physics movement for the Body.
@@ -88,10 +87,16 @@ namespace Verdant.Physics
             Velocity *= 1 - Friction;
 
             Components[0].Position += Velocity;
+
+            // TODO: only necessary if hasn't been extended
+            //if (Components[0].GetType() == typeof(Rectangle))
+            //    ((Rectangle)Components[0]).CalculateVertices();
         }
         
         /// <summary>
         /// Visualize the Components of the Body according to the BodyColor.
+        /// The default implementation is only intended for debug purposes as
+        /// some draw calls, particularly for Circles are highly inefficient.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void DrawBody(SpriteBatch spriteBatch)

@@ -7,10 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PhysicsDemo
 {
-    public class Crate : Entity
+    public class Crate : BoxEntity
     {
 
-        public Crate(Vec2 pos, int w, int h, int m) : base(Sprites.Crate, pos, w, h)
+        public Crate(Vec2 pos, int w, int h, int m) : base(Sprites.Crate, pos, w, h, m)
         {
             Speed = 0.2f;
             Friction = 0.05f;
