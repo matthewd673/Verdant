@@ -13,22 +13,22 @@ namespace Verdant
         /// <summary>
         /// Initialize a new Camera.
         /// </summary>
-        /// <param name="w">The width of the screen.</param>
-        /// <param name="h">The height of the screen.</param>
-        public Camera(int w, int h) : base(RenderObject.None, new Vec2(), w, h) { }
+        /// <param name="width">The width of the screen.</param>
+        /// <param name="height">The height of the screen.</param>
+        public Camera(int width, int height) : base(RenderObject.None, new Vec2(), width, height) { }
 
         /// <summary>
         /// Initialize a new Camera.
         /// </summary>
-        /// <param name="pos">The initial position of the Camera.</param>
-        /// <param name="w">The width of the screen.</param>
-        /// <param name="h">The height of the screen.</param>
-        public Camera(Vec2 pos, int w, int h) : base(RenderObject.None, pos, w, h) { }
+        /// <param name="position">The initial position of the Camera.</param>
+        /// <param name="width">The width of the screen.</param>
+        /// <param name="height">The height of the screen.</param>
+        public Camera(Vec2 position, int width, int height) : base(RenderObject.None, position, width, height) { }
 
         /// <summary>
         /// Update the Camera, performing any animated effects (such as screen shake).
         /// </summary>
-        public void Update()
+        public override void Update()
         {
             if (shakeCooldown == null)
                 return;

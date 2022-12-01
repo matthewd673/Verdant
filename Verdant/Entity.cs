@@ -130,7 +130,7 @@ namespace Verdant
 
             spriteBatch.Draw(
                 Sprite.Draw(),
-                Renderer.Camera.GetRenderBounds(
+                Manager.Scene.Camera.GetRenderBounds(
                     Position.X - HalfWidth,
                     Position.Y - HalfHeight,
                     Width,

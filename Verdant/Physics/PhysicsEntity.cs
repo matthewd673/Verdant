@@ -104,21 +104,25 @@ namespace Verdant.Physics
                     Rectangle r = (Rectangle)s;
 
                     Renderer.DrawLine(spriteBatch,
+                        Manager.Scene.Camera,
                         r.Vertices[0],
                         r.Vertices[1],
                         BodyColor
                         );
                     Renderer.DrawLine(spriteBatch,
+                        Manager.Scene.Camera,
                         r.Vertices[1],
                         r.Vertices[2],
                         BodyColor
                         );
                     Renderer.DrawLine(spriteBatch,
+                        Manager.Scene.Camera,
                         r.Vertices[2],
                         r.Vertices[3],
                         BodyColor
                         );
                     Renderer.DrawLine(spriteBatch,
+                        Manager.Scene.Camera,
                         r.Vertices[3],
                         r.Vertices[0],
                         BodyColor
@@ -130,7 +134,7 @@ namespace Verdant.Physics
 
                     spriteBatch.Draw(
                         Renderer.GenerateCircleSprite(c.Radius * Renderer.Scale, Color.White).Draw(),
-                        Renderer.Camera.GetRenderBounds(
+                        Manager.Scene.Camera.GetRenderBounds(
                             c.Position.X - c.Radius,
                             c.Position.Y - c.Radius,
                             (int)(c.Radius * 2),
@@ -143,6 +147,7 @@ namespace Verdant.Physics
                     Line l = (Line)s;
 
                     Renderer.DrawLine(spriteBatch,
+                        Manager.Scene.Camera,
                         l.Vertices[0],
                         l.Vertices[1],
                         BodyColor

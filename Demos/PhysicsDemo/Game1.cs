@@ -27,7 +27,6 @@ namespace PhysicsDemo
         protected override void Initialize()
         {
             base.Initialize();
-
             Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
 
             sceneManager = new SceneManager();
@@ -36,9 +35,6 @@ namespace PhysicsDemo
             playScene.Initialize();
 
             sceneManager.AddScene(playScene);
-
-            Log.WriteLine("Finished initializing");
-            Log.WriteLine(Renderer.Camera.Position.ToString());
         }
 
         protected override void LoadContent()

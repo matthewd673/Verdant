@@ -51,7 +51,7 @@ namespace Verdant.Physics
             float rad = ((Circle)Components[0]).Radius;
             spriteBatch.Draw(
                 circleTexture.Draw(),
-                Renderer.Camera.GetRenderBounds(Position - new Vec2(rad, rad), circleTexture.Width, circleTexture.Height),
+                Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(rad, rad), circleTexture.Width, circleTexture.Height),
                 Color.White
                 );
         }
