@@ -65,8 +65,8 @@ namespace Verdant
         /// <param name="e">The Entity to center on.</param>
         public void CenterOnEntity(Entity e)
         {
-            Position.X = (e.Position.X + e.Width / 2) - Width / Renderer.Scale / 2;
-            Position.Y = (e.Position.Y + e.Height / 2) - Height / Renderer.Scale / 2;
+            Position.X = (e.Position.X) - Width / Renderer.Scale / 2;
+            Position.Y = (e.Position.Y) - Height / Renderer.Scale / 2;
         }
         /// <summary>
         /// Given a position on the screen, return the corresponding position in the world.
