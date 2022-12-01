@@ -45,14 +45,15 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Position the Camera so that the given Entity is in the center of the frame.
+        /// Position the Camera so that the given world point is in the center of the view.
         /// </summary>
-        /// <param name="e">The Entity to center on.</param>
-        public void CenterOnEntity(Entity e)
+        /// <param name="point">The point to center on.</param>
+        public void CenterOnPoint(Vec2 point)
         {
-            Position.X = (e.Position.X + e.Width / 2) - Width / Renderer.Scale / 2;
-            Position.Y = (e.Position.Y + e.Height / 2) - Height / Renderer.Scale / 2;
+            Position.X = point.X - Width / Renderer.Scale / 2;
+            Position.Y = point.Y - Height / Renderer.Scale / 2;
         }
+
         /// <summary>
         /// Given a position on the screen, return the corresponding position in the world.
         /// </summary>
@@ -94,7 +95,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Given rectangular dimensions, calculate the Rectangle bounds to render at through the Camera.
+        /// Given rectangular dimensions in world-space, return the rectangle's on-screen bounds.
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
@@ -105,6 +106,7 @@ namespace Verdant
         {
             return new Rectangle((int)((x - GetCameraRenderPos().X) * Renderer.Scale), (int)((y - GetCameraRenderPos().Y) * Renderer.Scale), w * Renderer.Scale, h * Renderer.Scale);
         }
+
         /// <summary>
         /// Given rectangular dimensions, calculate the Rectangle bounds to render at through the Camera.
         /// </summary>
@@ -116,6 +118,7 @@ namespace Verdant
         {
             return GetRenderBounds(pos.X, pos.Y, w, h);
         }
+
         /// <summary>
         /// Given an Entity, calculate the Rectangle bounds to render at through the Camera.
         /// </summary>
@@ -125,6 +128,7 @@ namespace Verdant
         {
             return GetRenderBounds(e.Position.X, e.Position.Y, e.Width, e.Height);
         }
+
         /// <summary>
         /// Given a TransformState, calculate the Rectangle bounds to render at through the Camera. The TransformState's rotation will not be considered.
         /// </summary>
@@ -145,6 +149,7 @@ namespace Verdant
         {
             return new Vec2Int((int)((x - GetCameraRenderPos().X) * Renderer.Scale), (int)((y - GetCameraRenderPos().Y) * Renderer.Scale));
         }
+
         /// <summary>
         /// Calculate the screen position that the given Vec2 should be rendered at. Unlike WorldToScreenPos(), this method accounts for Camera effects such as screen shake.
         /// </summary>
@@ -154,6 +159,7 @@ namespace Verdant
         {
             return GetRenderPos(pos.X, pos.Y);
         }
+
         /// <summary>
         /// Given an Entity, calculate the screen position that it should be rendered at through the Camera.
         /// </summary>
