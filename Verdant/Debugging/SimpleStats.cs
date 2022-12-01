@@ -9,14 +9,15 @@ namespace Verdant.Debugging
     public static class SimpleStats
     {
 
-        private static int lineCt = 0;
+        private static int stackHeight = 0;
         private static Dictionary<string, string> customFields = new();
 
         public static Color TextColor { get; set; } = Color.White;
+        public static Color BackgroundColor { get; set; } = new Color(Color.Black, 125);
 
         public static void Render(Scene scene, SpriteBatch spriteBatch, SpriteFont font)
         {
-            lineCt = 0;
+            stackHeight = 0;
             WriteToScreen($"FPS: {1000/scene.DeltaTime} ({scene.DeltaTime}ms)", spriteBatch, font);
             WriteToScreen($"Entities: {scene.EntityManager.EntityCount}", spriteBatch, font);
             WriteToScreen($"Total updates (last tick): {scene.EntityManager.EntityUpdateCount}", spriteBatch, font);
@@ -30,8 +31,10 @@ namespace Verdant.Debugging
 
         static void WriteToScreen(string text, SpriteBatch spriteBatch, SpriteFont font)
         {
-            spriteBatch.DrawString(font, text, new Vector2(10, 10 + (20 * lineCt)), TextColor);
-            lineCt++;
+            Vector2 stringDim = font.MeasureString(text);
+            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle(10, 10 + stackHeight, (int)stringDim.X, (int)stringDim.Y), BackgroundColor);
+            spriteBatch.DrawString(font, text, new Vector2(10, 10 + stackHeight), TextColor);
+            stackHeight += (int)stringDim.Y;
         }
 
         public static void UpdateField(string fieldName, object value)
