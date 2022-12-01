@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Verdant.UI;
 
 namespace Verdant
@@ -12,6 +13,8 @@ namespace Verdant
 
         public EntityManager EntityManager { get; protected set; }
         public UIManager UIManager { get; protected set; }
+
+        public float DeltaTime { get; private set; } = 1f;
 
         /// <summary>
         /// Create a new Scene. It will not be initialized immediately.
@@ -34,10 +37,12 @@ namespace Verdant
 
         /// <summary>
         /// Perform the basic update loop. Update all managers in the scene, and the InputHandler.
+        /// <param name="gameTime">The MonoGame GameTime</param>
         /// </summary>
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
-            InputHandler.Update(); //always update input
+            DeltaTime = (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+            InputHandler.Update(); // always update input
 
             EntityManager.Update();
             UIManager.Update();
