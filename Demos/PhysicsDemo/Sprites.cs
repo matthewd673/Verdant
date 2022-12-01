@@ -12,11 +12,14 @@ namespace PhysicsDemo
         public static Sprite BoxEntity;
         public static Sprite CapsuleEntity;
 
+        public static SpriteFont DebugFont;
+
         public static void LoadSprites(ContentManager content)
         {
             Crate = content.Load<Texture2D>("crate");
             BoxEntity = content.Load<Texture2D>("boxentity");
             CapsuleEntity = content.Load<Texture2D>("capsuleentity");
+            DebugFont = content.Load<SpriteFont>("debugfont");
         }
 
     }

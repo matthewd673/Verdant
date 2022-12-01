@@ -82,7 +82,7 @@ namespace Verdant.Physics
 
             spriteBatch.Draw(
                 Sprite.Draw(),
-                Renderer.Camera.GetRenderBounds(
+                Manager.Scene.Camera.GetRenderBounds(
                     Position.X,
                     Position.Y,
                     Width,

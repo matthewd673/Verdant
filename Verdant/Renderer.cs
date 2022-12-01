@@ -10,7 +10,8 @@ namespace Verdant
     public static class Renderer
     {
 
-        public static Camera Camera { get; set; }
+        public static int ScreenWidth { get; private set; }
+        public static int ScreenHeight { get; private set; }
         public static int Scale { get; private set; }
 
         static Sprite pixel;
@@ -44,8 +45,9 @@ namespace Verdant
         /// <param name="scale">The render scale.</param>
         public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
         {
+            ScreenWidth = screenWidth;
+            ScreenHeight = screenHeight;
             GraphicsDevice = graphicsDevice;
-            Camera = new Camera(new Vec2(), screenWidth, screenHeight);
             Scale = scale;
 
             //build pixel texture
@@ -62,15 +64,12 @@ namespace Verdant
         /// <param name="entityManager">The EntityManager to draw from.</param>
         /// <param name="uiManager">The UIManager to draw from.</param>
         /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, EntityManager entityManager, UIManager uiManager, bool visualizeBodies = false)
+        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
         {
-            //update camera
-            Camera.Update();
-
             //render entities
             if (SortEntities)
             {
-                sortedQueue = entityManager.GetEntitiesInBounds(Camera.Position, Camera.Width, Camera.Height).OrderBy(n => n.ZIndex);
+                sortedQueue = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
                 foreach (Entity e in sortedQueue)
                 {
                     e.Draw(spriteBatch);
@@ -80,7 +79,7 @@ namespace Verdant
             }
             else
             {
-                foreach (Entity e in entityManager.GetEntitiesInBounds(Camera.Position, Camera.Width, Camera.Height))
+                foreach (Entity e in scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height))
                 {
                     e.Draw(spriteBatch);
                     if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
@@ -89,7 +88,7 @@ namespace Verdant
             }
 
             //render ui elements
-            foreach (UIElement e in uiManager.GetElements())
+            foreach (UIElement e in scene.UIManager.GetElements())
             {
                 e.Draw(spriteBatch);
             }
@@ -106,21 +105,11 @@ namespace Verdant
                     Color.White);
             }
         }
-        /// <summary>
-        /// Render the current frame containing the elements in the provided scene.
-        /// </summary>
-        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
-        /// <param name="scene">The Scene to draw from.</param>
-        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
-        {
-            Render(spriteBatch, scene.EntityManager, scene.UIManager, visualizeBodies: visualizeBodies);
-        }
 
-        public static void DrawLine(SpriteBatch spriteBatch, Vec2 start, Vec2 end, Color color)
+        public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
-            Vec2 worldStart = Camera.WorldToScreenPos(start);
-            Vec2 worldEnd = Camera.WorldToScreenPos(end);
+            Vec2 worldStart = camera.WorldToScreenPos(start);
+            Vec2 worldEnd = camera.WorldToScreenPos(end);
             
             Vec2 diff = worldEnd - worldStart;
             float angle = (float)Math.Atan2(diff.Y, diff.X);
