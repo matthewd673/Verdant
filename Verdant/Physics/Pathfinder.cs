@@ -278,10 +278,11 @@ namespace Verdant.Physics
                     Microsoft.Xna.Framework.Color drawColor = Microsoft.Xna.Framework.Color.Red;
                     if (pathMap[i, j])
                         drawColor = Microsoft.Xna.Framework.Color.White;
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellWidth, j * cellHeight, cellWidth, 1), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds((i + 1) * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellWidth, j * 1 * cellHeight, cellWidth, 1), drawColor);
+                    // TODO: fix this
+                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, 1, cellH), drawColor);
+                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, cellW, 1), drawColor);
+                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds((i + 1) * cellW, j * cellH, 1, cellH), drawColor);
+                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, (j * 1) * cellH, cellW, 1), drawColor);
                 }
             }
         }

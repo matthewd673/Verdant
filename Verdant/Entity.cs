@@ -80,11 +80,8 @@ namespace Verdant
             Sprite = sprite;
             Position = position;
 
-            if (sprite != null)
-            {
-                Width = (width == -1) ? sprite.Width : width;
-                Height = (height == -1) ? sprite.Height : height;
-            }
+            Width = (width == -1 && sprite != RenderObject.None) ? sprite.Width : width;
+            Height = (height == -1 && sprite != RenderObject.None) ? sprite.Height : height;
 
             //set automatic rotation origin
             //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
@@ -133,7 +130,7 @@ namespace Verdant
 
             spriteBatch.Draw(
                 Sprite.Draw(),
-                Renderer.Camera.GetRenderBounds(
+                Manager.Scene.Camera.GetRenderBounds(
                     Position.X - HalfWidth,
                     Position.Y - HalfHeight,
                     Width,

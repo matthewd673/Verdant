@@ -77,7 +77,7 @@ namespace Verdant.Physics
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
                 Sprite.Draw(),
-                Renderer.Camera.GetRenderBounds(
+                Manager.Scene.Camera.GetRenderBounds(
                     Position.X,
                     Position.Y, // TODO: GetRenderBounds(this) renders the image a height/2 higher, why?
                     Width,

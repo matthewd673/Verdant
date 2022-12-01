@@ -10,9 +10,6 @@ namespace Verdant.Physics
     /// </summary>
     public class BallEntity : PhysicsEntity
     {
-
-        private Sprite circleTexture;
-
         /// <summary>
         /// Initialize a new BallEntity.
         /// </summary>
@@ -24,8 +21,6 @@ namespace Verdant.Physics
             : base(sprite, position, (int)(radius * 2), (int)(radius * 2), mass)
         {
             Components = new Shape[] { new Circle(position.X, position.Y, radius) };
-
-            circleTexture = Renderer.GenerateCircleSprite(radius, Color.White);
         }
 
         /// <summary>
@@ -49,11 +44,6 @@ namespace Verdant.Physics
         public override void Draw(SpriteBatch spriteBatch)
         {
             float rad = ((Circle)Components[0]).Radius;
-            //spriteBatch.Draw(
-            //    circleTexture.Draw(),
-            //    Renderer.Camera.GetRenderBounds(Position - new Vec2(rad, rad), circleTexture.Width, circleTexture.Height),
-            //    Color.White
-            //    );
             spriteBatch.Draw(Sprite.Draw(), Renderer.Camera.GetRenderBounds(Position - new Vec2(rad, rad), (int)(rad * 2), (int)(rad * 2)), Color.White);
         }
 

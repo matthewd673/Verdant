@@ -13,7 +13,7 @@ namespace Verdant
             NearCamera,
         }
 
-        public Scene Scene;
+        public Scene Scene { get; set; }
 
         private readonly Dictionary<string, List<Entity>> entityTable = new();
         public int CellSize { get; }
@@ -581,10 +581,10 @@ namespace Verdant
                     break;
                 case UpdateMode.NearCamera: //update in rectangle near camera (with some padding to be safe)
                     UpdateList(GetEntitiesInBounds(
-                        Renderer.Camera.Position.X - CellSize,
-                        Renderer.Camera.Position.Y - CellSize,
-                        Renderer.Camera.Width + (CellSize * 2),
-                        Renderer.Camera.Height + (CellSize * 2)));
+                        Scene.Camera.Position.X - CellSize,
+                        Scene.Camera.Position.Y - CellSize,
+                        Scene.Camera.Width + (CellSize * 2),
+                        Scene.Camera.Height + (CellSize * 2)));
                     break;
             }
         }

@@ -11,6 +11,7 @@ namespace Verdant
 
         public SceneManager Manager { get; set; }
 
+        public Camera Camera { get; set; }
         public EntityManager EntityManager { get; protected set; }
         public UIManager UIManager { get; protected set; }
 
@@ -33,6 +34,8 @@ namespace Verdant
             EntityManager = new EntityManager();
             EntityManager.Scene = this;
             UIManager = new UIManager();
+
+            Camera = new Camera(Renderer.ScreenWidth, Renderer.ScreenHeight);
         }
 
         /// <summary>
@@ -46,6 +49,8 @@ namespace Verdant
 
             EntityManager.Update();
             UIManager.Update();
+
+            Camera.Update();
         }
 
     }
