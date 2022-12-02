@@ -44,7 +44,7 @@ namespace Verdant.Physics
         public override void Draw(SpriteBatch spriteBatch)
         {
             float rad = ((Circle)Components[0]).Radius;
-            spriteBatch.Draw(Sprite.Draw(), Renderer.Camera.GetRenderBounds(Position - new Vec2(rad, rad), (int)(rad * 2), (int)(rad * 2)), Color.White);
+            spriteBatch.Draw(Sprite.Draw(), Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(rad, rad), (int)(rad * 2), (int)(rad * 2)), Color.White);
         }
 
     }

@@ -31,6 +31,8 @@ namespace TopdownShooter
             PlayScene playScene = new PlayScene(0);
             playScene.Initialize();
             sceneManager.AddScene(playScene);
+
+            SimpleStats.TextColor = Color.Black;
         }
 
         protected override void LoadContent()

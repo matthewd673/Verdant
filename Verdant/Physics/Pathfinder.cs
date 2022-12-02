@@ -38,12 +38,12 @@ namespace Verdant.Physics
         /// <param name="walkerCollider">The specific Collider on the walker Entity to check against.</param>
         /// <param name="targetCollider">The specific Collider on the target Entity to check against.</param>
         /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
-        public List<Vec2> UpdatePath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider)
+        public List<Vec2> FindPath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider)
         {
             // ensure that the target is within the appropriate range before finding a path
             if (GameMath.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
             {
-                return FindPath(walkerCollider, targetCollider);
+                return GeneratePath(walkerCollider, targetCollider);
             }
 
             return new List<Vec2>(); // couldn't find path, return empty
@@ -53,7 +53,7 @@ namespace Verdant.Physics
         /// Find a path between the origin and the target goal.
         /// </summary>
         /// <returns>A list of all points in the path (where [0] is the target's current tile). Points are marked as the center of a PathCell.</returns>
-        List<Vec2> FindPath(Shape walkerCollider, Shape targetCollider)
+        List<Vec2> GeneratePath(Shape walkerCollider, Shape targetCollider)
         {
             // define start & goal
             Shape walkerC = walkerCollider;
@@ -197,10 +197,10 @@ namespace Verdant.Physics
         /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
         public void BuildPathMap<T>(EntityManager entityManager) where T : PhysicsEntity
         {
-            //get a list of obstacles (currently only walls)
-            List<T> obstacles = entityManager.GetAllEntitiesOfType<T>();
+            // get a list of obstacles
+            List<T> obstacles = entityManager.GetAllEntities<T>();
 
-            //create a list of colliders for all obstacles
+            // create a list of colliders for all obstacles
             List<Shape> obsColliders = new List<Shape>();
 
             int maxX = 0;
@@ -217,7 +217,7 @@ namespace Verdant.Physics
                     float width = 0;
                     float height = 0;
 
-                    // lines won't work (because pathfinding off of lines makes no sense)
+                    // TODO: add lines (so you can pathfind around walls)
                     if (s.GetType() == typeof(Rectangle))
                     {
                         width = ((Rectangle)s).Width;
@@ -253,8 +253,7 @@ namespace Verdant.Physics
                     int cellX = i * cellWidth;
                     int cellY = j * cellHeight;
 
-                    //will get the job done but isn't excluding non-walls
-                    if (entityManager.CheckRectCollisions(cellX, cellY, cellWidth, cellHeight, onlySolids: true).Count == 0)
+                    if (entityManager.CheckRectCollisions<T>(cellX, cellY, cellWidth, cellHeight, includeTriggers: false).Count == 0)
                         //if (CollisionSolver.GetAllPotentialColliding(cellX, cellY, cellW, cellH, excludeTriggers: true).Count == 0)
                         pathMap[i, j] = true;
                     else
@@ -269,7 +268,7 @@ namespace Verdant.Physics
         /// For debugging. Draw a grid visualizing all PathCells (white = walkable).
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to use when drawing.</param>
-        public void Visualize(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        public void Visualize(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Camera camera)
         {
             for (int i = 0; i < pathMap.GetLength(0); i++)
             {
@@ -278,11 +277,11 @@ namespace Verdant.Physics
                     Microsoft.Xna.Framework.Color drawColor = Microsoft.Xna.Framework.Color.Red;
                     if (pathMap[i, j])
                         drawColor = Microsoft.Xna.Framework.Color.White;
-                    // TODO: fix this
-                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, 1, cellH), drawColor);
-                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, j * cellH, cellW, 1), drawColor);
-                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds((i + 1) * cellW, j * cellH, 1, cellH), drawColor);
-                    //spriteBatch.Draw(Renderer.GetPixel(), Renderer.Camera.GetRenderBounds(i * cellW, (j * 1) * cellH, cellW, 1), drawColor);
+
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, j * cellHeight, cellWidth, 1), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds((i + 1) * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, (j * 1) * cellHeight, cellWidth, 1), drawColor);
                 }
             }
         }
