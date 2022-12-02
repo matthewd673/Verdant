@@ -1,6 +1,7 @@
 ﻿using Verdant;
 using Verdant.UI;
 using System;
+using Microsoft.Xna.Framework;
 
 namespace ParticleToy
 {
@@ -44,11 +45,11 @@ namespace ParticleToy
             UIManager.AddElement(textBox);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             text.Text = slider.Value.ToString();
 
-            base.Update();
+            base.Update(gameTime);
         }
 
     }

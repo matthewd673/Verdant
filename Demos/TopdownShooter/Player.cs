@@ -17,7 +17,6 @@ namespace TopdownShooter
 
         public Player(Vec2 position) : base(Resources.Player, position, 16, 1)
         {
-            SetZIndexToBase = false;
             AngleFriction = 1f;
             Speed = 2f;
             Friction = 0.25f;
@@ -35,6 +34,7 @@ namespace TopdownShooter
             //Renderer.Camera.CenterOnEntity(this);
 
             SimpleStats.UpdateField("cam", $"x={Manager.Scene.Camera.Position.X} y={Manager.Scene.Camera.Position.Y}");
+            SimpleStats.UpdateField("zindex", ZIndex);
         }
 
     }

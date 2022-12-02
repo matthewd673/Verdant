@@ -56,14 +56,14 @@ namespace Verdant.Physics
         public Vec2 Velocity { get; set; } = new Vec2(0, 0);
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
 
-        public float Speed { get; set; }
+        public float Speed { get; set; } = 1f;
         public float Friction { get; set; }
         public float AngleSpeed { get; set; }
         public float AngleFriction { get; set; }
 
         public float Elasticity { get; set; } = 1f;
 
-        public bool Trigger { get; set; }
+        public bool Trigger { get; set; } = false;
 
         public Color BodyColor { get; set; } = Color.Yellow;
 
@@ -75,6 +75,19 @@ namespace Verdant.Physics
                 : base(sprite, position, (int)width, (int)height)
         {
             Mass = mass;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            // update z index
+            // PhysicsEntities must update their ZIndex manually
+            // because they overwrite the Position property
+            if (ZIndexMode == EntityManager.ZIndexMode.Bottom)
+                ZIndex = (int)(Position.Y + Height);
+            else if (ZIndexMode == EntityManager.ZIndexMode.Top)
+                ZIndex = (int)(Position.Y);
         }
 
         /// <summary>

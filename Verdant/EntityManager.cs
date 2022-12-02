@@ -6,11 +6,23 @@ namespace Verdant
 {
     public class EntityManager
     {
-
         public enum UpdateMode
         {
             All,
             NearCamera,
+        }
+
+        public enum ZIndexMode
+        {
+            // Assign a ZIndex based on the order it was added to the Manager.
+            // This will only work if this is the Entity's ZIndexMode prior to being added to a Manager.
+            ByIndex,
+            // Manually assign ZIndex (default: 0).
+            Manual,
+            // Automatically assign ZIndex to the bottom of the Entity's Sprite after each update.
+            Bottom,
+            // Automatically assign ZIndex to the top of the Entity's Sprite after each update.
+            Top,
         }
 
         public Scene Scene { get; set; }
@@ -83,10 +95,13 @@ namespace Verdant
             foreach (Entity e in addQueue)
             {
                 e.Manager = this;
+                if (e.ZIndexMode == ZIndexMode.ByIndex)
+                    e.ZIndex = EntityCount;
+
                 //add to appropriate list in table (create if necessary)
                 List<Entity> cellList;
                 if (entityTable.TryGetValue(e.Key, out cellList))
-                    entityTable[e.Key].Add(e);
+                    cellList.Add(e);
                 else
                     entityTable.Add(e.Key, new List<Entity>() { e });
                 EntityCount++; // keep track

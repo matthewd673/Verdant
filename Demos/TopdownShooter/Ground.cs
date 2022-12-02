@@ -13,8 +13,8 @@ namespace TopdownShooter
 
         public Ground(Vec2 position) : base(Resources.Ground, position)
         {
-            SetZIndexToBase = false;
-            ZIndex = -9;
+            ZIndexMode = EntityManager.ZIndexMode.Manual;
+            ZIndex = -999;
         }
 
     }

@@ -14,6 +14,8 @@ namespace TopdownShooter
 
         public PlayScene(int index) : base(index) { }
 
+        public Pathfinder Pathfinder { get; private set; }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -41,8 +43,8 @@ namespace TopdownShooter
 
             EntityManager.ApplyQueues();
 
-            Pathfinder pathfinder = new Pathfinder(16, 16, 1000);
-            pathfinder.BuildPathMap<Wall>(EntityManager);
+            Pathfinder = new Pathfinder(32, 32, 1000);
+            Pathfinder.BuildPathMap<Wall>(EntityManager);
 
             for (int i = 0; i < 20; i++)
             {

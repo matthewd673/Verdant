@@ -21,8 +21,6 @@ namespace Verdant
 
         public static bool SortEntities { get; set; } = true;
 
-        static IEnumerable<Entity> sortedQueue;
-
         public static GraphicsDevice GraphicsDevice { get; private set; }
 
         /// <summary>
@@ -67,23 +65,23 @@ namespace Verdant
         public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
         {
             //render entities
+            IEnumerable<Entity> entities;
             if (SortEntities)
-            {
-                sortedQueue = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
-                foreach (Entity e in sortedQueue)
-                {
-                    e.Draw(spriteBatch);
-                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
-                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
-                }
-            }
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
             else
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height);
+
+            foreach (Entity e in entities)
             {
-                foreach (Entity e in scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height))
+                e.Draw(spriteBatch);
+            }
+
+            if (visualizeBodies)
+            {
+                foreach (Entity e in entities)
                 {
-                    e.Draw(spriteBatch);
-                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
-                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
+                    if (e.IsType(typeof(Physics.PhysicsEntity)))
+                        ((Physics.PhysicsEntity)e).DrawBody(spriteBatch);
                 }
             }
 

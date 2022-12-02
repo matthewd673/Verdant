@@ -57,7 +57,13 @@ namespace TopdownShooter
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
+            Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: true);
+
+            if (sceneManager.ActiveScene.ID == 0)
+            {
+                ((PlayScene)sceneManager.ActiveScene).Pathfinder.Visualize(_spriteBatch, sceneManager.ActiveScene.Camera);
+            }
+
             SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Resources.DebugFont);
             _spriteBatch.End();
 
