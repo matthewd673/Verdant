@@ -8,7 +8,7 @@ namespace Verdant.Physics
     public class PhysicsEntity : Entity
     {
         public Shape[] Components { get; set; } = new Shape[0];
-        public new Vec2 Position
+        public override Vec2 Position
         {
             get
             {
@@ -75,19 +75,6 @@ namespace Verdant.Physics
                 : base(sprite, position, (int)width, (int)height)
         {
             Mass = mass;
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            // update z index
-            // PhysicsEntities must update their ZIndex manually
-            // because they overwrite the Position property
-            if (ZIndexMode == EntityManager.ZIndexMode.Bottom)
-                ZIndex = (int)(Position.Y + Height);
-            else if (ZIndexMode == EntityManager.ZIndexMode.Top)
-                ZIndex = (int)(Position.Y);
         }
 
         /// <summary>

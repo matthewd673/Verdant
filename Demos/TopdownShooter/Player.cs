@@ -29,11 +29,12 @@ namespace TopdownShooter
             SimpleInput();
 
             // TODO: why is this broken? Renderer.Camera.CenterOnEntity(this);
-            Manager.Scene.Camera.Position.X = Position.X - (Manager.Scene.Camera.Width / 2);
-            Manager.Scene.Camera.Position.Y = Position.Y - (Manager.Scene.Camera.Height / 2);
             //Renderer.Camera.CenterOnEntity(this);
 
-            SimpleStats.UpdateField("cam", $"x={Manager.Scene.Camera.Position.X} y={Manager.Scene.Camera.Position.Y}");
+            Manager.Scene.Camera.CenterOnPoint(Position);
+
+            SimpleStats.UpdateField("pos", Position);
+            SimpleStats.UpdateField("key", Key);
             SimpleStats.UpdateField("zindex", ZIndex);
         }
 

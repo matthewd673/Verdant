@@ -12,6 +12,8 @@ namespace Verdant.Physics
         private readonly int cellWidth;
         private readonly int cellHeight;
 
+        private Vec2Int origin; // top left corner of the pathmap
+
         public int MaxSeekDistance { get; set; }
         public int MaxSearchCells { get; set; } = 100;
 
@@ -203,9 +205,11 @@ namespace Verdant.Physics
             // create a list of colliders for all obstacles
             List<Shape> obsColliders = new List<Shape>();
 
+            int minX = int.MaxValue;
             int maxX = 0;
+            int minY = int.MaxValue;
             int maxY = 0;
-
+            
             foreach (PhysicsEntity e in obstacles) // we need data that only PhysicsEntities have
             {
                 foreach (Shape s in e.Components)
@@ -233,28 +237,32 @@ namespace Verdant.Physics
                         height = ((Circle)s).Radius * 2;
                     }
 
+                    if (x - (width / 2) < minX)
+                        minX = (int)(x - (width / 2));
+                    if (x + (width/2) > maxX)
+                        maxX = (int)(x + (width/2));
 
-                    if (x + width > maxX)
-                        maxX = (int)(x + width);
-
-                    if (y + height > maxY)
-                        maxY = (int)(y + height);
+                    if (y - (height/2) < minY)
+                        minY = (int)(y - (height/2));
+                    if (y + (height/2) > maxY)
+                        maxY = (int)(y + (height / 2));
                 }
             }
 
-            //create a pathmap that fits the size of the map
-            pathMap = new bool[maxX / cellWidth + 1, maxY / cellHeight + 1];
+            origin = new Vec2Int(minX, minY);
 
-            //check pathmap collisions
+            // create a pathmap that fits the size of the map (from origin to max)
+            pathMap = new bool[(maxX - origin.X) / cellWidth + 1, (maxY - origin.Y) / cellHeight + 1];
+
+            // check pathmap collisions
             for (int i = 0; i < pathMap.GetLength(0); i++)
             {
                 for (int j = 0; j < pathMap.GetLength(1); j++)
                 {
-                    int cellX = i * cellWidth;
-                    int cellY = j * cellHeight;
+                    int cellX = i * cellWidth + origin.X - (cellWidth/2);
+                    int cellY = j * cellHeight + origin.Y - (cellHeight/2);
 
                     if (entityManager.CheckRectCollisions<T>(cellX, cellY, cellWidth, cellHeight, includeTriggers: false).Count == 0)
-                        //if (CollisionSolver.GetAllPotentialColliding(cellX, cellY, cellW, cellH, excludeTriggers: true).Count == 0)
                         pathMap[i, j] = true;
                     else
                         pathMap[i, j] = false;
@@ -278,10 +286,10 @@ namespace Verdant.Physics
                     if (pathMap[i, j])
                         drawColor = Microsoft.Xna.Framework.Color.White;
 
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, j * cellHeight, cellWidth, 1), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds((i + 1) * cellWidth, j * cellHeight, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth, (j * 1) * cellHeight, cellWidth, 1), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, j * cellHeight + origin.Y, 1, cellHeight), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, j * cellHeight + origin.Y, cellWidth, 1), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds((i + 1) * cellWidth + origin.X, j * cellHeight + origin.Y, 1, cellHeight), drawColor);
+                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, (j * 1) * cellHeight + origin.Y, cellWidth, 1), drawColor);
                 }
             }
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 using Verdant.Physics;
 
 namespace Verdant
@@ -36,6 +38,9 @@ namespace Verdant
         public int EntityCount { get; protected set; }
         public int EntityUpdateCount { get; protected set; }
         public int PhysicsEntityUpdateCount { get; protected set; }
+
+        private Stopwatch updatePerformanceTimer = new Stopwatch();
+        public float UpdateDuration { get; protected set; }
 
         private List<CollisionData> collisions = new List<CollisionData>();
 
@@ -543,6 +548,7 @@ namespace Verdant
                     RemoveEntity(e);
                     continue; // don't bother with anything else if being removed
                 }
+
                 if (!e.Key.Equals(e.PreviousKey))
                     MoveEntityCell(e);
             }
@@ -558,6 +564,8 @@ namespace Verdant
         /// <param name="updateMode">The UpdateMode to use.</param>
         public void Update(UpdateMode updateMode = UpdateMode.NearCamera)
         {
+            updatePerformanceTimer.Start();
+
             switch (updateMode)
             {
                 case UpdateMode.All: //update all entities
@@ -571,6 +579,10 @@ namespace Verdant
                         Scene.Camera.Height + (CellSize * 2)));
                     break;
             }
+
+            updatePerformanceTimer.Stop();
+            UpdateDuration = updatePerformanceTimer.ElapsedMilliseconds;
+            updatePerformanceTimer.Reset();
         }
 
         /// <summary>

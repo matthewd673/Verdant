@@ -28,7 +28,7 @@ namespace Verdant
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
 
-        public Vec2 Position { get; set; }
+        public virtual Vec2 Position { get; set; }
 
         private int _width;
         // The draw width of the Entity.
