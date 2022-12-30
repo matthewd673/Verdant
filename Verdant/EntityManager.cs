@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using Verdant.Debugging;
 using Verdant.Physics;
 
 namespace Verdant
@@ -426,15 +427,20 @@ namespace Verdant
 
                 PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
 
+                bool eColliding = false;
                 for (int k = 0; k < e.Components.Length; k++)
                 {
-                    PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(bounds, e.Components[k]);
-                    if (currentSAT.Penetration > bestSAT.Penetration)
-                        bestSAT = currentSAT;
+                    if (!eColliding)
+                        eColliding = PhysicsMath.SAT(bounds, e.Components[k]).Overlap;
                 }
 
-                if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
+                if (eColliding)
                     colliding.Add(e);
+
+                //if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
+                //{
+                //    colliding.Add(e);
+                //}
             }
 
             return colliding;
@@ -480,9 +486,11 @@ namespace Verdant
         {
             collisions.Clear();
 
-            int i = 0;
-            foreach (PhysicsEntity e in updateList)
+            for (int i = 0; i < updateList.Count; i++)
             {
+                updateList[i].Colliding.Clear();
+
+                // TODO: cut down on physics checks
                 for (int j = i + 1; j < updateList.Count; j++)
                 {
                     PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
@@ -499,16 +507,18 @@ namespace Verdant
                         }
                     }
 
-                    if (bestSAT.Overlap && bestSAT.Penetration != float.MaxValue)
+                    if (bestSAT.Overlap)
+                    {
                         collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
-
+                    }
                 }
-
-                i++;
             }
 
             foreach (CollisionData c in collisions)
             {
+                c.a.Colliding.Add(c.b);
+                c.b.Colliding.Add(c.a);
+
                 if (c.a.Trigger || c.b.Trigger) // skip triggers
                     continue;
 

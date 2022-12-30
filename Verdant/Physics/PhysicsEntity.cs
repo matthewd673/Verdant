@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -66,6 +68,8 @@ namespace Verdant.Physics
         public bool Trigger { get; set; } = false;
 
         public Color BodyColor { get; set; } = Color.Yellow;
+
+        public List<PhysicsEntity> Colliding { get; private set; } = new();
 
         /// <summary>
         /// Initialize a new PhysicsEntity. By default, it will have a mass but no Components.
