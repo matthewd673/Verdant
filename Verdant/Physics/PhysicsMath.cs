@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace Verdant.Physics
 {
-    public static class PhysicsMath
+    internal static class PhysicsMath
     {
-
         internal static ShapeProjection ProjectShapeOntoAxis(Vec2 axis, Shape shape)
         {
             SetCircleVerticesAlongAxis(axis, shape);
@@ -149,9 +148,9 @@ namespace Verdant.Physics
                     return new SATResult(false, 0, null, null);
 
                 if ((proj1.Max > proj2.Max && proj1.Min < proj2.Min) ||
-                    (proj1.Max < proj2.Max && proj1.Min > proj2.Max))
+                    (proj1.Max < proj2.Max && proj1.Min > proj2.Min))
                 {
-                    float mins = Math.Abs(proj1.Min - proj2.Max);
+                    float mins = Math.Abs(proj1.Min - proj2.Min);
                     float maxes = Math.Abs(proj1.Max - proj2.Max);
                     if (mins < maxes)
                         overlap += mins;

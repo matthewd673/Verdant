@@ -74,6 +74,8 @@ namespace Verdant.Physics
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (Sprite == null) return;
+
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
                 Sprite.Draw(),

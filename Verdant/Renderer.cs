@@ -133,6 +133,14 @@ namespace Verdant
                 );
         }
 
+        public static void DrawRectangle(SpriteBatch spriteBatch, Camera camera, Vec2 topLeft, Vec2 bottomRight, Color color)
+        {
+            DrawLine(spriteBatch, camera, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
+            DrawLine(spriteBatch, camera, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
+            DrawLine(spriteBatch, camera, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
+            DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
+        }
+
         public static Sprite GenerateCircleSprite(float radius, Color color) //TODO: this is far from perfect
         {
             int diam = (int)(radius * 2);
