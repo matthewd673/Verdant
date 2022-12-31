@@ -12,15 +12,10 @@ namespace Verdant
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="target">The second point.</param>
-        /// <param name="easyAdjust">If true, apply a useful adjustment (negate the angle and add PI/2) to the result automatically.</param>
         /// <returns>A float representing the angle between the two points.</returns>
-        public static float AngleBetweenPoints(Vec2 a, Vec2 target, bool easyAdjust = false)
+        public static float AngleBetweenPoints(Vec2 a, Vec2 target)
         {
-            float angle = (float)Math.Atan2(target.X - a.X, target.Y - a.Y);
-
-            if (easyAdjust)
-                return -angle + (float)Math.PI / 2;
-            return angle;
+            return (float)Math.Atan2(target.X - a.X, target.Y - a.Y);
         }
 
         /// <summary>

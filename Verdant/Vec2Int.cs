@@ -45,6 +45,11 @@ namespace Verdant
             return HashCode.Combine(X, Y);
         }
 
+        public override string ToString()
+        {
+            return "(" + X + ", " + Y + ")";
+        }
+
         public static Vec2Int operator +(Vec2Int a) => a;
         public static Vec2Int operator -(Vec2Int a) => -a;
 

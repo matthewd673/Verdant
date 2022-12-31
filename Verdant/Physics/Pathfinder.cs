@@ -51,6 +51,11 @@ namespace Verdant.Physics
             return new List<Vec2>(); // couldn't find path, return empty
         }
 
+        public List<Vec2> FindPath(PhysicsEntity walker, PhysicsEntity target)
+        {
+            return FindPath(walker, target, walker.Components[0], target.Components[0]);
+        }
+
         /// <summary>
         /// Find a path between the origin and the target goal.
         /// </summary>
@@ -136,7 +141,7 @@ namespace Verdant.Physics
 
             while (current != null)
             {
-                finalPath.Insert(0, new Vec2(current.X + cellWidth/2, current.Y + cellHeight/2)); // add center of cell as new point
+                finalPath.Insert(0, new Vec2(current.X * cellWidth + cellWidth/2, current.Y * cellHeight + cellHeight/2)); // add center of cell as new point
                 current = current.Parent;
             }
 
@@ -259,17 +264,23 @@ namespace Verdant.Physics
             {
                 for (int j = 0; j < pathMap.GetLength(1); j++)
                 {
-                    int cellX = i * cellWidth + origin.X - (cellWidth/2);
-                    int cellY = j * cellHeight + origin.Y - (cellHeight/2);
+                    int cellX = i * cellWidth + origin.X + (cellWidth / 2);
+                    int cellY = j * cellHeight + origin.Y + (cellHeight / 2);
 
                     if (entityManager.CheckRectCollisions<T>(cellX, cellY, cellWidth, cellHeight, includeTriggers: false).Count == 0)
                         pathMap[i, j] = true;
                     else
                         pathMap[i, j] = false;
-
                 }
             }
 
+        }
+
+        public bool IsOpen(float x, float y)
+        {
+            if (x < origin.X || y < origin.Y) return false;
+
+            return pathMap[(int)((x - origin.X) / cellWidth + 1), (int)((y - origin.Y) / cellHeight + 1)];
         }
 
         /// <summary>
