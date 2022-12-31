@@ -1,5 +1,10 @@
 ﻿using System;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using Verdant.UI;
+
 namespace Verdant.Physics
 {
     internal class Line : Shape
@@ -19,6 +24,16 @@ namespace Verdant.Physics
             Vertices[1] = new Vec2(x2, y2);
             Dir = (Vertices[1] - Vertices[0]).Unit();
             Position = new Vec2((Vertices[0].X + Vertices[1].X) / 2f, (Vertices[0].Y + Vertices[1].Y) / 2f);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Camera camera, Color color)
+        {
+            Renderer.DrawLine(spriteBatch,
+                camera,
+                Vertices[0],
+                Vertices[1],
+                color
+                );
         }
     }
 }

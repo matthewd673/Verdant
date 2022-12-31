@@ -69,7 +69,7 @@ namespace Verdant.Physics
 
         public Color BodyColor { get; set; } = Color.Yellow;
 
-        public List<PhysicsEntity> Colliding { get; private set; } = new();
+        internal List<PhysicsEntity> Colliding { get; private set; } = new();
 
         /// <summary>
         /// Initialize a new PhysicsEntity. By default, it will have a mass but no Components.
@@ -92,7 +92,46 @@ namespace Verdant.Physics
 
             Components[0].Position += Velocity;
         }
-        
+
+        /// <summary>
+        /// Get a list of all PhysicsEntities of a given type currently colliding with this Entity.
+        /// </summary>
+        /// <typeparam name="TPhysicsEntity">The type of PhysicsEntity to check for.</typeparam>
+        /// <param name="includeTriggers">Check against PhysicsEntities that are triggers.</param>
+        /// <param name="includeSolids">Check against PhysicsEntities that are not triggers.</param>
+        /// <returns>A list containing all colliding Entities.</returns>
+        public List<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
+        {
+            List<TPhysicsEntity> colliding = new List<TPhysicsEntity>();
+
+            foreach (PhysicsEntity p in Colliding)
+            {
+                if (!p.IsType(typeof(TPhysicsEntity)))
+                    continue;
+
+                if (includeTriggers && p.Trigger)
+                {
+                    colliding.Add((TPhysicsEntity)p);
+                    continue;
+                }
+
+                if (includeSolids && !p.Trigger)
+                {
+                    colliding.Add((TPhysicsEntity)p);
+                    continue;
+                }
+
+                colliding.Add((TPhysicsEntity)p);
+            }
+
+            return colliding;
+        }
+
+        public List<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
+        {
+            return GetColliding<PhysicsEntity>();
+        }
+
         /// <summary>
         /// Visualize the Components of the Body according to the BodyColor.
         /// The default implementation is only intended for debug purposes as
@@ -103,60 +142,7 @@ namespace Verdant.Physics
         {
             foreach (Shape s in Components)
             {
-                if (s.GetType() == typeof(Rectangle))
-                {
-                    Rectangle r = (Rectangle)s;
-
-                    Renderer.DrawLine(spriteBatch,
-                        Manager.Scene.Camera,
-                        r.Vertices[0],
-                        r.Vertices[1],
-                        BodyColor
-                        );
-                    Renderer.DrawLine(spriteBatch,
-                        Manager.Scene.Camera,
-                        r.Vertices[1],
-                        r.Vertices[2],
-                        BodyColor
-                        );
-                    Renderer.DrawLine(spriteBatch,
-                        Manager.Scene.Camera,
-                        r.Vertices[2],
-                        r.Vertices[3],
-                        BodyColor
-                        );
-                    Renderer.DrawLine(spriteBatch,
-                        Manager.Scene.Camera,
-                        r.Vertices[3],
-                        r.Vertices[0],
-                        BodyColor
-                        );
-                }
-                else if (s.GetType() == typeof(Circle))
-                {
-                    Circle c = (Circle)s;
-
-                    spriteBatch.Draw(
-                        Renderer.GenerateCircleSprite(c.Radius * Renderer.Scale, Color.White).Draw(),
-                        Manager.Scene.Camera.GetRenderBounds(
-                            c.Position.X - c.Radius,
-                            c.Position.Y - c.Radius,
-                            (int)(c.Radius * 2),
-                            (int)(c.Radius * 2)),
-                        BodyColor
-                        );
-                }
-                else if (s.GetType() == typeof(Line))
-                {
-                    Line l = (Line)s;
-
-                    Renderer.DrawLine(spriteBatch,
-                        Manager.Scene.Camera,
-                        l.Vertices[0],
-                        l.Vertices[1],
-                        BodyColor
-                        );
-                }
+                s.Draw(spriteBatch, Manager.Scene.Camera, BodyColor);
             }
         }
 

@@ -288,118 +288,9 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Get a list of all Entities currently colliding with the specified Entity.
-        /// </summary>
-        /// <param name="e">The Entity used to check collisions. By default, all of the Entity's colliders will be checked.</param>
-        /// <param name="specificCollider">Specify a single collider to check against. Useful if the Entity has more than one Collider attached to it.</param>
-        /// <param name="includeTriggers">Check against PhysicsEntities that are triggers.</param>
-        /// <param name="includeSolids">Check against PhysicsEntities that are not triggers.</param>
-        /// <returns>A list containing all colliding Entities.</returns>
-        public List<Entity> GetAllColliding(Entity e, bool includeTriggers = false, bool includeSolids = true)
-        {
-            List<Entity> colliding = new List<Entity>();
-
-            foreach (CollisionData c in collisions)
-            {
-                if (c.a == e)
-                {
-                    if (includeTriggers && c.b.Trigger)
-                    {
-                        colliding.Add(c.b);
-                        continue;
-                    }
-                    
-                    if (includeSolids && !c.b.Trigger)
-                    {
-                        colliding.Add(c.b);
-                        continue;
-                    }
-                    
-                    colliding.Add(c.b);
-                }
-                else if (c.b == e)
-                {
-                    if (includeTriggers && c.a.Trigger)
-                    {
-                        colliding.Add(c.a);
-                        continue;
-                    }
-                    
-                    if (includeSolids && !c.a.Trigger)
-                    {
-                        colliding.Add(c.a);
-                        continue;
-                    }
-
-                    colliding.Add(c.a);
-                }
-            }
-
-            return colliding;
-
-        }
-
-        /// <summary>
-        /// Get a list of all PhysicsEntities of a given type currently colliding with the specified Entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of PhysicsEntity to check for.</typeparam>
-        /// <param name="e">The PhysicsEntity used to check collisions against.</param>
-        /// <param name="includeTriggers">Check against PhysicsEntities that are triggers.</param>
-        /// <param name="includeSolids">Check against PhysicsEntities that are not triggers.</param>
-        /// <returns>A list containing all colliding Entities.</returns>
-        public List<TEntity> GetAllCollidingOfType<TEntity>(Entity e, bool includeTriggers = false, bool includeSolids = true) where TEntity : PhysicsEntity // largely copied from GetAllColliding
-        {
-            List<TEntity> colliding = new List<TEntity>();
-
-            foreach (CollisionData c in collisions)
-            {
-                if (c.a == e)
-                {
-                    if (c.b.GetType() != typeof(TEntity))
-                        continue;
-
-                    if (includeTriggers && c.b.Trigger)
-                    {
-                        colliding.Add((TEntity) c.b);
-                        continue;
-                    }
-                    
-                    if (includeSolids && !c.b.Trigger)
-                    {
-                        colliding.Add((TEntity) c.b);
-                        continue;
-                    }
-
-                    colliding.Add((TEntity) c.b);
-                }
-                else if (c.b == e)
-                {
-                    if (c.a.GetType() != typeof(TEntity))
-                        continue;
-
-                    if (includeTriggers && c.a.Trigger)
-                    {
-                        colliding.Add((TEntity) c.a);
-                        continue;
-                    }
-
-                    if (includeSolids && !c.a.Trigger)
-                    {
-                        colliding.Add((TEntity) c.a);
-                        continue;
-                    }
-
-                    colliding.Add((TEntity) c.a);
-                }
-            }
-
-            return colliding;
-        }
-
-        /// <summary>
         /// Get a list of all PhysicsEntities of a given type intersecting with a given rectangle. 
         /// </summary>
-        /// <typeparam name="TEntity">The type of Entity to check for.</typeparam>
+        /// <typeparam name="TPhysicsEntity">The type of Entity to check for.</typeparam>
         /// <param name="x">The x coordinate of the rectangle.</param>
         /// <param name="y">The y coordinate of the rectangle.</param>
         /// <param name="width">The width of the rectangle.</param>
@@ -408,14 +299,15 @@ namespace Verdant
         /// <param name="includeSolids">Check against PhysicsEntities that are not triggers.</param>
         /// <param name="ignoreList">A list of all Entities to exclude from the check.</param>
         /// <returns>A list of all colliding Entities of the given type.</returns>
-        public List<TEntity> CheckRectCollisions<TEntity>(float x, float y, int width, int height, bool includeTriggers = false, bool includeSolids = true, List<TEntity> ignoreList = null) where TEntity : PhysicsEntity
+        public List<TPhysicsEntity> CheckRectCollisions<TPhysicsEntity>(float x, float y, int width, int height, bool includeTriggers = false, bool includeSolids = true, List<TPhysicsEntity> ignoreList = null) where TPhysicsEntity : PhysicsEntity
         {
-            List<TEntity> colliding = new List<TEntity>();
+            List<TPhysicsEntity> colliding = new List<TPhysicsEntity>();
 
-            List<TEntity> searchList = GetEntitiesInBounds<TEntity>(x, y, width, height);
-            Rectangle bounds = new Rectangle(x, y, x + width, x + height, width);
+            List<TPhysicsEntity> searchList = GetEntitiesInBounds<TPhysicsEntity>(x, y, width, height);
+            Rectangle bounds = new Rectangle(x, y, x + height, y + 1, width); // why do these coordinates work?
+            bounds.CalculateVertices();
 
-            foreach (TEntity e in searchList)
+            foreach (TPhysicsEntity e in searchList)
             {
                 if (e.Trigger && !includeTriggers)
                     continue;
@@ -427,20 +319,19 @@ namespace Verdant
 
                 PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
 
-                bool eColliding = false;
                 for (int k = 0; k < e.Components.Length; k++)
                 {
-                    if (!eColliding)
-                        eColliding = PhysicsMath.SAT(bounds, e.Components[k]).Overlap;
+                    PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(bounds, e.Components[k]);
+                    if (currentSAT.Penetration > bestSAT.Penetration)
+                    {
+                        bestSAT = currentSAT;
+                    }
                 }
 
-                if (eColliding)
+                if (bestSAT.Overlap)
+                {
                     colliding.Add(e);
-
-                //if (bestSAT.Overlap && bestSAT.Penetration != float.MinValue)
-                //{
-                //    colliding.Add(e);
-                //}
+                }
             }
 
             return colliding;

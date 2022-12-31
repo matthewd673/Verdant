@@ -1,5 +1,10 @@
 ﻿using System;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+using Verdant.UI;
+
 namespace Verdant.Physics
 {
     internal class Circle : Shape
@@ -20,5 +25,17 @@ namespace Verdant.Physics
             Radius = radius;
         }
 
+        public override void Draw(SpriteBatch spriteBatch, Camera camera, Color color)
+        {
+            spriteBatch.Draw(
+                Renderer.GenerateCircleSprite(Radius * Renderer.Scale, Color.White).Draw(),
+                camera.GetRenderBounds(
+                    Position.X - Radius,
+                    Position.Y - Radius,
+                    (int)(Radius * 2),
+                    (int)(Radius * 2)),
+                color
+                );
+        }
     }
 }

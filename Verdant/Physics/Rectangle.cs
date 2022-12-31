@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using Verdant.UI;
+
 namespace Verdant.Physics
 {
     public class Rectangle : Shape
@@ -53,6 +55,34 @@ namespace Verdant.Physics
             Vertices[1] = Position + (Dir * -Length / 2) + (Dir.Normal() * -Width / 2);
             Vertices[2] = Position + (Dir * Length / 2) + (Dir.Normal() * -Width / 2);
             Vertices[3] = Position + (Dir * Length / 2) + (Dir.Normal() * Width / 2);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Camera camera, Color color)
+        {
+            Renderer.DrawLine(spriteBatch,
+                camera,
+                Vertices[0],
+                Vertices[1],
+                color
+                );
+            Renderer.DrawLine(spriteBatch,
+                camera,
+                Vertices[1],
+                Vertices[2],
+                color
+                );
+            Renderer.DrawLine(spriteBatch,
+                camera,
+                Vertices[2],
+                Vertices[3],
+                color
+                );
+            Renderer.DrawLine(spriteBatch,
+                camera,
+                Vertices[3],
+                Vertices[0],
+                color
+                );
         }
 
     }
