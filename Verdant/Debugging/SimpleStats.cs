@@ -19,6 +19,7 @@ namespace Verdant.Debugging
         {
             stackHeight = 0;
             WriteToScreen($"FPS: {1000/scene.DeltaTime} ({scene.DeltaTime}ms)", spriteBatch, font);
+            WriteToScreen($"Frame Duration: {scene.EntityManager.UpdateDuration + Renderer.RenderDuration}ms (U={scene.EntityManager.UpdateDuration} + R={Renderer.RenderDuration})", spriteBatch, font);
             WriteToScreen($"Entities: {scene.EntityManager.EntityCount}", spriteBatch, font);
             WriteToScreen($"Total updates (last tick): {scene.EntityManager.EntityUpdateCount}", spriteBatch, font);
             WriteToScreen($"Physics updates (last tick): {scene.EntityManager.PhysicsEntityUpdateCount}", spriteBatch, font);

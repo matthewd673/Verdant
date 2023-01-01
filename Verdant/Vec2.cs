@@ -84,11 +84,6 @@ namespace Verdant
 
         public Vec2 Normal()
         {
-            //a faster way to achieve: return new Vec2(-Y, X).Unit();
-            //float mag = Magnitude();
-            //if (mag == 0)
-            //    return new Vec2(0, 0);
-            //return new Vec2(-Y / mag, X / mag);
             return new Vec2(-Y, X).Unit();
         }
 

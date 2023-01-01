@@ -4,10 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
-
     public class Entity
     {
-
         EntityManager _manager;
 
         // The EntityManager that manages this Entity.
@@ -30,7 +28,7 @@ namespace Verdant
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
 
-        public Vec2 Position { get; set; }
+        public virtual Vec2 Position { get; set; }
 
         private int _width;
         // The draw width of the Entity.
@@ -56,7 +54,9 @@ namespace Verdant
         protected int HalfWidth { get; private set; }
         protected int HalfHeight { get; private set; }
 
-        protected bool SetZIndexToBase { get; set; }
+        // The method by which to update the ZIndex.
+        public EntityManager.ZIndexMode ZIndexMode { get; set; } = EntityManager.ZIndexMode.ByIndex;
+
         // The z-index, used for sorting and depth-based rendering.
         public int ZIndex { get; set; } = 0;
 
@@ -74,9 +74,6 @@ namespace Verdant
         public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) :
             base()
         {
-            //apply default properties
-            SetZIndexToBase = true;
-
             Sprite = sprite;
             Position = position;
 
@@ -101,8 +98,10 @@ namespace Verdant
             }
 
             // update z index
-            if (SetZIndexToBase)
+            if (ZIndexMode == EntityManager.ZIndexMode.Bottom)
                 ZIndex = (int)(Position.Y + Height);
+            else if (ZIndexMode == EntityManager.ZIndexMode.Top)
+                ZIndex = (int)(Position.Y);
         }
 
         /// <summary>

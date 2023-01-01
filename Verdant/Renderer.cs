@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,9 +22,10 @@ namespace Verdant
 
         public static bool SortEntities { get; set; } = true;
 
-        static IEnumerable<Entity> sortedQueue;
-
         public static GraphicsDevice GraphicsDevice { get; private set; }
+
+        private static Stopwatch renderPerformanceTimer = new Stopwatch();
+        public static float RenderDuration { get; private set; }
 
         /// <summary>
         /// Get a Texture2D containing a single white pixel.
@@ -66,34 +68,36 @@ namespace Verdant
         /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
         public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
         {
-            //render entities
+            renderPerformanceTimer.Start();
+
+            // render entities
+            IEnumerable<Entity> entities;
             if (SortEntities)
-            {
-                sortedQueue = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
-                foreach (Entity e in sortedQueue)
-                {
-                    e.Draw(spriteBatch);
-                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
-                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
-                }
-            }
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
             else
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height);
+
+            foreach (Entity e in entities)
             {
-                foreach (Entity e in scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height))
+                e.Draw(spriteBatch);
+            }
+
+            if (visualizeBodies)
+            {
+                foreach (Entity e in entities)
                 {
-                    e.Draw(spriteBatch);
-                    if (visualizeBodies && e.IsType(typeof(Physics.PhysicsEntity)))
-                        ((Physics.PhysicsEntity) e).DrawBody(spriteBatch);
+                    if (e.IsType(typeof(Physics.PhysicsEntity)))
+                        ((Physics.PhysicsEntity)e).DrawBody(spriteBatch);
                 }
             }
 
-            //render ui elements
+            // render ui elements
             foreach (UIElement e in scene.UIManager.GetElements())
             {
                 e.Draw(spriteBatch);
             }
 
-            //render cursor
+            // render cursor
             if (ShowCursor && Cursor != null)
             {
                 spriteBatch.Draw(Cursor.Draw(),
@@ -104,6 +108,10 @@ namespace Verdant
                     ),
                     Color.White);
             }
+
+            renderPerformanceTimer.Stop();
+            RenderDuration = renderPerformanceTimer.ElapsedMilliseconds;
+            renderPerformanceTimer.Reset();
         }
 
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
@@ -123,6 +131,14 @@ namespace Verdant
                 SpriteEffects.None,
                 0
                 );
+        }
+
+        public static void DrawRectangle(SpriteBatch spriteBatch, Camera camera, Vec2 topLeft, Vec2 bottomRight, Color color)
+        {
+            DrawLine(spriteBatch, camera, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
+            DrawLine(spriteBatch, camera, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
+            DrawLine(spriteBatch, camera, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
+            DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
         }
 
         public static Sprite GenerateCircleSprite(float radius, Color color) //TODO: this is far from perfect
