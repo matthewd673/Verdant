@@ -2,19 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using Verdant.Debugging;
 using Verdant.Physics;
 
 namespace Verdant
 {
     public class EntityManager
     {
-        public enum UpdateMode
-        {
-            All,
-            NearCamera,
-        }
-
         public enum ZIndexMode
         {
             // Assign a ZIndex based on the order it was added to the Manager.
@@ -85,6 +78,8 @@ namespace Verdant
 
         /// <summary>
         /// Remove an Entity from the list, and mark its manager as null.
+        /// NOTE: In most cases (such as if Entities are removing themselves or others
+        /// in the middle of an update) set <c>Entity.ForRemoval = true</c> instead.
         /// </summary>
         /// <param name="e">The Entity to remove.</param>
         public void RemoveEntity(Entity e)
@@ -97,7 +92,7 @@ namespace Verdant
         /// </summary>
         public void ApplyQueues()
         {
-            //add marked
+            // add marked
             foreach (Entity e in addQueue)
             {
                 e.Manager = this;
@@ -113,15 +108,17 @@ namespace Verdant
                 EntityCount++; // keep track
             }
 
-            //remove marked
+            // remove marked
             foreach (Entity e in removeQueue)
             {
-                e.Manager = null;
                 List<Entity> cellList;
-                if (entityTable.TryGetValue(e.Key, out cellList))
+                if (entityTable.TryGetValue(e.ForRemoval ? e.PreviousKey : e.Key, out cellList))
                 {
                     if (cellList.Remove(e))
+                    {
+                        e.Manager = null;
                         EntityCount--; // keep track
+                    }
                 }
             }
 
@@ -304,7 +301,7 @@ namespace Verdant
             List<TPhysicsEntity> colliding = new List<TPhysicsEntity>();
 
             List<TPhysicsEntity> searchList = GetEntitiesInBounds<TPhysicsEntity>(x, y, width, height);
-            Rectangle bounds = new Rectangle(x, y, x + height, y + 1, width); // why do these coordinates work?
+            Rectangle bounds = new(x, y, x + height, y + 1, width); // why do these coordinates work?
             bounds.CalculateVertices();
 
             foreach (TPhysicsEntity e in searchList)
@@ -433,6 +430,14 @@ namespace Verdant
             {
                 e.Update();
 
+                // remove marked entities
+                if (e.ForRemoval)
+                {
+                    RemoveEntity(e);
+                    continue; // don't bother with anything else if being removed
+                }
+
+                // move physicsentities
                 if (e.IsType(typeof(PhysicsEntity)))
                 {
                     PhysicsEntity p = (PhysicsEntity) e;
@@ -442,13 +447,6 @@ namespace Verdant
                 }
 
                 EntityUpdateCount++; // count entity updates
-
-                // remove marked entities
-                if (e.ForRemoval)
-                {
-                    RemoveEntity(e);
-                    continue; // don't bother with anything else if being removed
-                }
 
                 if (!e.Key.Equals(e.PreviousKey))
                     MoveEntityCell(e);
@@ -463,23 +461,16 @@ namespace Verdant
         /// Update the EntityManager.
         /// </summary>
         /// <param name="updateMode">The UpdateMode to use.</param>
-        public void Update(UpdateMode updateMode = UpdateMode.NearCamera)
+        public void Update()
         {
             updatePerformanceTimer.Start();
 
-            switch (updateMode)
-            {
-                case UpdateMode.All: //update all entities
-                    UpdateList(GetAllEntities());
-                    break;
-                case UpdateMode.NearCamera: //update in rectangle near camera (with some padding to be safe)
-                    UpdateList(GetEntitiesInBounds(
-                        Scene.Camera.Position.X - CellSize,
-                        Scene.Camera.Position.Y - CellSize,
-                        Scene.Camera.Width + (CellSize * 2),
-                        Scene.Camera.Height + (CellSize * 2)));
-                    break;
-            }
+            //update in rectangle near camera (with some padding to be safe)
+            UpdateList(GetEntitiesInBounds(
+                Scene.Camera.Position.X - CellSize,
+                Scene.Camera.Position.Y - CellSize,
+                Scene.Camera.Width + (CellSize * 2),
+                Scene.Camera.Height + (CellSize * 2)));
 
             updatePerformanceTimer.Stop();
             UpdateDuration = updatePerformanceTimer.ElapsedMilliseconds;
