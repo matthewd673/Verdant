@@ -430,6 +430,8 @@ namespace Verdant
             {
                 e.Update();
 
+                EntityUpdateCount++; // count entity updates
+
                 // remove marked entities
                 if (e.ForRemoval)
                 {
@@ -445,8 +447,6 @@ namespace Verdant
                     physicsList.Add(p);
                     PhysicsEntityUpdateCount++; // count physics updates
                 }
-
-                EntityUpdateCount++; // count entity updates
 
                 if (!e.Key.Equals(e.PreviousKey))
                     MoveEntityCell(e);
@@ -503,7 +503,10 @@ namespace Verdant
         /// </summary>
         /// <param name="cell">The cell coordinates.</param>
         /// <returns>An Entity key.</returns>
-        public static string GetKeyFromCell(Vec2Int cell) { return GetKeyFromCell(cell.X, cell.Y); }
+        public static string GetKeyFromCell(Vec2Int cell)
+        {
+            return GetKeyFromCell(cell.X, cell.Y);
+        }
 
         /// <summary>
         /// Given a position in the world, build an appropriate Entity key.
@@ -520,7 +523,10 @@ namespace Verdant
         /// </summary>
         /// <param name="pos">The position.</param>
         /// <returns>An Entity key.</returns>
-        public string GetKeyFromPos(Vec2 pos) { return GetKeyFromPos(pos.X, pos.Y); }
+        public string GetKeyFromPos(Vec2 pos)
+        {
+            return GetKeyFromPos(pos.X, pos.Y);
+        }
 
     }
 }

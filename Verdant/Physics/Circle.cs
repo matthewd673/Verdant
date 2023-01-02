@@ -28,7 +28,7 @@ namespace Verdant.Physics
         public override void Draw(SpriteBatch spriteBatch, Camera camera, Color color)
         {
             spriteBatch.Draw(
-                Renderer.GenerateCircleSprite(Radius * Renderer.Scale, Color.White).Draw(),
+                Renderer.GenerateCircleSprite((int)(Radius * Renderer.Scale), Color.White).Draw(),
                 camera.GetRenderBounds(
                     Position.X - Radius,
                     Position.Y - Radius,

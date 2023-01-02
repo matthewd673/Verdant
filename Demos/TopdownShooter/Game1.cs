@@ -32,7 +32,7 @@ namespace TopdownShooter
             playScene.Initialize();
             sceneManager.AddScene(playScene);
 
-            SimpleStats.TextColor = Color.Black;
+            SimpleStats.TextColor = Color.White;
         }
 
         protected override void LoadContent()

@@ -141,28 +141,50 @@ namespace Verdant
             DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
         }
 
-        public static Sprite GenerateCircleSprite(float radius, Color color) //TODO: this is far from perfect
+        public static Sprite GenerateCircleSprite(int radius, Color color) //TODO: this is far from perfect
         {
-            int diam = (int)(radius * 2);
+            int diam = radius * 2;
 
-            Texture2D circleTex = new Texture2D(GraphicsDevice, diam, diam);
-            Color[] colorData = new Color[diam * diam];
+            Texture2D circleTex = new Texture2D(GraphicsDevice, diam+1, diam+1);
+            Color[] colorData = new Color[(diam+1) * (diam+1)];
 
-            for (int i = 0; i < diam; i++)
+            // Bresenham's
+            int x = 0;
+            int y = radius;
+            int d = 3 - diam;
+
+            DrawCircleSpritePoint(x, y, radius, diam, colorData, color);
+            while (y >= x)
             {
-                for (int j = 0; j < diam; j++)
+                x++;
+
+                if (d > 0)
                 {
-                    int colorIndex = i * diam + j;
-                    float distFromCenter = (new Vec2(i, j) - new Vec2(radius, radius)).Magnitude();
-                    if (Math.Abs(distFromCenter - radius) <= 1f)
-                        colorData[colorIndex] = color;
-                    else
-                        colorData[colorIndex] = Color.Transparent;
+                    y--;
+                    d = d + 4 * (x - y) + 10;
                 }
+                else
+                {
+                    d = d + 4 * x + 6;
+                }
+
+                DrawCircleSpritePoint(x, y, radius, diam, colorData, color);
             }
 
             circleTex.SetData(colorData);
             return new Sprite(circleTex);
+        }
+
+        private static void DrawCircleSpritePoint(int x, int y, int rad, int diam, Color[] colorData, Color color)
+        {
+            colorData[(rad+x) * (diam+1) + (rad+y)] = color;
+            colorData[(rad-x) * (diam+1) + (rad+y)] = color;
+            colorData[(rad+x) * (diam+1) + (rad-y)] = color;
+            colorData[(rad-x) * (diam+1) + (rad-y)] = color;
+            colorData[(rad+y) * (diam+1) + (rad+x)] = color;
+            colorData[(rad-y) * (diam+1) + (rad+x)] = color;
+            colorData[(rad+y) * (diam+1) + (rad-x)] = color;
+            colorData[(rad-y) * (diam+1) + (rad-x)] = color;
         }
 
     }
