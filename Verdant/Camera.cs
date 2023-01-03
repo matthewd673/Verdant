@@ -5,7 +5,8 @@ namespace Verdant
     public class Camera : Entity
     {
         float shakeStrength;
-        Timer shakeCooldown;
+        int shakeDuration;
+        int shakeCountdown;
         float offsetX;
         float offsetY;
 
@@ -29,17 +30,17 @@ namespace Verdant
         /// </summary>
         public override void Update()
         {
-            if (shakeCooldown == null)
+            if (shakeDuration == 0)
                 return;
 
-            shakeCooldown.Tick();
-            if (!shakeCooldown.Check())
+            shakeCountdown--;
+            if (shakeCountdown > 0)
                 ApplyShake();
             else
             {
                 offsetX = 0;
                 offsetY = 0;
-                shakeCooldown = null;
+                shakeDuration = 0;
             }
         }
 
@@ -177,7 +178,8 @@ namespace Verdant
         public void SetShake(float strength, int duration)
         {
             shakeStrength = strength;
-            shakeCooldown = new Timer(duration);
+            shakeDuration = duration;
+            shakeCountdown = duration;
             offsetX = 0;
             offsetY = 0;
         }
@@ -188,7 +190,7 @@ namespace Verdant
         /// <returns>Returns true if the Camera is currently shaking. Otherwise, return false.</returns>
         public bool IsShaking()
         {
-            return (shakeCooldown != null);
+            return shakeDuration != 0;
         }
 
         /// <summary>

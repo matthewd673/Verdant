@@ -141,7 +141,13 @@ namespace Verdant
             DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
         }
 
-        public static Sprite GenerateCircleSprite(int radius, Color color) //TODO: this is far from perfect
+        /// <summary>
+        /// Generate a (non-filled) circle Sprite with a given radius and color.
+        /// </summary>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="color">The color of the circle.</param>
+        /// <returns>A Sprite with the circle raster.</returns>
+        public static Sprite GenerateCircleSprite(int radius, Color color)
         {
             int diam = radius * 2;
 

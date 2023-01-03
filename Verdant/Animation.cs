@@ -9,13 +9,14 @@ namespace Verdant
         readonly SpriteSheet sheet;
         FrameSet frameSet;
 
-        readonly Timer animateCooldown;
+        private int frameDelay;
+        private int frameTimeCounter;
         public bool Looping { get; set; }
 
-        int frameIndex;
+        private int frameIndex;
 
-        bool settled = false;
-        bool hasLooped = false;
+        private bool settled = false;
+        private bool hasLooped = false;
 
         /// <summary>
         /// Initialize a new Animation.
@@ -27,9 +28,11 @@ namespace Verdant
         {
             this.sheet = sheet;
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
-            animateCooldown = new Timer(frameDelay);
+            this.frameDelay = frameDelay;
+            frameTimeCounter = frameDelay;
             Looping = looping;
         }
+
         /// <summary>
         /// Initialize a new Animation.
         /// </summary>
@@ -41,9 +44,11 @@ namespace Verdant
         {
             this.sheet = sheet;
             this.frameSet = frameSet;
-            animateCooldown = new Timer(frameDelay);
+            this.frameDelay = frameDelay;
+            frameTimeCounter = frameDelay;
             Looping = looping;
         }
+
         /// <summary>
         /// Initialize a new Animation directly from a Texture2D sheet.
         /// </summary>
@@ -56,7 +61,8 @@ namespace Verdant
         {
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
-            animateCooldown = new Timer(frameDelay);
+            this.frameDelay = frameDelay;
+            frameTimeCounter = frameDelay;
             Looping = looping;
         }
         /// <summary>
@@ -72,7 +78,8 @@ namespace Verdant
         {
             sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
             this.frameSet = frameSet;
-            animateCooldown = new Timer(frameDelay);
+            this.frameDelay = frameDelay;
+            frameTimeCounter = frameDelay;
             Looping = looping;
         }
 
@@ -149,10 +156,11 @@ namespace Verdant
             if (settled) //skip other steps if settled
                 return sheet.DrawIndex(frameIndex, frameSet.row);
 
-            animateCooldown.Tick();
+            frameTimeCounter--;
 
-            if (animateCooldown.Consume())
+            if (frameTimeCounter <= 0)
             {
+                frameTimeCounter = frameDelay;
                 frameIndex++;
 
                 if (frameIndex >= frameSet.endFrame)
@@ -193,7 +201,7 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(sheet, frameSet, animateCooldown.Duration, Looping);
+            return new Animation(sheet, frameSet, frameDelay, Looping);
         }
 
         public struct FrameSet
