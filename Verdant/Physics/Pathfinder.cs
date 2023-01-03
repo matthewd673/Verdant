@@ -14,9 +14,11 @@ namespace Verdant.Physics
 
         private Vec2Int origin; // top left corner of the pathmap
 
+        // The maximum distance from walker to target that the walker will seek to traverse.
         public int MaxSeekDistance { get; set; }
+        // The maximum number of cells that may be searched when pathfinding.
         public int MaxSearchCells { get; set; } = 100;
-
+        // The last goal point that a walker attempted to reach.
         public Vec2 LastGoalPosition { get; private set; } = new Vec2(0, 0);
 
         /// <summary>
@@ -33,17 +35,18 @@ namespace Verdant.Physics
         }
 
         /// <summary>
-        /// Generate a new path on the current path map with the specified walker and target Entities.
+        /// Generate a new path on the current map with the specified walker and target Entities.
         /// </summary>
         /// <param name="walker">The walker Entity.</param>
         /// <param name="target">The target Entity.</param>
-        /// <param name="walkerCollider">The specific Collider on the walker Entity to check against.</param>
-        /// <param name="targetCollider">The specific Collider on the target Entity to check against.</param>
+        /// <param name="walkerCollider">The specific physics Component on the walker Entity to check against.</param>
+        /// <param name="targetCollider">The specific physics Component on the target Entity to check against.</param>
+        /// <param name="maxSeekDistance">The maximum distance from walker to target that the walker will seek to traverse. If omitted, the default MaxSeekDistance will be used.</param>
         /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
-        public List<Vec2> FindPath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider)
+        public List<Vec2> FindPath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider, int maxSeekDistance = -1)
         {
             // ensure that the target is within the appropriate range before finding a path
-            if (GameMath.GetDistance(walker.Position, target.Position) < MaxSeekDistance)
+            if (GameMath.GetDistance(walker.Position, target.Position) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
             {
                 return GeneratePath(walkerCollider, targetCollider);
             }
@@ -51,9 +54,16 @@ namespace Verdant.Physics
             return new List<Vec2>(); // couldn't find path, return empty
         }
 
-        public List<Vec2> FindPath(PhysicsEntity walker, PhysicsEntity target)
+        /// <summary>
+        /// Generate a new path on the current map with the specified walker and target Entities.
+        /// </summary>
+        /// <param name="walker">The walker Entity.</param>
+        /// <param name="target">The target Entity.</param>
+        /// <param name="maxSeekDistance">The maximum distance from walker to target that the walker will seek to traverse. If omitted, the default MaxSeekDistance will be used.</param>
+        /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
+        public List<Vec2> FindPath(PhysicsEntity walker, PhysicsEntity target, int maxSeekDistance = -1)
         {
-            return FindPath(walker, target, walker.Components[0], target.Components[0]);
+            return FindPath(walker, target, walker.Components[0], target.Components[0], maxSeekDistance);
         }
 
         /// <summary>
@@ -276,6 +286,12 @@ namespace Verdant.Physics
 
         }
 
+        /// <summary>
+        /// Check if the cell at a given point is open (can be traversed).
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <returns></returns>
         public bool IsOpen(float x, float y)
         {
             if (x < origin.X || y < origin.Y) return false;

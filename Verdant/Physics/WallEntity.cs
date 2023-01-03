@@ -17,7 +17,6 @@ namespace Verdant.Physics
         public WallEntity(Vec2 start, Vec2 end)
             : base(null, new Vec2(0, 0), 0, 0, mass: 0)
         {
-            //InitializeBody(start.X, start.Y, end.X, end.Y);
             Components = new Shape[] { new Line(start.X, start.Y, end.X, end.Y) };
             Position = new Vec2(
                 (start.X + end.X) / 2f,

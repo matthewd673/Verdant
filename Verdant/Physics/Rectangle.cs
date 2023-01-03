@@ -12,6 +12,7 @@ namespace Verdant.Physics
         Vec2 refDir;
         internal float Length { get; set; }
         internal float Width { get; set; }
+        // The angle of the Rectangle's rotation.
         public float Angle { get; set; }
         Matrix rotMat;
 

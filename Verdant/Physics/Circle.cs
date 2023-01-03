@@ -3,14 +3,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using Verdant.UI;
-
 namespace Verdant.Physics
 {
     internal class Circle : Shape
     {
 
         internal float Radius { get; set; }
+        private Sprite bodySprite;
 
         /// <summary>
         /// Initialize a new Circle shape.
@@ -27,8 +26,14 @@ namespace Verdant.Physics
 
         public override void Draw(SpriteBatch spriteBatch, Camera camera, Color color)
         {
+            // only generate body sprite once, and only if Draw is actually called
+            if (bodySprite == RenderObject.None)
+            {
+                bodySprite = Renderer.GenerateCircleSprite((int)(Radius * Renderer.Scale), Color.White).Draw();
+            }
+
             spriteBatch.Draw(
-                Renderer.GenerateCircleSprite((int)(Radius * Renderer.Scale), Color.White).Draw(),
+                bodySprite.Draw(),
                 camera.GetRenderBounds(
                     Position.X - Radius,
                     Position.Y - Radius,

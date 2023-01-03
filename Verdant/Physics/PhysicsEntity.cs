@@ -9,7 +9,10 @@ namespace Verdant.Physics
     
     public class PhysicsEntity : Entity
     {
+        // The Shapes that make up the PhysicsEntity's collider.
         public Shape[] Components { get; set; } = new Shape[0];
+        
+        // The position of the PhysicsEntity (the center of its first Shape component).
         public override Vec2 Position
         {
             get
@@ -26,6 +29,7 @@ namespace Verdant.Physics
         }
 
         private float _mass;
+        // The mass of the PhysicsEntity.
         public float Mass
         {
             get { return _mass; }
@@ -41,6 +45,7 @@ namespace Verdant.Physics
         internal float InvMass { get; private set; }
 
         private float _inertia;
+        // The inertia of the PhysicsEntity, calculated from mass.
         public float Inertia
         {
             get { return _inertia; }
@@ -55,18 +60,24 @@ namespace Verdant.Physics
         }
         internal float InvInertia { get; private set; }
 
+        // The velocity of the PhysicsEntity.
         public Vec2 Velocity { get; set; } = new Vec2(0, 0);
+        // The acceleration of the PhysicsEntity.
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
 
+        // The speed multiplier applied to acceleration when the PhysicsEntity moves.
         public float Speed { get; set; } = 1f;
+        // The friction of the PhysicsEntity.
         public float Friction { get; set; }
+        // The speed at which the PhysicsEntity is currently rotating.
         public float AngleSpeed { get; set; }
+        // The friction of the PhysicsEntity's rotation.
         public float AngleFriction { get; set; }
-
+        // The elasticity of the PhysicsEntity when a collision is resolved.
         public float Elasticity { get; set; } = 1f;
-
+        // Determines if the PhysicsEntity is a trigger. Collisions with triggers will not be resolved, but will still be registered.
         public bool Trigger { get; set; } = false;
-
+        // The color to render the PhysicsEntity's Shape components when visualizing bodies.
         public Color BodyColor { get; set; } = Color.Yellow;
 
         internal List<PhysicsEntity> Colliding { get; private set; } = new();
@@ -97,8 +108,8 @@ namespace Verdant.Physics
         /// Get a list of all PhysicsEntities of a given type currently colliding with this Entity.
         /// </summary>
         /// <typeparam name="TPhysicsEntity">The type of PhysicsEntity to check for.</typeparam>
-        /// <param name="includeTriggers">Check against PhysicsEntities that are triggers.</param>
-        /// <param name="includeSolids">Check against PhysicsEntities that are not triggers.</param>
+        /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
+        /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
         /// <returns>A list containing all colliding Entities.</returns>
         public List<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
         {
@@ -127,6 +138,12 @@ namespace Verdant.Physics
             return colliding;
         }
 
+        /// <summary>
+        /// Get a list of all PhysicsEntities currently colliding with this Entity.
+        /// </summary>
+        /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
+        /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
+        /// <returns></returns>
         public List<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
         {
             return GetColliding<PhysicsEntity>();

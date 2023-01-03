@@ -24,7 +24,7 @@ namespace Verdant.Physics
         }
 
         /// <summary>
-        /// Move according to WASD input. A basic template.
+        /// Move according to WASD input.
         /// </summary>
         public void SimpleInput()
         {
@@ -43,6 +43,8 @@ namespace Verdant.Physics
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (Sprite == RenderObject.None) return;
+
             float rad = ((Circle)Components[0]).Radius;
             spriteBatch.Draw(Sprite.Draw(), Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(rad, rad), (int)(rad * 2), (int)(rad * 2)), Color.White);
         }

@@ -12,18 +12,19 @@ namespace Verdant.Debugging
          * - add option to warn when connecting (so a game doesn't accidentally ship with the logger still going)
          */
 
-        static UdpClient client;
-        static bool connectionFailed = false;
+        private static UdpClient client;
+        // If the logger fails to establish a WebSockets connection, it will stop attempting to send messages and this value will be true.
+        public static bool ConnectionFailed { get; private set; } = false;
 
         /// <summary>
         /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).
+        /// NOTE: Log is not intended for production use. WriteLine will not do anything unless it is called in a debug build.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="value">The value to write.</param>
         public static void WriteLine(object value)
         {
-
 #if DEBUG
-            if (connectionFailed) { return; } //only try to connect once
+            if (ConnectionFailed) { return; } //only try to connect once
 
             if (client == null)
             {
@@ -38,7 +39,7 @@ namespace Verdant.Debugging
                 catch (Exception)
                 {
                     //fail silently for now
-                    connectionFailed = true;
+                    ConnectionFailed = true;
                     return;
                 }
             }
@@ -46,7 +47,6 @@ namespace Verdant.Debugging
             byte[] messageBytes = Encoding.ASCII.GetBytes(value.ToString());
             client.Send(messageBytes, messageBytes.Length);
 #endif
-
         }
 
     }

@@ -45,7 +45,7 @@ namespace Verdant.Physics
         }
 
         /// <summary>
-        /// Move according to WASD input. A basic template.
+        /// Move according to WASD input.
         /// </summary>
         public void SimpleInput()
         {
@@ -74,7 +74,7 @@ namespace Verdant.Physics
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Sprite == null) return;
+            if (Sprite == RenderObject.None) return;
 
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             spriteBatch.Draw(
