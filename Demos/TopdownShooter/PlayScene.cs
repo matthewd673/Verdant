@@ -17,7 +17,7 @@ namespace TopdownShooter
     internal class PlayScene : Scene
     {
 
-        public PlayScene(int index) : base(index) { }
+        public PlayScene(string id) : base(id) { }
 
         public Player Player { get; private set; }
         public Pathfinder Pathfinder { get; private set; }
@@ -26,6 +26,7 @@ namespace TopdownShooter
         {
             base.Initialize();
 
+            // generate world (walls & enemies)
             for (int i = 0; i < 100; i++)
             {
                 for (int j = 0; j < 100; j++)
@@ -41,11 +42,12 @@ namespace TopdownShooter
                 }
             }
 
+            // create player
             Player = new Player(new Vec2());
             EntityManager.AddEntity(Player);
 
+            // generate pathfinder map
             EntityManager.ApplyQueues();
-
             Pathfinder = new Pathfinder(16, 16, 1000);
             Pathfinder.BuildPathMap<Wall>(EntityManager);
         }

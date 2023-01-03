@@ -8,7 +8,7 @@ namespace ParticleToy
     internal class PlayScene : Scene
     {
 
-        public PlayScene(int id) : base(id) { }
+        public PlayScene(string id) : base(id) { }
 
         ParticleSystem particleSystem;
 

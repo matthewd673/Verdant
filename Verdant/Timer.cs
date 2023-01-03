@@ -88,7 +88,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Reset the Timer's current time.
+        /// Reset the Timer's current time. If the Timer is running, it will continue running.
         /// </summary>
         public void Reset()
         {

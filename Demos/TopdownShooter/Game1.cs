@@ -28,7 +28,7 @@ namespace TopdownShooter
             Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
 
             sceneManager = new SceneManager();
-            PlayScene playScene = new PlayScene(0);
+            PlayScene playScene = new PlayScene("play");
             playScene.Initialize();
             sceneManager.AddScene(playScene);
 
@@ -58,12 +58,6 @@ namespace TopdownShooter
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: false);
-
-            if (sceneManager.ActiveScene.ID == 0)
-            {
-                //((PlayScene)sceneManager.ActiveScene).Pathfinder.Visualize(_spriteBatch, sceneManager.ActiveScene.Camera);
-                //((PlayScene)sceneManager.ActiveScene).sanity.Draw(_spriteBatch, sceneManager.ActiveScene.Camera);
-            }
 
             SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Resources.DebugFont);
             _spriteBatch.End();

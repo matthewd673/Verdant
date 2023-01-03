@@ -11,10 +11,6 @@ namespace PhysicsDemo
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        enum SceneType
-        {
-            Play,
-        }
         SceneManager sceneManager;
 
         public Game1()
@@ -31,7 +27,7 @@ namespace PhysicsDemo
 
             sceneManager = new SceneManager();
 
-            PlayScene playScene = new PlayScene((int)SceneType.Play);
+            PlayScene playScene = new PlayScene("play");
             playScene.Initialize();
 
             sceneManager.AddScene(playScene);

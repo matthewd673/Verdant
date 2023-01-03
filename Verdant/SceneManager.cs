@@ -6,11 +6,11 @@ namespace Verdant
     public class SceneManager
     {
 
-        Dictionary<int, Scene> scenes = new Dictionary<int, Scene>();
+        Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
         public Scene ActiveScene { get { return scenes[ActiveID]; } }
         public bool HasActive { get; private set; } = false;
-        private int _activeId;
-        public int ActiveID {
+        private string _activeId;
+        public string ActiveID {
             get { return _activeId; }
             set
             {
@@ -46,7 +46,7 @@ namespace Verdant
         /// </summary>
         /// <param name="scenes">The list of Scenes to initialize with.</param>
         /// <param name="activeId">The ID of the Scene to be made active.</param>
-        public SceneManager(List<Scene> scenes, int activeId)
+        public SceneManager(List<Scene> scenes, string activeId)
         {
             foreach (Scene s in scenes)
                 AddScene(s, automaticallyMakeActive: false);

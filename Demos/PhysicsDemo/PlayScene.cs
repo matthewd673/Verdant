@@ -8,7 +8,7 @@ namespace PhysicsDemo
     internal class PlayScene : Scene
     {
 
-        public PlayScene(int id) : base(id) { }
+        public PlayScene(string id) : base(id) { }
 
         public override void Initialize()
         {

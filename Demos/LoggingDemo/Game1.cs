@@ -11,10 +11,6 @@ namespace LoggingDemo
         private SpriteBatch _spriteBatch;
 
         SceneManager sceneManager;
-        enum SceneType
-        {
-            Play
-        }
 
         public Game1()
         {
@@ -33,7 +29,7 @@ namespace LoggingDemo
 
             sceneManager = new SceneManager();
 
-            Scene playScene = new PlayScene((int)SceneType.Play);
+            Scene playScene = new PlayScene("play");
             playScene.Initialize();
 
             sceneManager.AddScene(playScene);

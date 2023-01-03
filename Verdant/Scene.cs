@@ -9,7 +9,7 @@ namespace Verdant
     public class Scene
     {
 
-        public int ID { get; private set; }
+        public string ID { get; private set; }
 
         public SceneManager Manager { get; set; }
 
@@ -23,7 +23,7 @@ namespace Verdant
         /// Create a new Scene. It will not be initialized immediately.
         /// </summary>
         /// <param name="id">The ID of the Scene. Two Scenes in the same Manager cannot have the same ID.</param>
-        public Scene(int id)
+        public Scene(string id)
         {
             ID = id;
         }

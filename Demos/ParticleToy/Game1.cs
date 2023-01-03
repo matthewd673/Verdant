@@ -10,10 +10,6 @@ namespace ParticleToy
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        enum SceneType
-        {
-            Play,
-        }
         SceneManager sceneManager;
 
         public Game1()
@@ -31,7 +27,7 @@ namespace ParticleToy
 
             sceneManager = new SceneManager();
 
-            PlayScene playScene = new PlayScene((int)SceneType.Play);
+            PlayScene playScene = new PlayScene("play");
             playScene.Initialize();
 
             sceneManager.AddScene(playScene);
@@ -49,7 +45,7 @@ namespace ParticleToy
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            sceneManager.Update();
+            sceneManager.ActiveScene.Update(gameTime);
 
             base.Update(gameTime);
         }
