@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
 using Verdant.UI;
 
@@ -50,8 +52,9 @@ namespace Verdant
             EntityManager.Update();
             UIManager.Update();
 
+            Timer.TickAll(DeltaTime);
+
             Camera.Update();
         }
-
     }
 }

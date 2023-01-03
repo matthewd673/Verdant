@@ -9,52 +9,82 @@ namespace Verdant
     public class Timer
     {
 
-        public int Time { get; private set; } = 0;
-        public int Duration { get; private set; } = 0;
+        private static List<Timer> timers = new List<Timer>();
+
+        public delegate void TimerCallback(Timer sender);
+
+        // Shows if the Timer is currently running.
+        public bool Running { get; private set; } = false;
+        // The milliseconds that have elapsed since the Timer has started.
+        public float ElapsedTime { get; private set; } = 0;
+        // The duration the Timer runs for.
+        public float Duration { get; private set; } = 0;
+
+        private TimerCallback callback;
 
         /// <summary>
         /// Initialize a new Timer.
         /// </summary>
-        /// <param name="duration">The duration of the Timer (number of frames).</param>
-        public Timer(int duration, int startingTime = 0)
+        /// <param name="duration">The duration of the Timer (milliseconds).</param>
+        /// <param name="startingTime">The time value to start the Timer at.</param>
+        public Timer(float duration, TimerCallback callback, float startingTime = 0)
         {
             Duration = duration;
 
-            Time = startingTime;
-            if (Time > duration)
-                Time = duration;
+            ElapsedTime = startingTime;
+            if (ElapsedTime > duration)
+                ElapsedTime = duration;
+
+            this.callback = callback;
         }
 
-        /// <summary>
-        /// Increase the recorded time of the Timer (mark the passage of a frame).
-        /// </summary>
-        public void Tick()
+        static internal void TickAll(float deltaTime)
         {
-            Time += 1;
-        }
-
-        /// <summary>
-        /// Check if the Timer has reached its duration. 
-        /// </summary>
-        /// <returns>Returns true if the current time is greater than or equal to the duration.</returns>
-        public bool Check()
-        {
-            return (Time >= Duration);
-        }
-
-        /// <summary>
-        /// If the Timer has reached its duration, reset the time and return true.
-        /// </summary>
-        /// <returns>Returns true if the Timer has reached its duration. Otherwise, returns false.</returns>
-        public bool Consume()
-        {
-            bool ready = false;
-            if (Time >= Duration)
+            for (int i = 0; i < timers.Count; i++)
             {
-                ready = true;
-                Time = 0;
+                timers[i].Tick(deltaTime);
+                timers[i].Consume();
             }
-            return ready;
+        }
+
+        /// <summary>
+        /// Increase the recorded time of the Timer. When <c>Timer.Start()</c> is called, the current Scene will tick this timer automatically.
+        /// <param name="deltaTime">The Scene's DeltaTime value.</param>
+        /// </summary>
+        internal void Tick(float deltaTime)
+        {
+            ElapsedTime += deltaTime;
+        }
+
+        /// <summary>
+        /// Start the Timer.
+        /// </summary>
+        public void Start()
+        {
+            timers.Add(this);
+            Running = true;
+        }
+
+        /// <summary>
+        /// Stop the Timer. Its elapsed time will not be reset.
+        /// </summary>
+        public void Stop()
+        {
+            timers.Remove(this);
+            Running = false;
+        }
+
+        /// <summary>
+        /// If the Timer has reached its duration, reset the time and trigger the callback.
+        /// </summary>
+        public void Consume()
+        {
+            if (ElapsedTime >= Duration)
+            {
+                Stop();
+                ElapsedTime = 0;
+                callback.Invoke(this);
+            }
         }
 
         /// <summary>
@@ -62,7 +92,7 @@ namespace Verdant
         /// </summary>
         public void Reset()
         {
-            Time = 0;
+            ElapsedTime = 0;
         }
 
     }

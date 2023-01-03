@@ -8,7 +8,9 @@ namespace Verdant
 
         TransformState from;
         TransformState to;
-        Timer animateCooldown;
+
+        int animateDuration;
+        int animateCountdown;
 
         TransformState current;
         TransformState intervals;
@@ -23,7 +25,8 @@ namespace Verdant
         {
             this.from = from;
             this.to = to;
-            animateCooldown = new Timer(duration);
+            animateDuration = duration;
+            animateCountdown = duration;
 
             current = new TransformState(from);
             intervals = CalculateIntervals(from, to, duration);
@@ -62,7 +65,7 @@ namespace Verdant
         public TransformState Animate()
         {
             //perform animation if it isn't complete
-            if (!animateCooldown.Check())
+            if (animateCountdown > 0)
             {
                 //update current according to intervals
                 current.X += intervals.X;
@@ -72,7 +75,7 @@ namespace Verdant
                 current.Rotation += intervals.Rotation;
 
                 //tick animation
-                animateCooldown.Tick();
+                animateCountdown--;
 
                 return current; //return current state
             }
@@ -95,7 +98,7 @@ namespace Verdant
         public void Reset()
         {
             current = new TransformState(from);
-            animateCooldown.Reset();
+            animateCountdown = animateDuration;
         }
 
         /// <summary>
