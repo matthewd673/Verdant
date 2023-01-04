@@ -211,14 +211,24 @@ namespace Verdant.Physics
         }
 
         /// <summary>
-        /// Build the pathfinder's map of obstacles. Automatically built on construction.
+        /// Build the pathfinder's map of obstacles. Only Entities of a given type will be treated as obstacles.
         /// </summary>
         /// <typeparam name="T">The type of Entity to treat as an obstacle.</typeparam>
         /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
-        public void BuildPathMap<T>(EntityManager entityManager) where T : PhysicsEntity
+        /// <param name="topLeft">The top left corner of the path map's bounds.</param>
+        /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
+        public void BuildPathMap<T>(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null) where T : PhysicsEntity
         {
             // get a list of obstacles
-            List<T> obstacles = entityManager.GetAllEntities<T>();
+            List<T> obstacles;
+            if (topLeft == null || bottomRight == null)
+            {
+                obstacles = entityManager.GetAllEntities<T>();
+            }
+            else
+            {
+                obstacles = entityManager.CheckRectCollisions<T>(topLeft.X, topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
+            }
 
             // create a list of colliders for all obstacles
             List<Shape> obsColliders = new List<Shape>();
@@ -227,44 +237,55 @@ namespace Verdant.Physics
             int maxX = 0;
             int minY = int.MaxValue;
             int maxY = 0;
-            
-            foreach (PhysicsEntity e in obstacles) // we need data that only PhysicsEntities have
+
+            // find boundaries since they were not specified
+            if (topLeft == null || bottomRight == null)
             {
-                foreach (Shape s in e.Components)
+                foreach (PhysicsEntity e in obstacles) // we need data that only PhysicsEntities have
                 {
-                    obsColliders.Add(s);
-
-                    float x = s.Position.X;
-                    float y = s.Position.Y;
-                    float width = 0;
-                    float height = 0;
-
-                    // TODO: add lines (so you can pathfind around walls)
-                    if (s.GetType() == typeof(Rectangle))
+                    foreach (Shape s in e.Components)
                     {
-                        width = ((Rectangle)s).Width;
-                        height = ((Rectangle)s).Length;
+                        obsColliders.Add(s);
+
+                        float x = s.Position.X;
+                        float y = s.Position.Y;
+                        float width = 0;
+                        float height = 0;
+
+                        // TODO: add lines (so you can pathfind around walls)
+                        if (s.GetType() == typeof(Rectangle))
+                        {
+                            width = ((Rectangle)s).Width;
+                            height = ((Rectangle)s).Length;
+                        }
+                        if (s.GetType() == typeof(Circle))
+                        {
+                            float r = ((Circle)s).Radius;
+
+                            x -= r; // because circle's origin is at the center
+                            y -= r;
+                            width = ((Circle)s).Radius * 2;
+                            height = ((Circle)s).Radius * 2;
+                        }
+
+                        if (x - (width / 2) < minX)
+                            minX = (int)(x - (width / 2));
+                        if (x + (width / 2) > maxX)
+                            maxX = (int)(x + (width / 2));
+
+                        if (y - (height / 2) < minY)
+                            minY = (int)(y - (height / 2));
+                        if (y + (height / 2) > maxY)
+                            maxY = (int)(y + (height / 2));
                     }
-                    if (s.GetType() == typeof(Circle))
-                    {
-                        float r = ((Circle)s).Radius;
-
-                        x -= r; // because circle's origin is at the center
-                        y -= r;
-                        width = ((Circle)s).Radius * 2;
-                        height = ((Circle)s).Radius * 2;
-                    }
-
-                    if (x - (width / 2) < minX)
-                        minX = (int)(x - (width / 2));
-                    if (x + (width/2) > maxX)
-                        maxX = (int)(x + (width/2));
-
-                    if (y - (height/2) < minY)
-                        minY = (int)(y - (height/2));
-                    if (y + (height/2) > maxY)
-                        maxY = (int)(y + (height / 2));
                 }
+            }
+            else
+            {
+                minX = (int) topLeft.X;
+                maxX = (int) bottomRight.X;
+                minY = (int) topLeft.Y;
+                maxY = (int) bottomRight.Y;
             }
 
             origin = new Vec2Int(minX, minY);
@@ -287,6 +308,17 @@ namespace Verdant.Physics
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Build the Pathfinder's map of obstacles.
+        /// </summary>
+        /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
+        /// <param name="topLeft">The top left corner of the path map's bounds.</param>
+        /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
+        public void BuildPathMap(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null)
+        {
+            BuildPathMap<PhysicsEntity>(entityManager, topLeft, bottomRight);
         }
 
         /// <summary>

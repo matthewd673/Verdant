@@ -9,7 +9,7 @@ using Verdant.UI;
 namespace Verdant
 {
     /// <summary>
-    /// Manages the Rendering of the current Scene and stores relevant information about the game window's graphics.
+    /// Manages the rendering of the current Scene and stores relevant information about the game window's graphics.
     /// </summary>
     public static class Renderer
     {
