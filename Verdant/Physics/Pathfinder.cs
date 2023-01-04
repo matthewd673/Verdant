@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// Generates a path map from the Entities in a given Manager and finds valid paths between Entities that avoid obstacles.
+    /// </summary>
     public class Pathfinder
     {
 
@@ -26,7 +29,7 @@ namespace Verdant.Physics
         /// </summary>
         /// <param name="cellWidth">The width of each cell.</param>
         /// <param name="cellHeight">The height of each cell.</param>
-        /// <param name="maxSeekDistance">The maximum distance between a walker and target before the walker stops trying to pathfind. Checked in UpdatePath.</param>
+        /// <param name="maxSeekDistance">The maximum distance between a walker and target before the walker stops trying to pathfind.</param>
         public Pathfinder(int cellWidth, int cellHeight, int maxSeekDistance)
         {
             this.cellWidth = cellWidth;

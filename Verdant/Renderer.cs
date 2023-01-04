@@ -8,23 +8,34 @@ using Verdant.UI;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Manages the Rendering of the current Scene and stores relevant information about the game window's graphics.
+    /// </summary>
     public static class Renderer
     {
 
+        // The width of the game window.
         public static int ScreenWidth { get; private set; }
+        // The height of the game window.
         public static int ScreenHeight { get; private set; }
+        // The scale at which everything will be rendered.
         public static int Scale { get; private set; }
 
-        static Sprite pixel;
+        private static Sprite pixel;
 
+        // A custom cursor Sprite, which will be rendered if ShowCursor is true.
         public static Sprite Cursor { get; set; } = null;
+        // Determines if the custom cursor Sprite should be rendered.
         public static bool ShowCursor { get; set; } = true;
 
+        // Determines if Entities should be sorted according to Z index before rendering.
         public static bool SortEntities { get; set; } = true;
 
+        // The window's GraphicsDevice.
         public static GraphicsDevice GraphicsDevice { get; private set; }
 
         private static Stopwatch renderPerformanceTimer = new Stopwatch();
+        // The duration (in milliseconds) of the last Render call.
         public static float RenderDuration { get; private set; }
 
         /// <summary>
@@ -114,6 +125,14 @@ namespace Verdant
             renderPerformanceTimer.Reset();
         }
 
+        /// <summary>
+        /// Draw a line on the screen in world space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="camera">The Camera to render through.</param>
+        /// <param name="start">The start point of the line.</param>
+        /// <param name="end">The end point of the line.</param>
+        /// <param name="color">The color of the line.</param>
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
             Vec2 worldStart = camera.WorldToScreenPos(start);
@@ -133,6 +152,14 @@ namespace Verdant
                 );
         }
 
+        /// <summary>
+        /// Draw an axis-aligned rectangle in world space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="camera">The Camera to render through.</param>
+        /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
+        /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
+        /// <param name="color">The color of the Rectangle.</param>
         public static void DrawRectangle(SpriteBatch spriteBatch, Camera camera, Vec2 topLeft, Vec2 bottomRight, Color color)
         {
             DrawLine(spriteBatch, camera, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);

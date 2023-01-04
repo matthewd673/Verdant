@@ -2,6 +2,9 @@
 
 namespace Verdant
 {
+    /// <summary>
+    /// Used by the Renderer to render Entities in world space to the screen.
+    /// </summary>
     public class Camera : Entity
     {
         float shakeStrength;

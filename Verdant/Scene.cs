@@ -6,17 +6,23 @@ using Verdant.UI;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Contains managers and other game state information, independent from other Scenes.
+    /// </summary>
     public class Scene
     {
-
+        // The ID of the Scene within its manager.
         public string ID { get; private set; }
-
+        // The SceneManager that manages the Scene.
         public SceneManager Manager { get; set; }
-
+        // The Camera used to render the Scene.
         public Camera Camera { get; set; }
+        // The EntityManager controlled by the Scene.
         public EntityManager EntityManager { get; protected set; }
+        // The UIManager controlled by the Scene.
         public UIManager UIManager { get; protected set; }
 
+        // The last Update call delta time (based on frame rate). This is not representative of the amount of time the Update call actually took to compute.
         public float DeltaTime { get; private set; } = 1f;
 
         /// <summary>

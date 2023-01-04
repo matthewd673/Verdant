@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Counts milliseconds and triggers a callback when its finished.
+    /// </summary>
     public class Timer
     {
-
         private static List<Timer> timers = new List<Timer>();
 
         public delegate void TimerCallback(Timer sender);

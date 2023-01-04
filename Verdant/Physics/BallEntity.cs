@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Verdant.Physics
 {
     /// <summary>
-    /// An Entity with a Ball body.
+    /// An Entity with a Circle body.
     /// </summary>
     public class BallEntity : PhysicsEntity
     {

@@ -6,6 +6,9 @@ using Verdant.UI;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// A rectangle shape, which can rotate.
+    /// </summary>
     public class Rectangle : Shape
     {
 

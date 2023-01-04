@@ -6,6 +6,9 @@ using Verdant.Physics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Manages the creation, deletion, and update logic of all Entities.
+    /// </summary>
     public class EntityManager
     {
         public enum ZIndexMode
@@ -21,19 +24,25 @@ namespace Verdant
             Top,
         }
 
+        // The Scene that this EntityManager belongs to.
         public Scene Scene { get; set; }
 
         private readonly Dictionary<string, List<Entity>> entityTable = new();
+        // The width and height of each cell in the internal Entity table.
         public int CellSize { get; }
 
         private List<Entity> addQueue = new List<Entity>();
         private List<Entity> removeQueue = new List<Entity>();
 
+        // The number of Entities currently managed by the EntityManager.
         public int EntityCount { get; protected set; }
+        // The number of Entities updated in the last Update call.
         public int EntityUpdateCount { get; protected set; }
+        // The number of PhysicsEntities update in the last physics loop (within the last Update call).
         public int PhysicsEntityUpdateCount { get; protected set; }
 
         private Stopwatch updatePerformanceTimer = new Stopwatch();
+        // The duration (in milliseconds) of the last Update call.
         public float UpdateDuration { get; protected set; }
 
         private List<CollisionData> collisions = new List<CollisionData>();
@@ -370,7 +379,7 @@ namespace Verdant
             }
         }
 
-        protected void PhysicsLoop(List<PhysicsEntity> updateList)
+        private void PhysicsLoop(List<PhysicsEntity> updateList)
         {
             collisions.Clear();
 

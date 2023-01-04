@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
+    /// <summary>
+    /// A 2D vector data type.
+    /// </summary>
     public class Vec2
     {
-
         public float X { get; set; }
         public float Y { get; set; }
 

@@ -2,13 +2,24 @@
 
 namespace Verdant
 {
+    /// <summary>
+    /// A Matrix data type.
+    /// </summary>
     public class Matrix
     {
 
-        public int Rows { get; set; }
-        public int Columns { get; set; }
+        // The number of rows in the matrix.
+        public int Rows { get; private set; }
+        // The number of columns in the matrix.
+        public int Columns { get; private set; }
+        // The values in the matrix.
         public float[,] Data { get; set; }
 
+        /// <summary>
+        /// Initialize a new Matrix.
+        /// </summary>
+        /// <param name="r">The number of rows.</param>
+        /// <param name="c">The number of columns.</param>
         public Matrix(int r, int c)
         {
             Rows = r;

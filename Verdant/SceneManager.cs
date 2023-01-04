@@ -3,13 +3,19 @@ using System.Collections.Generic;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Manages all Scenes and allows for easy switching between them.
+    /// </summary>
     public class SceneManager
     {
 
         Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
+        // The Scene currently active.
         public Scene ActiveScene { get { return scenes[ActiveID]; } }
+        // Determines if the SceneManager has an active Scene currently.
         public bool HasActive { get; private set; } = false;
         private string _activeId;
+        // The ID of the Scene currently active.
         public string ActiveID {
             get { return _activeId; }
             set

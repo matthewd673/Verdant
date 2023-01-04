@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// A circle shape.
+    /// </summary>
     internal class Circle : Shape
     {
 

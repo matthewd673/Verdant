@@ -2,9 +2,13 @@
 
 namespace Verdant
 {
+    /// <summary>
+    /// A collection of helpful math functions.
+    /// </summary>
     public static class GameMath
     {
 
+        // The global Random instance, used by any internal random number generation.
         public static Random Random { get; } = new Random();
 
         /// <summary>

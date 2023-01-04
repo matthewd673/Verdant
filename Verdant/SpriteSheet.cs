@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// A RenderObject that stores an entire texture sheet, indexed by X,Y coordinates.
+    /// </summary>
     public class SpriteSheet : RenderObject
     {
 

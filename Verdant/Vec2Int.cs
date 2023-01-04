@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
+    /// <summary>
+    /// A 2D vector data type that stores only integer values.
+    /// </summary>
     public class Vec2Int
     {
 

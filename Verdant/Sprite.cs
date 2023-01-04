@@ -9,8 +9,7 @@ namespace Verdant
     /// </summary>
     public class Sprite : RenderObject
     {
-
-        Texture2D sprite;
+        protected Texture2D sprite;
 
         /// <summary>
         /// Initialize a new Sprite.

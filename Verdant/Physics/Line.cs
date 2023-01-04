@@ -7,6 +7,9 @@ using Verdant.UI;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// A line shape.
+    /// </summary>
     internal class Line : Shape
     {
 

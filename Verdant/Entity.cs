@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// An object within the game world, to be extended for every type of object in the game.
+    /// </summary>
     public class Entity
     {
         EntityManager _manager;
@@ -28,6 +31,7 @@ namespace Verdant
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
 
+        // The position (center) of the Entity.
         public virtual Vec2 Position { get; set; }
 
         private int _width;
@@ -42,6 +46,7 @@ namespace Verdant
             }
         }
         private int _height;
+        // The draw height of the Entity.
         public int Height
         {
             get { return _height; }

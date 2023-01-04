@@ -3,14 +3,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// A RenderObject that automatically displays different frames of an animation when rendered.
+    /// </summary>
     public class Animation : RenderObject
     {
-
         readonly SpriteSheet sheet;
         FrameSet frameSet;
 
         private int frameDelay;
         private int frameTimeCounter;
+        
+        // Determines if the Animation should loop indefinitely or only play once.
         public bool Looping { get; set; }
 
         private int frameIndex;

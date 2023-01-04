@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Verdant.Physics
 {
     
+    /// <summary>
+    /// An Entity with collider and additional physical properties, which can collide with other PhysicsEntities and be simulated by the EntityManager.
+    /// </summary>
     public class PhysicsEntity : Entity
     {
         // The Shapes that make up the PhysicsEntity's collider.

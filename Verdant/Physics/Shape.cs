@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// The foundation of PhysicsEntity colliders.
+    /// </summary>
     public class Shape
     {
-
         internal Vec2[] Vertices { get; set; }
         internal Vec2 Position { get; set; }
         // The direction of the Shape.

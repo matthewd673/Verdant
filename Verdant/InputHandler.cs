@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Contains current and previous input states, as well as helper functions to read input more easily.
+    /// </summary>
     public static class InputHandler
     {
 
@@ -13,14 +16,21 @@ namespace Verdant
             Middle
         }
 
+        // The current KeyboardState.
         public static KeyboardState KeyboardState { get; private set; }
+        // The KeyboardState on the previous frame.
         public static KeyboardState PreviousKeyboardState { get; private set; }
 
+        // The current MouseState.
         public static MouseState MouseState { get; private set; }
+        // The MouseState on the previous frame.
         public static MouseState PreviousMouseState { get; private set; }
 
+        // The X coordinate of the mouse on the screen.
         public static int MouseX { get; private set; }
+        // The Y coordinate of the mouse on the screen.
         public static int MouseY { get; private set; }
+        // The current position of the mouse on the screen.
         public static Vec2Int MousePosition { get; private set; } = new Vec2Int();
 
         /// <summary>
