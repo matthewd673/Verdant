@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.Xna.Framework;
+
 namespace Verdant.Physics
 {
     /// <summary>
@@ -38,23 +40,33 @@ namespace Verdant.Physics
         }
 
         /// <summary>
+        /// Generate a new path on the current map between the two points.
+        /// </summary>
+        /// <param name="start">The start position.</param>
+        /// <param name="end">The end position.</param>
+        /// <param name="maxSeekDistance">The maximum distance between points to traverse. If omitted, the default MaxSeekDistance will be used.</param>
+        /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
+        public List<Vec2> FindPath(Vec2 start, Vec2 end, int maxSeekDistance = -1)
+        {
+            // ensure that the target is within the appropriate range before finding a path
+            if (GameMath.GetDistance(start, end) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
+            {
+                return GeneratePath(start, end);
+            }
+
+            return new List<Vec2>(); // couldn't find path, return empty
+        }
+
+        /// <summary>
         /// Generate a new path on the current map with the specified walker and target Entities.
         /// </summary>
-        /// <param name="walker">The walker Entity.</param>
-        /// <param name="target">The target Entity.</param>
         /// <param name="walkerCollider">The specific physics Component on the walker Entity to check against.</param>
         /// <param name="targetCollider">The specific physics Component on the target Entity to check against.</param>
         /// <param name="maxSeekDistance">The maximum distance from walker to target that the walker will seek to traverse. If omitted, the default MaxSeekDistance will be used.</param>
         /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
-        public List<Vec2> FindPath(Entity walker, Entity target, Shape walkerCollider, Shape targetCollider, int maxSeekDistance = -1)
+        public List<Vec2> FindPath(Shape walkerCollider, Shape targetCollider, int maxSeekDistance = -1)
         {
-            // ensure that the target is within the appropriate range before finding a path
-            if (GameMath.GetDistance(walker.Position, target.Position) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
-            {
-                return GeneratePath(walkerCollider, targetCollider);
-            }
-
-            return new List<Vec2>(); // couldn't find path, return empty
+            return FindPath(walkerCollider.Position, targetCollider.Position, maxSeekDistance);
         }
 
         /// <summary>
@@ -66,20 +78,18 @@ namespace Verdant.Physics
         /// <returns>A list of Vec2 points on the path (points are at the center of each PathCell, closest point to walker at index 0).</returns>
         public List<Vec2> FindPath(PhysicsEntity walker, PhysicsEntity target, int maxSeekDistance = -1)
         {
-            return FindPath(walker, target, walker.Components[0], target.Components[0], maxSeekDistance);
+            return FindPath(walker.Components[0], target.Components[0], maxSeekDistance);
         }
 
         /// <summary>
         /// Find a path between the origin and the target goal.
         /// </summary>
         /// <returns>A list of all points in the path (where [0] is the target's current tile). Points are marked as the center of a PathCell.</returns>
-        List<Vec2> GeneratePath(Shape walkerCollider, Shape targetCollider)
+        List<Vec2> GeneratePath(Vec2 walkerPosition, Vec2 targetPosition)
         {
             // define start & goal
-            Shape walkerC = walkerCollider;
-            Shape targetC = targetCollider;
-            PathCell start = new PathCell((int)(walkerC.Position.X / cellWidth), (int)(walkerC.Position.Y / cellHeight));
-            PathCell goal = new PathCell((int)(targetC.Position.X / cellWidth), (int)(targetC.Position.Y / cellHeight));
+            PathCell start = new PathCell((int)((walkerPosition.X - origin.X) / cellWidth), (int)((walkerPosition.Y - origin.Y) / cellHeight));
+            PathCell goal = new PathCell((int)((targetPosition.X - origin.X) / cellWidth), (int)((targetPosition.Y - origin.Y) / cellHeight));
 
             LastGoalPosition = new Vec2(goal.X, goal.Y); // for stat tracking
 
@@ -154,7 +164,10 @@ namespace Verdant.Physics
 
             while (current != null)
             {
-                finalPath.Insert(0, new Vec2(current.X * cellWidth + cellWidth/2, current.Y * cellHeight + cellHeight/2)); // add center of cell as new point
+                finalPath.Insert(0,
+                    new Vec2(current.X * cellWidth + cellWidth/2 + origin.X,
+                             current.Y * cellHeight + cellHeight/2 + origin.Y)
+                    ); // add center of cell as new point
                 current = current.Parent;
             }
 
@@ -186,7 +199,6 @@ namespace Verdant.Physics
             {
                 for (int j = -1; j <= 1; j++)
                 {
-
                     //make sure coord is safe
                     if (focus.X + i > 0 &&
                         focus.X + i < pathMap.GetLength(0) &&
@@ -278,6 +290,14 @@ namespace Verdant.Physics
                         if (y + (height / 2) > maxY)
                             maxY = (int)(y + (height / 2));
                     }
+
+                    if (obstacles.Count == 0)
+                    {
+                        minX = 0;
+                        maxX = 0;
+                        minY = 0;
+                        maxY = 0;
+                    }
                 }
             }
             else
@@ -344,14 +364,13 @@ namespace Verdant.Physics
             {
                 for (int j = 0; j < pathMap.GetLength(1); j++)
                 {
-                    Microsoft.Xna.Framework.Color drawColor = Microsoft.Xna.Framework.Color.Red;
-                    if (pathMap[i, j])
-                        drawColor = Microsoft.Xna.Framework.Color.White;
-
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, j * cellHeight + origin.Y, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, j * cellHeight + origin.Y, cellWidth, 1), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds((i + 1) * cellWidth + origin.X, j * cellHeight + origin.Y, 1, cellHeight), drawColor);
-                    spriteBatch.Draw(Renderer.GetPixel(), camera.GetRenderBounds(i * cellWidth + origin.X, (j * 1) * cellHeight + origin.Y, cellWidth, 1), drawColor);
+                    Renderer.DrawRectangle(spriteBatch,
+                                           camera,
+                                           new Vec2(i * cellWidth + origin.X,
+                                                    j * cellHeight + origin.Y),
+                                           new Vec2((i + 1) * cellWidth + origin.X,
+                                                    (j + 1) * cellHeight + origin.Y),
+                                           pathMap[i, j] ? Color.White : Color.Red);
                 }
             }
         }
