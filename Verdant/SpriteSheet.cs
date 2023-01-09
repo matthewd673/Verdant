@@ -18,9 +18,9 @@ namespace Verdant
         /// <param name="sheetTexture">The Texture2D sheet of sprites. Sprites should be in one row, ordered left to right.</param>
         /// <param name="spriteW">The width of each sprite.</param>
         /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
-        public SpriteSheet(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice)
+        public SpriteSheet(Texture2D sheetTexture, int spriteW)
         {
-            sprites = BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice);
+            sprites = BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height);
         }
         /// <summary>
         /// Initialize a new 2D SpriteSheet.
@@ -29,9 +29,9 @@ namespace Verdant
         /// <param name="spriteW">The width of each sprite.</param>
         /// <param name="spriteH">The height of each sprite.</param>
         /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
-        public SpriteSheet(Texture2D sheetTexture, int spriteW, int spriteH, GraphicsDevice graphicsDevice)
+        public SpriteSheet(Texture2D sheetTexture, int spriteW, int spriteH)
         {
-            sprites = BuildTexture2DArray(sheetTexture, spriteW, spriteH, graphicsDevice);
+            sprites = BuildTexture2DArray(sheetTexture, spriteW, spriteH);
         }
         /// <summary>
         /// Initialize a new SpriteSheet from an existing array of Texture2Ds.
@@ -48,9 +48,8 @@ namespace Verdant
         /// <param name="sheetTexture">The Texture2D sheet of sprites.</param>
         /// <param name="spriteW">The width of each sprite in the sheet.</param>
         /// <param name="spriteH">The height of each sprite in the sheet.</param>
-        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping.</param>
         /// <returns>A 2D array of all Texture2D sprites in the sheet.</returns>
-        public static Texture2D[,] BuildTexture2DArray(Texture2D sheetTexture, int spriteW, int spriteH, GraphicsDevice graphicsDevice)
+        public static Texture2D[,] BuildTexture2DArray(Texture2D sheetTexture, int spriteW, int spriteH)
         {
 
             int sheetW = sheetTexture.Width / spriteW;
@@ -63,7 +62,7 @@ namespace Verdant
                 for (int j = 0; j < sheetH; j++)
                 {
                     //crop frame from sheet
-                    Texture2D slice = new Texture2D(graphicsDevice, spriteW, spriteH);
+                    Texture2D slice = new Texture2D(Renderer.GraphicsDevice, spriteW, spriteH);
                     Color[] colorData = new Color[spriteW * spriteH];
                     sheetTexture.GetData(0, new Rectangle(i * spriteW, j * spriteH, spriteW, spriteH), colorData, 0, colorData.Length);
                     slice.SetData(colorData);

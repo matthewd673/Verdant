@@ -63,7 +63,7 @@ namespace Verdant
         /// <param name="looping">Determines if the Animation loops.</param>
         public Animation(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice, int frameDelay, bool looping = true)
         {
-            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
+            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height));
             frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
             this.frameDelay = frameDelay;
             frameTimeCounter = frameDelay;
@@ -80,7 +80,7 @@ namespace Verdant
         /// <param name="looping">Determines if the Animation loops.</param>
         public Animation(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice, FrameSet frameSet, int frameDelay, bool looping = true)
         {
-            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height, graphicsDevice));
+            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height));
             this.frameSet = frameSet;
             this.frameDelay = frameDelay;
             frameTimeCounter = frameDelay;
