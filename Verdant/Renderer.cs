@@ -28,8 +28,11 @@ namespace Verdant
         // Determines if the custom cursor Sprite should be rendered.
         public static bool ShowCursor { get; set; } = true;
 
-        // Determines if Entities should be sorted according to Z index before rendering.
+        // Determines if Entities should be sorted according to z-index before rendering.
         public static bool SortEntities { get; set; } = true;
+
+        // Determines if UIElements should be sorted according to z-index before rendering.
+        public static bool SortUIElements { get; set; } = true;
 
         // The window's GraphicsDevice.
         public static GraphicsDevice GraphicsDevice { get; private set; }
@@ -103,6 +106,12 @@ namespace Verdant
             }
 
             // render ui elements
+            IEnumerable<UIElement> uiElements;
+            if (SortUIElements)
+                uiElements = scene.UIManager.GetElements().OrderBy(n => n.ZIndex);
+            else
+                uiElements = scene.UIManager.GetElements();
+
             foreach (UIElement e in scene.UIManager.GetElements())
             {
                 e.Draw(spriteBatch);

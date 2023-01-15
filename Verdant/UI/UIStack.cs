@@ -17,8 +17,8 @@ namespace Verdant.UI
         // The minimum padding between all elements in the stack.
         public float Gap { get; set; } = 0f;
 
-        private Vec2 _position;
-        public new Vec2 Position
+        private Vec2 _position = Vec2.Zero;
+        public override Vec2 Position
         {
             get { return _position; }
             set

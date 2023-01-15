@@ -12,7 +12,7 @@ namespace Verdant.UI
         public UIManager Manager { get; set; }
 
         // The position of the UIElement in screen space.
-        public Vec2 Position { get; set; }
+        public virtual Vec2 Position { get; set; }
 
         // The width of the UIElement in screen space.
         public float Width { get; set; }
@@ -21,6 +21,9 @@ namespace Verdant.UI
 
         // Determines if the UIElement will be removed at the end of the update loop.
         public bool ForRemoval { get; set; }
+
+        // The z-index, used for sorting.
+        public int ZIndex { get; set; }
 
         /// <summary>
         /// Initialize a new UIElement.
