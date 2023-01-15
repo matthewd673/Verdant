@@ -33,8 +33,8 @@ namespace Verdant.UI
                 (Vec2)InputHandler.MousePosition,
                 Position.X * Renderer.Scale,
                 Position.Y * Renderer.Scale,
-                Width * Renderer.Scale,
-                Height * Renderer.Scale
+                (int)Width * Renderer.Scale,
+                (int)Height * Renderer.Scale
                 ))
             { // button is being hovered
                 if (!Hovered) //it wasn't hovered last time, so trigger

@@ -26,17 +26,18 @@ namespace Verdant.UI
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
         // The width of the current string rendered with the current SpriteFont.
-        public float Width { get; private set; }
+        public new float Width { get; private set; }
         // The height (line spacing) of the current SpriteFont. Changing the string has no effect.
-        public float Height { get { return Font.LineSpacing; } }
+        public new float Height { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UIText.
         /// </summary>
-        /// <param name="pos">The position of the text.</param>
+        /// <param name="position">The position of the text.</param>
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display.</param>
-        public UIText(Vec2 pos, SpriteFont font, string text = "") : base(pos)
+        public UIText(Vec2 position, SpriteFont font, string text = "")
+            : base(position, font.MeasureString(text).X, font.LineSpacing)
         {
             Font = font;
             Text = text;

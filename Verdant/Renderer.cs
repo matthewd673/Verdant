@@ -74,10 +74,10 @@ namespace Verdant
         /// Render the current frame containing the elements in the provided managers.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
-        /// <param name="entityManager">The EntityManager to draw from.</param>
-        /// <param name="uiManager">The UIManager to draw from.</param>
-        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
+        /// <param name="scene">The Scene to render.</param>
+        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible.</param>
+        /// <param name="visualizeUIBounds>For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
+        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false, bool visualizeUIBounds = false)
         {
             renderPerformanceTimer.Start();
 
@@ -108,6 +108,14 @@ namespace Verdant
                 e.Draw(spriteBatch);
             }
 
+            if (visualizeUIBounds)
+            {
+                foreach (UIElement e in scene.UIManager.GetElements())
+                {
+                    e.DrawBounds(spriteBatch);
+                }
+            }
+
             // render cursor
             if (ShowCursor && Cursor != null)
             {
@@ -126,6 +134,29 @@ namespace Verdant
         }
 
         /// <summary>
+        /// Draw a line on the screen in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="start">The start point of the line.</param>
+        /// <param name="end">The end point of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        public static void DrawLine(SpriteBatch spriteBatch, Vec2 start, Vec2 end, Color color)
+        {
+            Vec2 diff = end - start;
+            float angle = (float)Math.Atan2(diff.Y, diff.X);
+
+            spriteBatch.Draw(GetPixel(),
+                new Rectangle((int)start.X, (int)start.Y, (int)diff.Magnitude(), 1),
+                null,
+                color,
+                angle,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                0
+                );
+        }
+
+        /// <summary>
         /// Draw a line on the screen in world space.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
@@ -135,20 +166,10 @@ namespace Verdant
         /// <param name="color">The color of the line.</param>
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
-            Vec2 worldStart = camera.WorldToScreenPos(start);
-            Vec2 worldEnd = camera.WorldToScreenPos(end);
-            
-            Vec2 diff = worldEnd - worldStart;
-            float angle = (float)Math.Atan2(diff.Y, diff.X);
-
-            spriteBatch.Draw(GetPixel(),
-                new Rectangle((int)worldStart.X, (int)worldStart.Y, (int)diff.Magnitude(), 1),
-                null,
-                color,
-                angle,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                0
+            DrawLine(spriteBatch,
+                camera.WorldToScreenPos(start),
+                camera.WorldToScreenPos(end),
+                color
                 );
         }
 
@@ -166,6 +187,21 @@ namespace Verdant
             DrawLine(spriteBatch, camera, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
             DrawLine(spriteBatch, camera, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
             DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
+        }
+
+        /// <summary>
+        /// Draw an axis-aligned rectangle in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
+        /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
+        /// <param name="color">The color of the Rectangle.</param>
+        public static void DrawRectangle(SpriteBatch spriteBatch, Vec2 topLeft, Vec2 bottomRight, Color color)
+        {
+            DrawLine(spriteBatch, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
+            DrawLine(spriteBatch, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
+            DrawLine(spriteBatch, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
+            DrawLine(spriteBatch, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
         }
 
         /// <summary>

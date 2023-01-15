@@ -45,7 +45,7 @@ namespace Verdant.UI
 
         private float _width;
         // The width of the UITextBox (may change when the text changes).
-        public float Width
+        public new float Width
         {
             get { return (_width > MinWidth) ? _width : MinWidth; }
             private set { _width = value; }
@@ -53,15 +53,16 @@ namespace Verdant.UI
         // The minimum (pixel) width of the UITextBox.
         public float MinWidth { get; set; } = 64;
         // The height of the UITextBox (does not change when the text changes).
-        public float Height { get { return Font.LineSpacing; } }
+        public new float Height { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UITextBox.
         /// </summary>
-        /// <param name="pos">The position of the textbox.</param>
+        /// <param name="position">The position of the textbox.</param>
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display by default.</param>
-        public UITextBox(Vec2 pos, SpriteFont font, string text = "") : base(pos)
+        public UITextBox(Vec2 position, SpriteFont font, string text = "")
+            : base(position, 0, font.LineSpacing) // TODO: 0 width?
         {
             Font = font;
             Text = text;
