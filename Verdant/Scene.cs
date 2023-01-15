@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 using Verdant.UI;
 
 namespace Verdant
@@ -62,5 +64,15 @@ namespace Verdant
 
             Camera.Update();
         }
+
+        /// <summary>
+        /// Render the Scene through its Camera.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            Renderer.Render(spriteBatch, this);
+        }
+
     }
 }

@@ -10,6 +10,10 @@ namespace Verdant.Physics
     /// </summary>
     public class BallEntity : PhysicsEntity
     {
+
+        private float radius;
+        private int drawDiam;
+
         /// <summary>
         /// Initialize a new BallEntity.
         /// </summary>
@@ -21,6 +25,8 @@ namespace Verdant.Physics
             : base(sprite, position, (int)(radius * 2), (int)(radius * 2), mass)
         {
             Components = new Shape[] { new Circle(position.X, position.Y, radius) };
+            this.radius = radius;
+            drawDiam = (int)(radius * 2);
         }
 
         /// <summary>
@@ -45,9 +51,7 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            float rad = ((Circle)Components[0]).Radius;
-            spriteBatch.Draw(Sprite.Draw(), Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(rad, rad), (int)(rad * 2), (int)(rad * 2)), Color.White);
+            spriteBatch.Draw(Sprite.Draw(), Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(radius, radius), drawDiam, drawDiam), Color.White);
         }
-
     }
 }
