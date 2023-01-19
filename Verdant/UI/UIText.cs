@@ -14,8 +14,11 @@ namespace Verdant.UI
             get { return _text; }
             set
             {
+                if (value.Equals(_text)) return;
+
                 _text = value;
                 Width = Font.MeasureString(_text).X;
+                Height = Font.MeasureString(_text).Y;
             }
         }
 
@@ -26,9 +29,9 @@ namespace Verdant.UI
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
         // The width of the current string rendered with the current SpriteFont.
-        public new float Width { get; private set; }
+        public override float Width { get; set; }
         // The height (line spacing) of the current SpriteFont. Changing the string has no effect.
-        public new float Height { get { return Font.LineSpacing; } }
+        public override float Height { get; set; }
 
         /// <summary>
         /// Initialize a new UIText.
@@ -37,7 +40,7 @@ namespace Verdant.UI
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display.</param>
         public UIText(Vec2 position, SpriteFont font, string text = "")
-            : base(position, font.MeasureString(text).X, font.LineSpacing)
+            : base(position, font.MeasureString(text).X, font.MeasureString(text).Y)
         {
             Font = font;
             Text = text;
@@ -46,7 +49,7 @@ namespace Verdant.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)Position.X, (int)Position.Y, (int)Width, (int)Height), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)Position, Color);
+            spriteBatch.DrawString(Font, Text, (Vector2)Position * Renderer.Scale, Color);
         }
 
     }

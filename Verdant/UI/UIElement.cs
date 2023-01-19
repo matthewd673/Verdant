@@ -15,9 +15,9 @@ namespace Verdant.UI
         public virtual Vec2 Position { get; set; }
 
         // The width of the UIElement in screen space.
-        public float Width { get; set; }
+        public virtual float Width { get; set; }
         // The height of the UIElement in screen space.
-        public float Height { get; set; }
+        public virtual float Height { get; set; }
 
         // Determines if the UIElement will be removed at the end of the update loop.
         public bool ForRemoval { get; set; }
