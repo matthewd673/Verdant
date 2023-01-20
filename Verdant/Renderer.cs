@@ -114,7 +114,7 @@ namespace Verdant
 
             foreach (UIElement e in scene.UIManager.GetElements())
             {
-                e.Draw(spriteBatch);
+                if (e.Show) e.Draw(spriteBatch);
             }
 
             if (visualizeUIBounds)

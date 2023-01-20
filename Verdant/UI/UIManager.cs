@@ -105,7 +105,7 @@ namespace Verdant.UI
             {
                 e.Update();
                 if (e.ForRemoval)
-                    removeQueue.Add(e);
+                    RemoveElement(e);
             }
 
             // remove and add

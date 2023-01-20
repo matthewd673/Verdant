@@ -10,6 +10,8 @@ namespace Verdant.UI
 
         // The UIManager managing the element.
         public UIManager Manager { get; set; }
+        // The UIGroup that contains the element. Not all UIElements have a parent.
+        public UIGroup Parent { get; set; }
 
         // The position of the UIElement in screen space.
         public virtual Vec2 Position { get; set; }
@@ -24,6 +26,9 @@ namespace Verdant.UI
 
         // The z-index, used for sorting.
         public int ZIndex { get; set; }
+
+        // Determines if the UIElement should be rendered.
+        public bool Show { get; set; } = true;
 
         /// <summary>
         /// Initialize a new UIElement.
