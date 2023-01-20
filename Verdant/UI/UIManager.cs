@@ -1,14 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Verdant.UI
 {
     public class UIManager
     {
 
-        List<UIElement> elements = new List<UIElement>();
-        List<UIElement> addQueue = new List<UIElement>();
-        List<UIElement> removeQueue = new List<UIElement>();
+        // The Scene that this UIManager belongs to.
+        public Scene Scene { get; set; }
+
+        private List<UIElement> elements = new List<UIElement>();
+
+        private List<UIElement> addQueue = new List<UIElement>();
+        private List<UIElement> removeQueue = new List<UIElement>();
+
+        // The number of UIElements currently managed by the UIManager.
+        public int UIElementCount { get; private set; }
+
+        private Stopwatch updatePerformanceTimer = new Stopwatch();
+        // The duration (in milliseconds) of the last Update call.
+        public float UpdateDuration { get; private set; }
+        // Indicates if the UIManager has entered the update loop.
+        public bool Updating { get; protected set; } = false;
 
         /// <summary>
         /// Initialize a new UIManager.
@@ -21,8 +35,8 @@ namespace Verdant.UI
         /// <param name="e">The element to add.</param>
         public void AddElement(UIElement e)
         {
-            e.Manager = this;
             addQueue.Add(e);
+            if (!Updating) ApplyQueues();
         }
 
         /// <summary>
@@ -33,9 +47,9 @@ namespace Verdant.UI
         {
             foreach (UIElement e in l)
             {
-                e.Manager = this;
                 addQueue.Add(e);
             }
+            if (!Updating) ApplyQueues();
         }
 
         /// <summary>
@@ -44,8 +58,8 @@ namespace Verdant.UI
         /// <param name="e">The element to remove.</param>
         public void RemoveElement(UIElement e)
         {
-            e.Manager = null;
             removeQueue.Add(e);
+            if (!Updating) ApplyQueues();
         }
         
         /// <summary>
@@ -57,17 +71,26 @@ namespace Verdant.UI
             return elements;
         }
 
-        /// <summary>
-        /// Force the UIManager to add and remove all queued elements. Use with caution.
-        /// </summary>
-        public void ForceApplyQueues()
+        private void ApplyQueues()
         {
-            //remove and add
+            foreach (UIElement e in addQueue)
+            {
+                e.Manager = this;
+                elements.Add(e);
+                UIElementCount++;
+            }
+
             foreach (UIElement e in removeQueue)
-                elements.Remove(e);
-            elements.AddRange(addQueue);
-            removeQueue.Clear();
+            {
+                if (elements.Remove(e))
+                {
+                    e.Manager = null;
+                    UIElementCount--;
+                }
+            }
+
             addQueue.Clear();
+            removeQueue.Clear();
         }
 
         /// <summary>
@@ -75,6 +98,9 @@ namespace Verdant.UI
         /// </summary>
         public void Update()
         {
+            updatePerformanceTimer.Start();
+            Updating = true;
+
             foreach (UIElement e in elements)
             {
                 e.Update();
@@ -83,11 +109,11 @@ namespace Verdant.UI
             }
 
             // remove and add
-            elements.AddRange(addQueue);
-            foreach (UIElement e in removeQueue)
-                elements.Remove(e);
-            removeQueue.Clear();
-            addQueue.Clear();
+            ApplyQueues();
+
+            updatePerformanceTimer.Stop();
+            UpdateDuration = updatePerformanceTimer.ElapsedMilliseconds;
+            updatePerformanceTimer.Reset();
         }
 
     }

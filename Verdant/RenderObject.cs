@@ -24,10 +24,10 @@ namespace Verdant
         /// <summary>
         /// Draw the frame at a specific index within the RenderObject.
         /// </summary>
-        /// <param name="i">The X coordinate.</param>
-        /// <param name="j">The Y coordinate. Some RenderObjects with multiple frames may not index them with Y coordinates.</param>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate. Some RenderObjects with multiple frames may not index them with Y coordinates.</param>
         /// <returns></returns>
-        public abstract Texture2D DrawIndex(int i, int j = 0);
+        public abstract Texture2D DrawIndex(int x, int y = 0);
 
     }
 }

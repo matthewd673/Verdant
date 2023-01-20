@@ -86,7 +86,7 @@ namespace Verdant
         /// <param name="w">The width of the AABB.</param>
         /// <param name="h">The height of the AABB.</param>
         /// <returns>Returns true if the point is within the AABB, and false otherwise.</returns>
-        public static bool CheckPointOnRectIntersection(Vec2 point, float x, float y, int w, int h)
+        public static bool CheckPointOnRectIntersection(Vec2 point, float x, float y, float w, float h)
         {
             return (point.X < x + w &&
                 point.X > x &&
