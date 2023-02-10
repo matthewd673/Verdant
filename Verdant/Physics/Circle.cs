@@ -32,18 +32,16 @@ namespace Verdant.Physics
             // only generate body sprite once, and only if Draw is actually called
             if (bodySprite == RenderObject.None)
             {
-                bodySprite = Renderer.GenerateCircleSprite((int)(Radius * Renderer.Scale), Color.White).Draw();
+                bodySprite = Renderer.GenerateCircleSprite((int)(Radius * Renderer.Scale), Color.White);
             }
 
-            spriteBatch.Draw(
-                bodySprite.Draw(),
-                camera.GetRenderBounds(
-                    Position.X - Radius,
-                    Position.Y - Radius,
-                    (int)(Radius * 2),
-                    (int)(Radius * 2)),
-                color
-                );
+            bodySprite.Draw(spriteBatch,
+                            camera.GetRenderBounds(
+                                Position.X - Radius,
+                                Position.Y - Radius,
+                                (int)(Radius * 2),
+                                (int)(Radius * 2))
+                            );
         }
     }
 }

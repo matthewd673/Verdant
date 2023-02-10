@@ -9,9 +9,6 @@ namespace Verdant
     /// </summary>
     public class SpriteSheet : RenderObject
     {
-
-        //protected Texture2D[,] sprites;
-
         protected int spriteWidth;
         protected int spriteHeight;
 
@@ -73,6 +70,11 @@ namespace Verdant
             DrawIndex(spriteBatch, bounds, 0, 0);
         }
 
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
+        {
+            DrawIndex(spriteBatch, bounds, angle, origin, 0);
+        }
+
         /// <summary>
         /// Draw the sprite at the given index on the sheet.
         /// </summary>
@@ -86,6 +88,19 @@ namespace Verdant
                              bounds,
                              new Rectangle(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight),
                              Color.White
+                             );
+        }
+
+        public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin, int x, int y = 0)
+        {
+            spriteBatch.Draw(texture,
+                             bounds,
+                             new Rectangle(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight),
+                             Color.White,
+                             angle,
+                             origin,
+                             SpriteEffects.None,
+                             0
                              );
         }
     }

@@ -11,7 +11,7 @@ namespace Verdant
     /// </summary>
     public class Sprite : RenderObject
     {
-        protected Rectangle crop;
+        protected Rectangle? crop = null;
 
         /// <summary>
         /// Initialize a new Sprite.
@@ -47,12 +47,31 @@ namespace Verdant
             spriteBatch.Draw(texture, bounds, crop, Color.White);
         }
 
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
+        {
+            spriteBatch.Draw(
+                texture,
+                bounds,
+                crop,
+                Color.White,
+                angle,
+                origin,
+                SpriteEffects.None,
+                0
+                );
+        }
+
         /// <summary>
         /// Sprites do not support DrawIndex, it will be a normal Draw call.
         /// </summary>
         public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, int x, int y = 0)
         {
             Draw(spriteBatch, bounds);
+        }
+
+        public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin, int x, int y = 0)
+        {
+            Draw(spriteBatch, bounds, angle, origin);
         }
 
         public static implicit operator Sprite(Texture2D texture2d) => new Sprite(texture2d);

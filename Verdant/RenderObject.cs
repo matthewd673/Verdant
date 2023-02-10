@@ -32,6 +32,8 @@ namespace Verdant
         /// <param name="bounds">The screen-space bounds to draw to.</param>
         public abstract void Draw(SpriteBatch spriteBatch, Rectangle bounds);
 
+        public abstract void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin);
+
         /// <summary>
         /// Draw a cropped portion of the RenderObject.
         /// Some RenderObjects do not index their texture and only support Draw().
@@ -42,5 +44,7 @@ namespace Verdant
         /// <param name="x">The X coordinate of the cropped sprite.</param>
         /// <param name="y">The Y coordinate of the cropped sprite.</param>
         public abstract void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, int x, int y = 0);
+
+        public abstract void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin, int x, int y = 0);
     }
 }
