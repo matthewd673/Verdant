@@ -28,8 +28,11 @@ namespace Verdant
         // Determines if the custom cursor Sprite should be rendered.
         public static bool ShowCursor { get; set; } = true;
 
-        // Determines if Entities should be sorted according to Z index before rendering.
+        // Determines if Entities should be sorted according to z-index before rendering.
         public static bool SortEntities { get; set; } = true;
+
+        // Determines if UIElements should be sorted according to z-index before rendering.
+        public static bool SortUIElements { get; set; } = true;
 
         // The window's GraphicsDevice.
         public static GraphicsDevice GraphicsDevice { get; private set; }
@@ -42,7 +45,7 @@ namespace Verdant
         /// Get a Texture2D containing a single white pixel.
         /// </summary>
         /// <returns>A Texture2D pixel.</returns>
-        public static Texture2D GetPixel() { return pixel.Draw(); }
+        public static Texture2D GetPixel() { return pixel.Texture; }
         /// <summary>
         /// Get a Sprite containing a single white pixel.
         /// </summary>
@@ -74,10 +77,10 @@ namespace Verdant
         /// Render the current frame containing the elements in the provided managers.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
-        /// <param name="entityManager">The EntityManager to draw from.</param>
-        /// <param name="uiManager">The UIManager to draw from.</param>
-        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible or not.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false)
+        /// <param name="scene">The Scene to render.</param>
+        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible.</param>
+        /// <param name="visualizeUIBounds>For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
+        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false, bool visualizeUIBounds = false)
         {
             renderPerformanceTimer.Start();
 
@@ -103,26 +106,63 @@ namespace Verdant
             }
 
             // render ui elements
+            IEnumerable<UIElement> uiElements;
+            if (SortUIElements)
+                uiElements = scene.UIManager.GetElements().OrderBy(n => n.ZIndex);
+            else
+                uiElements = scene.UIManager.GetElements();
+
             foreach (UIElement e in scene.UIManager.GetElements())
             {
-                e.Draw(spriteBatch);
+                if (e.Show) e.Draw(spriteBatch);
+            }
+
+            if (visualizeUIBounds)
+            {
+                foreach (UIElement e in scene.UIManager.GetElements())
+                {
+                    e.DrawBounds(spriteBatch);
+                }
             }
 
             // render cursor
             if (ShowCursor && Cursor != null)
             {
-                spriteBatch.Draw(Cursor.Draw(),
-                    new Rectangle(InputHandler.MouseX - (Cursor.Width / 2 * Scale),
-                        InputHandler.MouseY - (Cursor.Height / 2 * Scale),
-                        Cursor.Width * Scale,
-                        Cursor.Height * Scale
-                    ),
-                    Color.White);
+                Cursor.Draw(spriteBatch,
+                            new Rectangle(InputHandler.MouseX - (Cursor.Width / 2) * Scale,
+                                InputHandler.MouseY - (Cursor.Height / 2 * Scale),
+                                Cursor.Width * Scale,
+                                Cursor.Height * Scale
+                                )
+                            );
             }
 
             renderPerformanceTimer.Stop();
             RenderDuration = renderPerformanceTimer.ElapsedMilliseconds;
             renderPerformanceTimer.Reset();
+        }
+
+        /// <summary>
+        /// Draw a line on the screen in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="start">The start point of the line.</param>
+        /// <param name="end">The end point of the line.</param>
+        /// <param name="color">The color of the line.</param>
+        public static void DrawLine(SpriteBatch spriteBatch, Vec2 start, Vec2 end, Color color)
+        {
+            Vec2 diff = end - start;
+            float angle = (float)Math.Atan2(diff.Y, diff.X);
+
+            spriteBatch.Draw(GetPixel(),
+                new Rectangle((int)start.X, (int)start.Y, (int)diff.Magnitude(), 1),
+                null,
+                color,
+                angle,
+                new Vector2(0, 0),
+                SpriteEffects.None,
+                0
+                );
         }
 
         /// <summary>
@@ -135,20 +175,10 @@ namespace Verdant
         /// <param name="color">The color of the line.</param>
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
-            Vec2 worldStart = camera.WorldToScreenPos(start);
-            Vec2 worldEnd = camera.WorldToScreenPos(end);
-            
-            Vec2 diff = worldEnd - worldStart;
-            float angle = (float)Math.Atan2(diff.Y, diff.X);
-
-            spriteBatch.Draw(GetPixel(),
-                new Rectangle((int)worldStart.X, (int)worldStart.Y, (int)diff.Magnitude(), 1),
-                null,
-                color,
-                angle,
-                new Vector2(0, 0),
-                SpriteEffects.None,
-                0
+            DrawLine(spriteBatch,
+                camera.WorldToScreenPos(start),
+                camera.WorldToScreenPos(end),
+                color
                 );
         }
 
@@ -166,6 +196,21 @@ namespace Verdant
             DrawLine(spriteBatch, camera, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
             DrawLine(spriteBatch, camera, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
             DrawLine(spriteBatch, camera, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
+        }
+
+        /// <summary>
+        /// Draw an axis-aligned rectangle in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
+        /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
+        /// <param name="color">The color of the Rectangle.</param>
+        public static void DrawRectangle(SpriteBatch spriteBatch, Vec2 topLeft, Vec2 bottomRight, Color color)
+        {
+            DrawLine(spriteBatch, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
+            DrawLine(spriteBatch, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
+            DrawLine(spriteBatch, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
+            DrawLine(spriteBatch, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
         }
 
         /// <summary>

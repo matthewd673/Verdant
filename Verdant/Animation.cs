@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Reflection;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
@@ -6,14 +9,13 @@ namespace Verdant
     /// <summary>
     /// A RenderObject that automatically displays different frames of an animation when rendered.
     /// </summary>
-    public class Animation : RenderObject
+    public class Animation : SpriteSheet
     {
-        readonly SpriteSheet sheet;
-        FrameSet frameSet;
+        private FrameSet frameSet;
 
         private int frameDelay;
         private int frameTimeCounter;
-        
+
         // Determines if the Animation should loop indefinitely or only play once.
         public bool Looping { get; set; }
 
@@ -22,16 +24,40 @@ namespace Verdant
         private bool settled = false;
         private bool hasLooped = false;
 
+        // Is true after a non-looping Animation has completed or a looping Animation has completed at least one loop.
+        public bool Complete
+        { 
+            get { return Looping ? hasLooped : settled; }
+        }
+
+        // The current frame of Animation, relative to the FrameSet's start frame.
+        public int FrameIndex
+        {
+            get { return frameIndex - frameSet.startFrame; }
+            set
+            {
+                frameIndex = value + frameSet.startFrame;
+                settled = false; // otherwise, if it had been settled it won't animate
+            }
+        }
+
+        // The number of frames in the Animation
+        public int Count
+        { 
+            get { return frameSet.endFrame - frameSet.startFrame; }
+        }
+
         /// <summary>
         /// Initialize a new Animation.
         /// </summary>
-        /// <param name="sheet">The SpriteSheet of frames.</param>
+        /// <param name="sheetTexture">The Texture2D sheet of sprites. Sprites should be in one row, ordered left to right.</param>
+        /// <param name="spriteWidth">The width of each sprite.</param>
         /// <param name="frameDelay">The number of ticks between each frame.</param>
         /// <param name="looping">Determines if the Animation loops.</param>
-        public Animation(SpriteSheet sheet, int frameDelay, bool looping = true)
+        public Animation(Texture2D sheetTexture, int spriteWidth, int frameDelay, bool looping = true)
+            : base(sheetTexture, spriteWidth)
         {
-            this.sheet = sheet;
-            frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
+            frameSet = new FrameSet(0, horizontalSprites, row: 0);
             this.frameDelay = frameDelay;
             frameTimeCounter = frameDelay;
             Looping = looping;
@@ -40,66 +66,17 @@ namespace Verdant
         /// <summary>
         /// Initialize a new Animation.
         /// </summary>
-        /// <param name="sheet">The SpriteSheet of frames.</param>
+        /// <param name="sheetTexture">The Texture2D sheet of sprites. Sprites should be in one row, ordered left to right.</param>
         /// <param name="frameSet">The subset of frames in the SpriteSheet to animate through.</param>
         /// <param name="frameDelay">The number of ticks between each frame.</param>
         /// <param name="looping">Determines if the Animation loops.</param>
-        public Animation(SpriteSheet sheet, FrameSet frameSet, int frameDelay, bool looping = true)
+        public Animation(Texture2D sheetTexture, int spriteWidth, FrameSet frameSet, int frameDelay, bool looping = true)
+            : base(sheetTexture, spriteWidth)
         {
-            this.sheet = sheet;
             this.frameSet = frameSet;
             this.frameDelay = frameDelay;
             frameTimeCounter = frameDelay;
             Looping = looping;
-        }
-
-        /// <summary>
-        /// Initialize a new Animation directly from a Texture2D sheet.
-        /// </summary>
-        /// <param name="sheetTexture">The sheet texture to crop frames from. Frames must be in a single row.</param>
-        /// <param name="spriteW">The width of each sprite in the sheet.</param>
-        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping the sheet.</param>
-        /// <param name="frameDelay">The number of ticks between each frame.</param>
-        /// <param name="looping">Determines if the Animation loops.</param>
-        public Animation(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice, int frameDelay, bool looping = true)
-        {
-            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height));
-            frameSet = new FrameSet(0, sheet.GetSheetWidth(), row: 0);
-            this.frameDelay = frameDelay;
-            frameTimeCounter = frameDelay;
-            Looping = looping;
-        }
-        /// <summary>
-        /// Initialize a new Animation directly from a Texture2D sheet.
-        /// </summary>
-        /// <param name="sheetTexture">The sheet texture to crop frames from. Frames must be in a single row.</param>
-        /// <param name="spriteW">The width of each sprite in the sheet.</param>
-        /// <param name="graphicsDevice">The GraphicsDevice to use when cropping the sheet.</param>
-        /// <param name="frameSet">The subset of frames in the sheet to animate through.</param>
-        /// <param name="frameDelay">The number of ticks between each frame.</param>
-        /// <param name="looping">Determines if the Animation loops.</param>
-        public Animation(Texture2D sheetTexture, int spriteW, GraphicsDevice graphicsDevice, FrameSet frameSet, int frameDelay, bool looping = true)
-        {
-            sheet = new SpriteSheet(SpriteSheet.BuildTexture2DArray(sheetTexture, spriteW, sheetTexture.Height));
-            this.frameSet = frameSet;
-            this.frameDelay = frameDelay;
-            frameTimeCounter = frameDelay;
-            Looping = looping;
-        }
-
-        /// <summary>
-        /// Perform the next step of the Animation and return the current frame. Identical to the Draw method inherited from RenderObject.
-        /// </summary>
-        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D Animate() { return Draw(); }
-
-        /// <summary>
-        /// Get the current frame of the Animation (without animating further).
-        /// </summary>
-        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public Texture2D GetCurrentFrame()
-        {
-            return sheet.DrawIndex(frameIndex, frameSet.row);
         }
 
         /// <summary>
@@ -113,60 +90,25 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Check if the Animation has been played all the way through. If the Animation loops, it will be marked as complete after the first play.
-        /// </summary>
-        /// <returns>Returns true if the Animation is complete.</returns>
-        public bool IsComplete()
-        {
-            if (!Looping)
-                return settled;
-            else
-                return hasLooped;
-        }
-
-        /// <summary>
-        /// Get the number of frames in the Animation.
-        /// </summary>
-        /// <returns>The number of frames in the Animation.</returns>
-        public int GetLength()
-        {
-            return frameSet.endFrame - frameSet.startFrame;
-        }
-
-        /// <summary>
-        /// Get the index of the current frame of Animation, relative to the FrameSet's start frame.
-        /// </summary>
-        /// <returns>The index of the current frame.</returns>
-        public int GetCurrentFrameIndex()
-        {
-            return frameIndex - frameSet.startFrame;
-        }
-
-        /// <summary>
-        /// Manually set the index of the current frame of Animation, relative to the FrameSet's start frame.
-        /// </summary>
-        /// <param name="index">The new frame index.</param>
-        public void SetCurrentFrameIndex(int index)
-        {
-            frameIndex = index + frameSet.startFrame;
-        }
-
-        /// <summary>
         /// Perform the next step of the Animation and return the current frame.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override Texture2D Draw()
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
         {
-            if (settled) //skip other steps if settled
-                return sheet.DrawIndex(frameIndex, frameSet.row);
+            if (settled) // skip other steps if settled
+                DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
 
+            // tick towards next frame
             frameTimeCounter--;
 
+            // time for the next frame
             if (frameTimeCounter <= 0)
             {
+                // reset counter
                 frameTimeCounter = frameDelay;
                 frameIndex++;
 
+                // loop back to beginning, if looping
                 if (frameIndex >= frameSet.endFrame)
                 {
                     if (Looping)
@@ -183,20 +125,7 @@ namespace Verdant
 
             }
 
-            return sheet.DrawIndex(frameIndex, frameSet.row);
-        }
-
-        /// <summary>
-        /// Get the sprite at the specified index, relative to the FrameSet's start frame.
-        /// </summary>
-        /// <param name="index">The frame index to pull from.</param>
-        /// <param name="j">The row on the Animation sheet to pull from. By default, the appropriate row as defined by the FrameSet will be used.</param>
-        /// <returns>The sprite at the specified index.</returns>
-        public override Texture2D DrawIndex(int index, int j = -1)
-        {
-            if (j == -1)
-                j = frameSet.row;
-            return sheet.DrawIndex(index + frameSet.startFrame, j);
+            DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
         }
 
         /// <summary>
@@ -205,7 +134,7 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(sheet, frameSet, frameDelay, Looping);
+            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping);
         }
 
         public struct FrameSet

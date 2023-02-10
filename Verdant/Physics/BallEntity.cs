@@ -51,7 +51,12 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            spriteBatch.Draw(Sprite.Draw(), Manager.Scene.Camera.GetRenderBounds(Position - new Vec2(radius, radius), drawDiam, drawDiam), Color.White);
+            Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position - new Vec2(radius, radius),
+                            drawDiam,
+                            drawDiam)
+                        );
         }
     }
 }

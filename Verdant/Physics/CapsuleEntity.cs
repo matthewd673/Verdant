@@ -82,21 +82,16 @@ namespace Verdant.Physics
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
             float rad = ((Circle)Components[1]).Radius;
 
-            spriteBatch.Draw(
-                Sprite.Draw(),
-                Manager.Scene.Camera.GetRenderBounds(
-                    Position.X,
-                    Position.Y,
-                    Width,
-                    (int)(Height + 2*rad)
-                    ),
-                null,
-                Color.White,
-                ((Rectangle)Components[0]).Angle,
-                (Vector2)origin,
-                SpriteEffects.None,
-                0
-                );
+            Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position.X,
+                            Position.Y,
+                            Width,
+                            (int)(Height + 2 * rad)
+                            ),
+                        ((Rectangle)Components[0]).Angle,
+                        (Vector2)origin
+                        );
         }
     }
 }

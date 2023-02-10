@@ -19,6 +19,8 @@ namespace TopdownShooter
         public static Sprite Wall { get; private set; }
         public static Sprite Ground { get; private set; }
         public static Sprite Bullet { get; private set; }
+        public static Sprite Logo { get; private set; }
+        public static Sprite PlayButton { get; private set; }
 
         public static SpriteFont DebugFont { get; private set; }
 
@@ -29,6 +31,8 @@ namespace TopdownShooter
             Wall = content.Load<Texture2D>("wall");
             Ground = content.Load<Texture2D>("ground");
             Bullet = content.Load<Texture2D>("bullet");
+            Logo = content.Load<Texture2D>("logo");
+            PlayButton = content.Load<Texture2D>("playButton");
 
             DebugFont = content.Load<SpriteFont>("debugfont");
         }

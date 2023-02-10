@@ -17,7 +17,7 @@ namespace TopdownShooter
     internal class PlayScene : Scene
     {
 
-        public PlayScene(string id) : base(id) { }
+        public PlayScene() : base("play") { }
 
         public Player Player { get; private set; }
         public Pathfinder Pathfinder { get; private set; }

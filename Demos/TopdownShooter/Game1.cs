@@ -28,8 +28,9 @@ namespace TopdownShooter
             Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
 
             sceneManager = new SceneManager();
-            PlayScene playScene = new PlayScene("play");
-            playScene.Initialize();
+            TitleScene titleScene = new TitleScene();
+            sceneManager.AddScene(titleScene);
+            PlayScene playScene = new PlayScene();
             sceneManager.AddScene(playScene);
 
             SimpleStats.TextColor = Color.White;
@@ -58,7 +59,6 @@ namespace TopdownShooter
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: false);
-
             _spriteBatch.End();
 
             base.Draw(gameTime);

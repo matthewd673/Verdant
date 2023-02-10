@@ -14,8 +14,11 @@ namespace Verdant.UI
             get { return _text; }
             set
             {
+                if (value.Equals(_text)) return;
+
                 _text = value;
                 Width = Font.MeasureString(_text).X;
+                Height = Font.MeasureString(_text).Y;
             }
         }
 
@@ -25,18 +28,14 @@ namespace Verdant.UI
         public Color Color { get; set; } = Color.Black;
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
-        // The width of the current string rendered with the current SpriteFont.
-        public float Width { get; private set; }
-        // The height (line spacing) of the current SpriteFont. Changing the string has no effect.
-        public float Height { get { return Font.LineSpacing; } }
-
         /// <summary>
         /// Initialize a new UIText.
         /// </summary>
-        /// <param name="pos">The position of the text.</param>
+        /// <param name="position">The position of the text.</param>
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display.</param>
-        public UIText(Vec2 pos, SpriteFont font, string text = "") : base(pos)
+        public UIText(Vec2 position, SpriteFont font, string text = "")
+            : base(position, font.MeasureString(text).X, font.MeasureString(text).Y)
         {
             Font = font;
             Text = text;
@@ -44,8 +43,19 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)Position.X, (int)Position.Y, (int)Width, (int)Height), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)Position, Color);
+            // TODO: Doesn't this need to be scaled?
+            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Width, (int)Height), BackgroundColor);
+            spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition * Renderer.Scale, Color);
+        }
+
+        public override void DrawBounds(SpriteBatch spriteBatch)
+        {
+            // UIText width/height don't scale
+            Renderer.DrawRectangle(spriteBatch,
+                                   AbsolutePosition * Renderer.Scale,
+                                   (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),
+                                   Color.Pink
+                                   );
         }
 
     }

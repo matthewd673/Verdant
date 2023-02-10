@@ -62,11 +62,12 @@ namespace Verdant.UI
         /// </summary>
         /// <param name="indicatorSprite">The RenderObject to use when drawing the slider indicator.</param>
         /// <param name="barSprite">The RenderObject to use when drawing the slider bar. The RenderObject will be stretched horizontally to match the bar's width.</param>
-        /// <param name="pos">The position of the slider (top-left of slider bar).</param>
+        /// <param name="position">The position of the slider (top-left of slider bar).</param>
         /// <param name="minValue">The minimum value of the slider.</param>
         /// <param name="maxValue">The maximum value of the slider.</param>
         /// <param name="barWidth">The visual width of the slider bar.</param>
-        public UISlider(Vec2 pos, int minValue, int maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth) : base(pos)
+        public UISlider(Vec2 position, int minValue, int maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
+            : base(position, Math.Max(barWidth, indicatorSprite.Width), Math.Max(barSprite.Height, indicatorSprite.Height))
         {
             IndicatorPosition = Vec2.Zero;
             indicatorWidth = indicatorSprite.Width;
@@ -93,8 +94,8 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.CheckPointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale,
-                (IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale,
+                (IndicatorPosition.X + AbsolutePosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
+                (IndicatorPosition.Y + AbsolutePosition.Y + IndicatorDrawOffsetY) * Renderer.Scale,
                 indicatorWidth * Renderer.Scale,
                 indicatorHeight * Renderer.Scale
                 ))
@@ -165,23 +166,21 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(BarSprite.Draw(),
-                new Rectangle(
-                    (int)(Position.X * Renderer.Scale),
-                    (int)(Position.Y * Renderer.Scale),
-                    barWidth * Renderer.Scale,
-                    barHeight * Renderer.Scale),
-                Color.White
-                );
+            BarSprite.Draw(spriteBatch,
+                           new Rectangle(
+                               (int)(Position.X * Renderer.Scale),
+                               (int)(Position.Y * Renderer.Scale),
+                               barWidth * Renderer.Scale,
+                               barHeight * Renderer.Scale)
+                           );
 
-            spriteBatch.Draw(IndicatorSprite.Draw(),
-                new Rectangle(
-                    (int)((IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale),
-                    (int)((IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale),
-                    indicatorWidth * Renderer.Scale,
-                    indicatorHeight * Renderer.Scale),
-                Color.White
-                );
+            IndicatorSprite.Draw(spriteBatch,
+                                 new Rectangle(
+                                    (int)((IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale),
+                                    (int)((IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale),
+                                    indicatorWidth * Renderer.Scale,
+                                    indicatorHeight * Renderer.Scale)
+                                 );
         }
 
     }

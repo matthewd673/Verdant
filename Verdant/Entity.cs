@@ -27,7 +27,7 @@ namespace Verdant
         public string Key { get; private set; }
         // The key of the Entity at the end of the last update.
         public string PreviousKey { get; private set; } = "";
-        
+
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
 
@@ -79,15 +79,22 @@ namespace Verdant
         public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) :
             base()
         {
-            Sprite = sprite;
+            if (sprite != RenderObject.None)
+            {
+                // if the sprite is an animation, copy it automatically
+                if (sprite.GetType() == typeof(Animation) || sprite.GetType().IsSubclassOf(typeof(Animation)))
+                {
+                    Sprite = ((Animation)sprite).Copy();
+                }
+                else
+                {
+                    Sprite = sprite;
+                }
+            }
             Position = position;
 
             Width = (width == -1 && sprite != RenderObject.None) ? sprite.Width : width;
             Height = (height == -1 && sprite != RenderObject.None) ? sprite.Height : height;
-
-            //set automatic rotation origin
-            //TODO: when working with textures stretched to different aspect ratios, this will result in an off-center origin
-            //RotationOrigin = new Vec2Int(Width / 2, Height / 2);
         }
 
         /// <summary>
@@ -132,16 +139,13 @@ namespace Verdant
                 return;
             }
 
-            spriteBatch.Draw(
-                Sprite.Draw(),
-                Manager.Scene.Camera.GetRenderBounds(
-                    Position.X - HalfWidth,
-                    Position.Y - HalfHeight,
-                    Width,
-                    Height
-                    ),
-                Color.White
-                );
+            Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position.X - HalfWidth,
+                            Position.Y - HalfHeight,
+                            Width,
+                            Height
+                            ));
         }
 
         /// <summary>

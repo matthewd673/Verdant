@@ -44,6 +44,8 @@ namespace Verdant
         private Stopwatch updatePerformanceTimer = new Stopwatch();
         // The duration (in milliseconds) of the last Update call.
         public float UpdateDuration { get; protected set; }
+        // Indicates if the EntityManager has entered the update loop.
+        public bool Updating { get; protected set; } = false;
 
         private List<CollisionData> collisions = new List<CollisionData>();
 
@@ -70,6 +72,7 @@ namespace Verdant
         public void AddEntity(Entity e)
         {
             addQueue.Add(e);
+            if (!Updating) ApplyQueues();
         }
 
         /// <summary>
@@ -80,9 +83,9 @@ namespace Verdant
         {
             foreach (Entity e in l)
             {
-                e.Manager = this;
                 addQueue.Add(e);
             }
+            if (!Updating) ApplyQueues();
         }
 
         /// <summary>
@@ -94,12 +97,10 @@ namespace Verdant
         public void RemoveEntity(Entity e)
         {
             removeQueue.Add(e);
+            if (!Updating) ApplyQueues();
         }
 
-        /// <summary>
-        /// Force the Entities in the add and remove queues to be added/removed to the manager. DO NOT USE WITHIN UPDATE LOOP.
-        /// </summary>
-        public void ApplyQueues()
+        private void ApplyQueues()
         {
             // add marked
             foreach (Entity e in addQueue)
@@ -473,7 +474,7 @@ namespace Verdant
         public void Update()
         {
             updatePerformanceTimer.Start();
-
+            Updating = true;
             //update in rectangle near camera (with some padding to be safe)
             UpdateList(GetEntitiesInBounds(
                 Scene.Camera.Position.X - CellSize,

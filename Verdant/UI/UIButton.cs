@@ -13,16 +13,17 @@ namespace Verdant.UI
         /// Initialize a new UIButton.
         /// </summary>
         /// <param name="sprite">The sprite to render (also used to determine the button's width and height).</param>
-        /// <param name="pos">The position of the button.</param>
-        public UIButton(RenderObject sprite, Vec2 pos) : base(sprite, pos) { }
+        /// <param name="position">The position of the button.</param>
+        public UIButton(RenderObject sprite, Vec2 position) : base(sprite, position) { }
         /// <summary>
         /// Initialize a new UIButton.
         /// </summary>
         /// <param name="sprite">The sprite to render.</param>
-        /// <param name="pos">The position of the button.</param>
-        /// <param name="w">The width of the button.</param>
-        /// <param name="h">The height of the button.</param>
-        public UIButton(RenderObject sprite, Vec2 pos, int w, int h) : base(sprite, pos, w, h) { }
+        /// <param name="position">The position of the button.</param>
+        /// <param name="width">The width of the button.</param>
+        /// <param name="height">The height of the button.</param>
+        public UIButton(RenderObject sprite, Vec2 position, int width, int height)
+            : base(sprite, position, width, height) { }
 
         public override void Update()
         {
@@ -31,10 +32,10 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.CheckPointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                Position.X * Renderer.Scale,
-                Position.Y * Renderer.Scale,
-                Width * Renderer.Scale,
-                Height * Renderer.Scale
+                AbsolutePosition.X * Renderer.Scale,
+                AbsolutePosition.Y * Renderer.Scale,
+                (int)Width * Renderer.Scale,
+                (int)Height * Renderer.Scale
                 ))
             { // button is being hovered
                 if (!Hovered) //it wasn't hovered last time, so trigger
@@ -51,7 +52,6 @@ namespace Verdant.UI
             // check for click
             if (Hovered && InputHandler.IsMouseFirstReleased())
                 OnClick();
-
         }
 
         public event EventHandler Hover;
