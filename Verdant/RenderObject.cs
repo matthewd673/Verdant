@@ -1,4 +1,6 @@
 ﻿using System;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
@@ -12,22 +14,16 @@ namespace Verdant
         public const RenderObject None = null;
 
         // The draw width of the RenderObject.
-        public virtual int Width { get { return DrawIndex(0).Width; } }
+        public virtual int Width { get; protected set; }
         // The draw height of the RenderObject.
-        public virtual int Height { get { return DrawIndex(0).Height; } }
+        public virtual int Height { get; protected set; }
 
         /// <summary>
         /// Draw the RenderObject.
         /// </summary>
-        /// <returns>A Texture2D representing the current state of the RenderObject.</returns>
-        public abstract Texture2D Draw();
-        /// <summary>
-        /// Draw the frame at a specific index within the RenderObject.
-        /// </summary>
-        /// <param name="x">The X coordinate.</param>
-        /// <param name="y">The Y coordinate. Some RenderObjects with multiple frames may not index them with Y coordinates.</param>
-        /// <returns></returns>
-        public abstract Texture2D DrawIndex(int x, int y = 0);
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
+        /// <param name="bounds">The screen bounds to draw to.</param>
+        public abstract void Draw(SpriteBatch spriteBatch, Rectangle bounds);
 
     }
 }
