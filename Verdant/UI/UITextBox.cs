@@ -75,8 +75,8 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.CheckPointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (Position.X - Padding) * Renderer.Scale,
-                (Position.Y - Padding) * Renderer.Scale,
+                (AbsolutePosition.X - Padding) * Renderer.Scale,
+                (AbsolutePosition.Y - Padding) * Renderer.Scale,
                 (int)(Width + 2 * Padding) * Renderer.Scale,
                 (int)(Height + 2 * Padding) * Renderer.Scale))
             {
@@ -112,16 +112,6 @@ namespace Verdant.UI
                     // skip held keys
                     if (!InputHandler.IsKeyFirstPressed(k))
                         continue;
-
-                    // typical characters
-                    //if (
-                    //    ((int)k >= 48 && (int)k <= 57) || // digits
-                    //    ((int)k >= 65 && (int)k <= 90) // alphabetical
-                    //    )
-                    //{
-                    //    if (MaxLength <= 0 || Text.Length < MaxLength)
-                    //        Text += (char)k;
-                    //}
 
                     OnKeyPressed(k);
 

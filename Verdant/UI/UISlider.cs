@@ -94,8 +94,8 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.CheckPointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale,
-                (IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale,
+                (IndicatorPosition.X + AbsolutePosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
+                (IndicatorPosition.Y + AbsolutePosition.Y + IndicatorDrawOffsetY) * Renderer.Scale,
                 indicatorWidth * Renderer.Scale,
                 indicatorHeight * Renderer.Scale
                 ))
