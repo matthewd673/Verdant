@@ -52,7 +52,7 @@ namespace Verdant
         /// <param name="queueIfUninterruptable">If the current Animation cannot be interrupted, queue the given Animation to be played after.</param>
         public void Play(string id, bool queueIfUninterruptable = true)
         {
-            if (animations[currentId].animation.GetCurrentFrameIndex() >= animations[currentId].interruptFrame) //can be interrupted, so play
+            if (animations[currentId].animation.FrameIndex >= animations[currentId].interruptFrame) //can be interrupted, so play
             {
                 InvokeAnimationEnd();
                 currentId = id;
@@ -86,60 +86,60 @@ namespace Verdant
         /// Perform the next step of the current Animation, and switch to the next appropriate Animation if necessary.
         /// </summary>
         /// <returns>The current Texture2D frame of the current Animation.</returns>
-        public Texture2D Animate()
-        {
-            Texture2D frame = animations[currentId].animation.Animate();
+        //public Texture2D Animate()
+        //{
+        //    //Texture2D frame = animations[currentId].animation.Animate();
 
-            if (animations[currentId].animation.IsComplete()) //animation finished - move on to whats next
-            {
-                if (!animations[currentId].nextId.Equals("")) //if there is a specified next id, play that
-                {
-                    InvokeAnimationEnd();
-                    currentId = animations[currentId].nextId;
-                    InvokeAnimationStart();
+        //    if (animations[currentId].animation.Complete) //animation finished - move on to whats next
+        //    {
+        //        if (!animations[currentId].nextId.Equals("")) //if there is a specified next id, play that
+        //        {
+        //            InvokeAnimationEnd();
+        //            currentId = animations[currentId].nextId;
+        //            InvokeAnimationStart();
 
-                    return frame;
-                }
+        //            return frame;
+        //        }
 
-                if (queue.Count > 0) //if there is a queued animation, play that
-                {
-                    InvokeAnimationEnd();
-                    //pull next and remove from queue
-                    currentId = queue[0];
-                    queue.RemoveAt(0);
-                    InvokeAnimationStart();
+        //        if (queue.Count > 0) //if there is a queued animation, play that
+        //        {
+        //            InvokeAnimationEnd();
+        //            //pull next and remove from queue
+        //            currentId = queue[0];
+        //            queue.RemoveAt(0);
+        //            InvokeAnimationStart();
 
-                    return frame;
-                }
+        //            return frame;
+        //        }
 
-                if (!animations[currentId].indefinite) //if not indefinite, return to default
-                {
-                    //end current animation
-                    InvokeAnimationEnd();
-                    //play default
-                    animations[defaultId].animation.Reset(); //reset, just to be safe
-                    currentId = defaultId;
-                    InvokeAnimationStart();
+        //        if (!animations[currentId].indefinite) //if not indefinite, return to default
+        //        {
+        //            //end current animation
+        //            InvokeAnimationEnd();
+        //            //play default
+        //            animations[defaultId].animation.Reset(); //reset, just to be safe
+        //            currentId = defaultId;
+        //            InvokeAnimationStart();
 
-                    return frame;
-                }
-            }
+        //            return frame;
+        //        }
+        //    }
 
-            if (animations[currentId].animation.GetCurrentFrameIndex() >= animations[currentId].interruptFrame &&
-                queue.Count > 0) //the animation can be interrupted, and there is something in queue
-            {
-                InvokeAnimationEnd();
-                //play next in queue
-                currentId = queue[0];
-                queue.RemoveAt(0);
-                InvokeAnimationStart();
+        //    if (animations[currentId].animation.FrameIndex >= animations[currentId].interruptFrame &&
+        //        queue.Count > 0) //the animation can be interrupted, and there is something in queue
+        //    {
+        //        InvokeAnimationEnd();
+        //        //play next in queue
+        //        currentId = queue[0];
+        //        queue.RemoveAt(0);
+        //        InvokeAnimationStart();
 
-                return frame;
-            }
+        //        return frame;
+        //    }
 
-            return frame;
+        //    return frame;
 
-        }
+        //}
         
         void InvokeAnimationStart()
         {

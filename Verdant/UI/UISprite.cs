@@ -36,14 +36,13 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Sprite.DrawIndex(SpriteIndex),
-                new Rectangle(
-                    (int)(AbsolutePosition.X * Renderer.Scale),
-                    (int)(AbsolutePosition.Y * Renderer.Scale),
-                    (int)(Width * Renderer.Scale),
-                    (int)(Height * Renderer.Scale)
-                    ),
-                Color.White);
+            Sprite.DrawIndex(spriteBatch,
+                             new Rectangle(
+                                 (int)(AbsolutePosition.X * Renderer.Scale),
+                                 (int)(AbsolutePosition.Y * Renderer.Scale),
+                                 (int)(Width * Renderer.Scale),
+                                 (int)(Height * Renderer.Scale)),
+                             SpriteIndex);
         }
 
     }

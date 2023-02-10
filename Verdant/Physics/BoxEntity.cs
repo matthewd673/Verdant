@@ -77,21 +77,17 @@ namespace Verdant.Physics
             if (Sprite == RenderObject.None) return;
 
             Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
-            spriteBatch.Draw(
-                Sprite.Draw(),
-                Manager.Scene.Camera.GetRenderBounds(
-                    Position.X,
-                    Position.Y, // TODO: GetRenderBounds(this) renders the image a height/2 higher, why?
-                    Width,
-                    Height
-                    ),
-                null,
-                Color.White,
-                ((Rectangle)Components[0]).Angle,
-                (Vector2) origin,
-                SpriteEffects.None,
-                0
-                );
+
+            Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position.X,
+                            Position.Y,
+                            Width,
+                            Height
+                            ),
+                        ((Rectangle)Components[0]).Angle,
+                        (Vector2)origin
+                        );
         }
     }
 }
