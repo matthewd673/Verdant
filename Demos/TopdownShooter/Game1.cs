@@ -59,7 +59,6 @@ namespace TopdownShooter
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             Renderer.Render(_spriteBatch, sceneManager.ActiveScene, visualizeBodies: false);
 
-            SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Resources.DebugFont);
             _spriteBatch.End();
 
             base.Draw(gameTime);

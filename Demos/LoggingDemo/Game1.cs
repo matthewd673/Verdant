@@ -59,13 +59,7 @@ namespace LoggingDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
-
-            //if (Sprites.Loaded)
-            //{
-            //    Verdant.Debugging.SimpleStats.Render(sceneManager.ActiveScene, _spriteBatch, Sprites.debugFont);
-            //}
-
+            sceneManager.ActiveScene.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

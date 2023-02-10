@@ -2,6 +2,7 @@
 using Verdant.Physics;
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PhysicsDemo
 {
@@ -32,7 +33,10 @@ namespace PhysicsDemo
             EntityManager.AddEntity(box);
         }
 
-    }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Renderer.Render(spriteBatch, this, visualizeBodies: true);
+        }
 
-    
+    }
 }

@@ -55,9 +55,7 @@ namespace ParticleToy
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-            Renderer.Render(_spriteBatch, sceneManager.ActiveScene);
-
+            sceneManager.ActiveScene.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

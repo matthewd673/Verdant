@@ -47,7 +47,6 @@ namespace TopdownShooter
             EntityManager.AddEntity(Player);
 
             // generate pathfinder map
-            EntityManager.ApplyQueues();
             Pathfinder = new Pathfinder(16, 16, 1000);
             Pathfinder.BuildPathMap<Wall>(EntityManager);
         }
@@ -55,6 +54,13 @@ namespace TopdownShooter
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            SimpleStats.Render(this, spriteBatch, Resources.DebugFont);
         }
     }
 }
