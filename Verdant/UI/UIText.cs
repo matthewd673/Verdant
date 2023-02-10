@@ -28,11 +28,6 @@ namespace Verdant.UI
         public Color Color { get; set; } = Color.Black;
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
-        // The width of the current string rendered with the current SpriteFont.
-        public override float Width { get; set; }
-        // The height (line spacing) of the current SpriteFont. Changing the string has no effect.
-        public override float Height { get; set; }
-
         /// <summary>
         /// Initialize a new UIText.
         /// </summary>
@@ -48,8 +43,19 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)Position.X, (int)Position.Y, (int)Width, (int)Height), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)Position * Renderer.Scale, Color);
+            // TODO: Doesn't this need to be scaled?
+            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Width, (int)Height), BackgroundColor);
+            spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition * Renderer.Scale, Color);
+        }
+
+        public override void DrawBounds(SpriteBatch spriteBatch)
+        {
+            // UIText width/height don't scale
+            Renderer.DrawRectangle(spriteBatch,
+                                   AbsolutePosition * Renderer.Scale,
+                                   (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),
+                                   Color.Pink
+                                   );
         }
 
     }

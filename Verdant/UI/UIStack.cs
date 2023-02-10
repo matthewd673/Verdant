@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
-    public class UIStack : UIElement
+    public class UIStack : UIGroup
     {
 
         private List<UIElement> children = new List<UIElement>();
@@ -52,7 +52,7 @@ namespace Verdant.UI
         /// </summary>
         /// <param name="position">The position of the UIStack (and its first element).</param>
         /// <param name="vertical">Determines if the UIStack is aligned vertically or horizontally.</param>
-        public UIStack(Vec2 position, bool vertical = true) : base(position, 0, 0)
+        public UIStack(Vec2 position, bool vertical = true) : base(position)
         {
             _position = position;
             Vertical = vertical;
@@ -63,22 +63,32 @@ namespace Verdant.UI
         /// The element will be repositioned but will otherwise remain unchanged.
         /// </summary>
         /// <param name="element">The element to add to the stack.</param>
-        public void AddElement(UIElement element)
+        public override void AddElement(UIElement element)
         {
             if (Vertical)
             {
-                element.Position = new Vec2(Position.X, Position.Y + Height);
-                Height += element.Height + Gap;
-                Width = Math.Max(Width, element.Width);
+                element.Position = new Vec2(0, Height + (Height > 0 ? Gap : 0));
             }
             else
             {
-                element.Position = new Vec2(Position.X + Width, Position.Y);
-                Width += element.Width + Gap;
-                Height = Math.Max(Height, element.Height);
+                element.Position = new Vec2(Width + (Width > 0 ? Gap : 0), 0);
             }
 
-            children.Add(element);
+            base.AddElement(element);
+            // if (Vertical)
+            // {
+            //     element.Position = new Vec2(Position.X, Position.Y + Height);
+            //     Height += element.Height + Gap;
+            //     Width = Math.Max(Width, element.Width);
+            // }
+            // else
+            // {
+            //     element.Position = new Vec2(Position.X + Width, Position.Y);
+            //     Width += element.Width + Gap;
+            //     Height = Math.Max(Height, element.Height);
+            // }
+
+            // children.Add(element);
         }
 
         public void AddPadding(float padding)

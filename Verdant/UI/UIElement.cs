@@ -13,8 +13,18 @@ namespace Verdant.UI
         // The UIGroup that contains the element. Not all UIElements have a parent.
         public UIGroup Parent { get; set; }
 
-        // The position of the UIElement in screen space.
+        // The position of the UIElement relative to its parent.
         public virtual Vec2 Position { get; set; }
+        // The position of the UIElement on the screen.
+        public Vec2 AbsolutePosition
+        {
+            get
+            {
+                if (Parent != null)
+                    return Parent.AbsolutePosition + Position;
+                return Position;
+            }
+        }
 
         // The width of the UIElement in screen space.
         public virtual float Width { get; set; }
@@ -50,8 +60,8 @@ namespace Verdant.UI
         public virtual void DrawBounds(SpriteBatch spriteBatch)
         {
             Renderer.DrawRectangle(spriteBatch,
-                                   Position * Renderer.Scale,
-                                   (Position + new Vec2(Width, Height)) * Renderer.Scale,
+                                   AbsolutePosition * Renderer.Scale,
+                                   (AbsolutePosition + new Vec2(Width, Height)) * Renderer.Scale,
                                    Color.Pink
                                    );
         }

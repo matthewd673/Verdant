@@ -38,8 +38,8 @@ namespace Verdant.UI
         {
             spriteBatch.Draw(Sprite.DrawIndex(SpriteIndex),
                 new Rectangle(
-                    (int)(Position.X * Renderer.Scale),
-                    (int)(Position.Y * Renderer.Scale),
+                    (int)(AbsolutePosition.X * Renderer.Scale),
+                    (int)(AbsolutePosition.Y * Renderer.Scale),
                     (int)(Width * Renderer.Scale),
                     (int)(Height * Renderer.Scale)
                     ),

@@ -222,7 +222,7 @@ namespace Verdant.UI
             bool shift = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             switch (k)
             {
-                // alphabetical 
+                // alphabetical
                 case Keys.A: return (shift ? 'A' : 'a');
                 case Keys.B: return (shift ? 'B' : 'b');
                 case Keys.C: return (shift ? 'C' : 'c');

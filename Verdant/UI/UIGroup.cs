@@ -21,24 +21,24 @@ namespace Verdant.UI
 
         public UIGroup(Vec2 position) : base(position, 0, 0) { }
 
-        public void AddElement(UIElement e)
+        public virtual void AddElement(UIElement element)
         {
-            addQueue.Add(e);
+            addQueue.Add(element);
             if (Manager == null || !Manager.Updating) ApplyQueues();
         }
 
-        public void AddElementRange(List<UIElement> l)
+        public void AddElementRange(List<UIElement> elements)
         {
-            foreach (UIElement e in l)
+            foreach (UIElement e in elements)
             {
                 addQueue.Add(e);
             }
             if (Manager == null || !Manager.Updating) ApplyQueues();
         }
 
-        public void RemoveElement(UIElement e)
+        public virtual void RemoveElement(UIElement element)
         {
-            removeQueue.Add(e);
+            removeQueue.Add(element);
             if (Manager == null || !Manager.Updating) ApplyQueues();
         }
 
@@ -47,7 +47,10 @@ namespace Verdant.UI
             foreach (UIElement e in addQueue)
             {
                 e.Parent = this;
-                e.Position += Position;
+
+                // calculate new width/height
+                Width = Math.Max(e.Position.X + e.Width, Width);
+                Height = Math.Max(e.Position.Y + e.Height, Height);
 
                 children.Add(e);
                 ChildCount++;
@@ -59,6 +62,19 @@ namespace Verdant.UI
                 {
                     e.Parent = null;
                     ChildCount--;
+                }
+            }
+
+            // if elements were removed, must recompute width/height
+            // hopefully, removing an element will be pretty rare
+            if (removeQueue.Any())
+            {
+                Width = 0;
+                Height = 0;
+                foreach (UIElement e in children)
+                {
+                    Width = Math.Max(e.Position.X + e.Width, Width);
+                    Height = Math.Max(e.Position.Y + e.Height, Height);
                 }
             }
 
@@ -78,6 +94,15 @@ namespace Verdant.UI
             }
 
             ApplyQueues();
+
+            // recalculate bounds
+            Width = 0;
+            Height = 0;
+            foreach (UIElement e in children)
+            {
+                Width = Math.Max(e.Position.X + e.Width, Width);
+                Height = Math.Max(e.Position.Y + e.Height, Height);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
