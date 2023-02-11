@@ -71,7 +71,7 @@ namespace Verdant
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="scene">The Scene to render.</param>
         /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible.</param>
-        /// <param name="visualizeUIBounds>For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
+        /// <param name="visualizeUIBounds">For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
         public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false, bool visualizeUIBounds = false)
         {
             renderPerformanceTimer.Start();

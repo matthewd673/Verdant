@@ -26,6 +26,7 @@ namespace Verdant.UI
         public SpriteFont Font { get; private set; }
         // The color of the text.
         public Color Color { get; set; } = Color.Black;
+        // The color of the box behind the text.
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
         /// <summary>

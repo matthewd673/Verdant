@@ -9,9 +9,12 @@ namespace Verdant
     public class Vec2Int
     {
 
+        // The X coordinate.
         public int X { get; set; }
+        // The Y coordinate.
         public int Y { get; set; }
 
+        // A Vec2Int representing (0, 0)
         public static Vec2Int Zero { get; } = new Vec2Int(0, 0);
 
         /// <summary>
@@ -33,6 +36,11 @@ namespace Verdant
             Y = y;
         }
 
+        /// <summary>
+        /// Deep equality check.
+        /// </summary>
+        /// <param name="obj">The object to compare to.</param>
+        /// <returns>True if the object is equal to this Vec2Int (deep).</returns>
         public override bool Equals(object obj)
         {
             if (obj == null)

@@ -4,6 +4,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using Verdant.Debugging;
 
 namespace ParticleToy
 {
@@ -12,7 +13,7 @@ namespace ParticleToy
 
         public PlayScene(string id) : base(id) { }
 
-        ParticleSystem particleSystem;
+        static ParticleSystem particleSystem;
         private Timer spawnTimer;
 
         public override void Initialize()
@@ -43,12 +44,33 @@ namespace ParticleToy
             UIStack controlStack = new UIStack(new Vec2(20, 20));
             controlStack.Gap = 12;
 
+            // SPAWN RATE
+            UIStack rateStack = new UIStack(Vec2.Zero, vertical: false);
+            rateStack.Gap = 12;
+            rateStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Spawn Delay "));
+            UITextBox rateText = new UITextBox(Vec2.Zero, Resources.Font);
+            UISlider rateSlider = new UISlider(Vec2.Zero, 10, 3000, Resources.SliderIndicator, Resources.SliderBar, 200);
+            rateSlider.Change += (object sender, EventArgs args) =>
+            {
+                spawnTimer.Duration = rateSlider.Value;
+                rateText.Text = rateSlider.Value.ToString("0.00");
+            };
+            rateText.Submit += (object sender, EventArgs args) =>
+            {
+                float value;
+                float.TryParse(rateText.Text, out value);
+                rateSlider.Value = value;
+            };
+            rateStack.AddElement(rateSlider);
+            rateStack.AddElement(rateText);
+            controlStack.AddElement(rateStack);
+
             // RADIUS
             UIStack radiusStack = new UIStack(Vec2.Zero, vertical: false);
             radiusStack.Gap = 12;
             radiusStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Radius "));
             UITextBox radiusText = new UITextBox(Vec2.Zero, Resources.Font);
-            UISlider radiusSlider = new UISlider(Vec2.Zero, 0, 128, Resources.SliderIndicator, Resources.SliderBar, 250);
+            UISlider radiusSlider = new UISlider(Vec2.Zero, 0, 128, Resources.SliderIndicator, Resources.SliderBar, 200);
             radiusSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.Radius = radiusSlider.Value;
@@ -85,7 +107,6 @@ namespace ParticleToy
                                  2),
                              Color.Black
                              );
-        }
-
+        }       
     }
 }

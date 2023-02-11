@@ -71,7 +71,7 @@ namespace Verdant.UI
         public UISlider(Vec2 position, int minValue, int maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
             : base(position, Math.Max(barWidth, indicatorSprite.Width), Math.Max(barSprite.Height, indicatorSprite.Height))
         {
-            IndicatorPosition = Vec2.Zero;
+            IndicatorPosition = new Vec2(0, 0);
             indicatorWidth = indicatorSprite.Width;
             indicatorHeight = indicatorSprite.Height;
 

@@ -20,7 +20,7 @@ namespace Verdant
         // The milliseconds that have elapsed since the Timer has started.
         public float ElapsedTime { get; private set; } = 0;
         // The duration the Timer runs for.
-        public float Duration { get; private set; } = 0;
+        public float Duration { get; set; } = 0;
 
         private TimerCallback callback;
 
