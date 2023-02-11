@@ -16,9 +16,14 @@ namespace Verdant.Debugging
         // If the logger fails to establish a WebSockets connection, it will stop attempting to send messages and this value will be true.
         public static bool ConnectionFailed { get; private set; } = false;
 
+        // The port of the game's UdpClient. Should not be changed after the first message is sent.
+        public static int ClientPort { get; set; } = 40425;
+        // The port of the LogConsole instance. Should not be changed after the first message is sent.
+        public static int ConsolePort { get; set; } = 8085;
+
         /// <summary>
         /// Send a string to the LogConsole. If the game is not currently connected to the LogConsole, it will attempt to connect (but only once).
-        /// NOTE: Log is not intended for production use. WriteLine will not do anything unless it is called in a debug build.
+        /// NOTE: Log is not intended for production use. WriteLine will not do anything unless the game is running in a debug build.
         /// </summary>
         /// <param name="value">The value to write.</param>
         public static void WriteLine(object value)
@@ -28,10 +33,10 @@ namespace Verdant.Debugging
 
             if (client == null)
             {
-                client = new UdpClient(40425);
+                client = new UdpClient(ClientPort);
                 try
                 {
-                    client.Connect("127.0.0.1", 8085);
+                    client.Connect("127.0.0.1", ConsolePort);
                     //first message
                     byte[] firstBytes = Encoding.ASCII.GetBytes("__mdebug__");
                     client.Send(firstBytes, firstBytes.Length);

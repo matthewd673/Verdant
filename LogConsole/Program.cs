@@ -10,7 +10,6 @@ namespace LogConsole
 
         /*
          * TODO
-         * - settings file to customize port
          * - option to save output when session ends
          * - option to auto-reset every time a new client connects
          *      (presumably, this will only happen when the game is re-run)
@@ -24,15 +23,25 @@ namespace LogConsole
             Console.WriteLine("Verdant Debugging Log Console");
             Console.ResetColor();
 
-            StartServer();
+            int port = 8085;
+            if (args.Length > 0)
+            {
+                if (!Int32.TryParse(args[0], out port))
+                {
+                    Console.WriteLine("Invalid port specified (\"{0}\")", args[0]);
+                    return;
+                }
+            }
+
+            StartServer(port);
         }
 
-        static void StartServer()
+        static void StartServer(int port)
         {
 
-            UdpClient server = new UdpClient(8085);
+            UdpClient server = new UdpClient(port);
 
-            Console.WriteLine("[CON] Listening on port 8085");
+            Console.WriteLine("[CON] Listening on port {0}", port);
 
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
             byte[] data = new byte[1024];
