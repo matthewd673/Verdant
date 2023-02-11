@@ -14,6 +14,7 @@ namespace Verdant.UI
         public bool Focused { get; private set; }
 
         private string _text;
+        private Vector2 _textMeasurements;
         // The string contents of the UITextBox.
         public string Text
         {
@@ -23,7 +24,8 @@ namespace Verdant.UI
                 if (MaxLength >= 0 && value.Length > MaxLength)
                     value = value[..MaxLength];
                 _text = value;
-                Width = Font.MeasureString(_text).X;
+                _textMeasurements = Font.MeasureString(_text);
+                Width = (int)_textMeasurements.X;
             }
         }
         // The maximum number of characters allowed in the text string. Set to 0 or less for infinite length.
@@ -41,7 +43,32 @@ namespace Verdant.UI
         // The amount of padding on each side of the box.
         public float Padding { get; set; } = 0f;
         // Determines if an outline should be drawn when the UITextBox is focused.
-        public bool DrawFocusOutline { get; set; } = true;
+        public bool ShowFocusOutline { get; set; } = true;
+        // Determines if a caret should be drawn when typing. 
+        public bool ShowCaret { get; set; } = true;
+
+        private int caretPreWidth = 0;
+        private int _caretPosition;
+        // The position of the caret within the string.
+        public int CaretPosition
+        {
+            get { return _caretPosition; }
+            set
+            {
+                _caretPosition = value;
+                if (value > Text.Length)
+                    _caretPosition = Text.Length;
+                else if (value < 0)
+                    _caretPosition = 0;
+
+                caretPreWidth = (int)Font.MeasureString(Text.Substring(0, _caretPosition)).X;
+            }
+        }
+
+        private int initialHoldFrames = 35;
+        private int repeatHoldFrames = 2;
+        private int currentHoldFrames = 0;
+        private bool repeatingHold = false;
 
         private float _width;
         // The width of the UITextBox (may change when the text changes).
@@ -107,22 +134,67 @@ namespace Verdant.UI
             // accept text input
             if (Focused)
             {
+                bool sawHeldKey = false;
                 foreach (Keys k in InputHandler.KeyboardState.GetPressedKeys())
                 {
-                    // skip held keys
                     if (!InputHandler.IsKeyFirstPressed(k))
-                        continue;
+                    {
+                        if (!sawHeldKey)
+                        {
+                            currentHoldFrames++;
+                        }
+
+                        sawHeldKey = true;
+
+                        // hold is repeating but hasn't hit threshhold
+                        if (repeatingHold && currentHoldFrames < repeatHoldFrames)
+                        {
+                            continue;
+                        }
+                        // hold is repeating and has hit threshhold
+                        // so, trigger input and reset counter
+                        else if (repeatingHold)
+                        {
+                            currentHoldFrames = 0;
+                        }
+
+                        // hold is not yet repeating but has hit the threshhold
+                        // so, trigger input and switch to repeating mode
+                        if (!repeatingHold && currentHoldFrames >= initialHoldFrames)
+                        {
+                            currentHoldFrames = 0;
+                            repeatingHold = true;
+                        }
+                        else if (!repeatingHold)
+                        {
+                            continue;
+                        }
+                    }
 
                     OnKeyPressed(k);
 
                     char keyChar = GetKeyChar(InputHandler.KeyboardState, k);
                     if (keyChar != (char)0 && (MaxLength <= 0 || Text.Length < MaxLength))
-                        Text += keyChar;
+                    {
+                        Text = Text.Insert(CaretPosition, keyChar.ToString());
+                        CaretPosition++;
+                    }
 
                     // backspace
                     if (k == Keys.Back && Text.Length > 0)
                     {
-                        Text = Text.Remove(Text.Length - 1, 1);
+                        Text = Text.Remove(CaretPosition - 1, 1);
+                        CaretPosition--;
+                    }
+
+                    // arrow keys
+                    if (k == Keys.Left)
+                    {
+                        CaretPosition--;
+                    }
+                    if (k == Keys.Right)
+                    {
+                        CaretPosition++;
                     }
 
                     // escape focus
@@ -138,13 +210,19 @@ namespace Verdant.UI
                         OnSubmit();
                     }
                 }
+
+                if (!sawHeldKey)
+                {
+                    currentHoldFrames = 0;
+                    repeatingHold = false;
+                }
             }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             // draw focus outline
-            if (DrawFocusOutline && Focused)
+            if (ShowFocusOutline && Focused)
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
@@ -169,6 +247,19 @@ namespace Verdant.UI
 
             // draw string
             spriteBatch.DrawString(Font, Text, (Vector2)Position, Color);
+
+            // draw caret
+            if (ShowCaret && Focused)
+            {
+                spriteBatch.Draw(Renderer.Pixel,
+                    new Rectangle(
+                        (int)(Position.X + caretPreWidth),
+                        (int)Position.Y,
+                        1,
+                        (int)(Height)
+                        ),
+                    Color.Black);
+            }
         }
 
         public event EventHandler Hover;
@@ -205,6 +296,12 @@ namespace Verdant.UI
         protected virtual void OnKeyPressed(Keys key)
         {
             KeyPressed?.Invoke(this, new KeyPressedEventArgs(key));
+        }
+
+        public event EventHandler Changed;
+        protected virtual void OnChanged(string text)
+        {
+            Changed?.Invoke(this, new ChangedEventArgs(text));
         }
 
         private static char GetKeyChar(KeyboardState state, Keys k)
@@ -279,6 +376,16 @@ namespace Verdant.UI
         public KeyPressedEventArgs(Keys key)
         {
             Key = key;
+        }
+    }
+
+    public class ChangedEventArgs : EventArgs
+    {
+        public string Text { get; set; }
+
+        public ChangedEventArgs(string text)
+        {
+            Text = text;
         }
     }
 }

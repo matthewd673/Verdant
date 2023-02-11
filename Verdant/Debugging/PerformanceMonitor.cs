@@ -23,8 +23,12 @@ namespace Verdant.Debugging
         private static float runningRender = 0;
         private static float runningUi = 0;
 
+        // Determines if PerformanceMonitor should be rendered. Historical dat will still be collected while it is hidden.
+        public static bool Show { get; set; } = true;
+
         public static void Draw(Scene scene, SpriteBatch spriteBatch)
         {
+
             Vec2Int position = new Vec2Int(Renderer.ScreenWidth - 32, Renderer.ScreenHeight - 32);
 
             avgCounter++;
@@ -54,6 +58,9 @@ namespace Verdant.Debugging
 
                 avgCounter = 0;
             }
+
+            // don't render when hidden
+            if (!Show) return;
 
             // render all metrics in history
             int i = 0;

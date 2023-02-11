@@ -121,8 +121,8 @@ namespace Verdant
             if (ShowCursor && Cursor != null)
             {
                 Cursor.Draw(spriteBatch,
-                            new Rectangle(InputHandler.MouseX - (Cursor.Width / 2) * Scale,
-                                InputHandler.MouseY - (Cursor.Height / 2 * Scale),
+                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * Scale,
+                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * Scale),
                                 Cursor.Width * Scale,
                                 Cursor.Height * Scale
                                 )
