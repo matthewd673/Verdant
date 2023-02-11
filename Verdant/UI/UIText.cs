@@ -44,7 +44,7 @@ namespace Verdant.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // TODO: Doesn't this need to be scaled?
-            spriteBatch.Draw(Renderer.GetPixel(), new Rectangle((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Width, (int)Height), BackgroundColor);
+            spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Width, (int)Height), BackgroundColor);
             spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition * Renderer.Scale, Color);
         }
 

@@ -27,7 +27,7 @@ namespace Verdant
         /// <param name="pos">The position of the system.</param>
         /// <param name="spreadRadius">The radius that GetNewParticlePos will spawn within.</param>
         /// <param name="autoRemove">Determine if dead particles should be removed automatically.</param>
-        public ParticleSystem(Vec2 pos, int spreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
+        public ParticleSystem(Vec2 pos, int spreadRadius, bool autoRemove = true) : base(Renderer.PixelSprite, pos, 0, 0)
         {
             SpreadRadius = spreadRadius;
             AutoRemove = autoRemove;

@@ -60,7 +60,8 @@ namespace TopdownShooter
         {
             base.Draw(spriteBatch);
 
-            SimpleStats.Render(this, spriteBatch, Resources.DebugFont);
+            SimpleStats.Draw(this, spriteBatch, Resources.DebugFont);
+            PerformanceMonitor.Draw(this, spriteBatch);
         }
     }
 }

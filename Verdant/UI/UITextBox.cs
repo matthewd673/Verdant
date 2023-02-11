@@ -146,7 +146,7 @@ namespace Verdant.UI
             // draw focus outline
             if (DrawFocusOutline && Focused)
             {
-                spriteBatch.Draw(Renderer.GetPixel(),
+                spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
                         (int)(Position.X - Padding - 2),
                         (int)(Position.Y - Padding - 2),
@@ -157,7 +157,7 @@ namespace Verdant.UI
                     );
             }
             // draw background
-            spriteBatch.Draw(Renderer.GetPixel(),
+            spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
                     (int)(Position.X - Padding),
                     (int)(Position.Y - Padding),

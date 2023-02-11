@@ -41,16 +41,8 @@ namespace Verdant
         // The duration (in milliseconds) of the last Render call.
         public static float RenderDuration { get; private set; }
 
-        /// <summary>
-        /// Get a Texture2D containing a single white pixel.
-        /// </summary>
-        /// <returns>A Texture2D pixel.</returns>
-        public static Texture2D GetPixel() { return pixel.Texture; }
-        /// <summary>
-        /// Get a Sprite containing a single white pixel.
-        /// </summary>
-        /// <returns>A Sprite pixel.</returns>
-        public static Sprite GetPixelSprite() { return pixel; }
+        public static Texture2D Pixel { get { return pixel.Texture; } }
+        public static Sprite PixelSprite { get { return pixel; } }
 
         /// <summary>
         /// Initialize the Renderer. Create a Camera, establish a consistent render scale, etc.
@@ -154,7 +146,7 @@ namespace Verdant
             Vec2 diff = end - start;
             float angle = (float)Math.Atan2(diff.Y, diff.X);
 
-            spriteBatch.Draw(GetPixel(),
+            spriteBatch.Draw(Pixel,
                 new Rectangle((int)start.X, (int)start.Y, (int)diff.Magnitude(), 1),
                 null,
                 color,
