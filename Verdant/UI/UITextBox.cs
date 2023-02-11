@@ -47,6 +47,8 @@ namespace Verdant.UI
         public bool ShowFocusOutline { get; set; } = true;
         // Determines if a caret should be drawn when typing. 
         public bool ShowCaret { get; set; } = true;
+        // Determines if the UITextBox should only accept numeric (int & real) input.
+        public bool Numeric { get; set; } = false;
 
         private int caretPreWidth = 0;
         private int _caretPosition;
@@ -175,7 +177,8 @@ namespace Verdant.UI
                     OnKeyPressed(k);
 
                     char keyChar = GetKeyChar(InputHandler.KeyboardState, k);
-                    if (keyChar != (char)0 && (MaxLength <= 0 || Text.Length < MaxLength))
+                    if (keyChar != (char)0 && (MaxLength <= 0 || Text.Length < MaxLength) &&
+                        (!Numeric || (Numeric && CharIsNumeric(keyChar))))
                     {
                         Text = Text.Insert(CaretPosition, keyChar.ToString());
                         CaretPosition++;
@@ -373,6 +376,11 @@ namespace Verdant.UI
                 case Keys.Space: return ' ';
             }
             return (char)0;
+        }
+
+        private static bool CharIsNumeric(char c)
+        {
+            return (c >= 48 && c <= 57) || c == '.' || c == '-';
         }
     }
 

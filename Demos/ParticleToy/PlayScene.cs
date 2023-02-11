@@ -49,6 +49,7 @@ namespace ParticleToy
             rateStack.Gap = 12;
             rateStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Spawn Delay "));
             UITextBox rateText = new UITextBox(Vec2.Zero, Resources.Font);
+            rateText.Numeric = true;
             UISlider rateSlider = new UISlider(Vec2.Zero, 10, 3000, Resources.SliderIndicator, Resources.SliderBar, 200);
             rateSlider.Change += (object sender, EventArgs args) =>
             {
@@ -65,11 +66,34 @@ namespace ParticleToy
             rateStack.AddElement(rateText);
             controlStack.AddElement(rateStack);
 
+            // LIFETIME
+            UIStack lifetimeStack = new UIStack(Vec2.Zero, vertical: false);
+            lifetimeStack.Gap = 12;
+            lifetimeStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Particle Lifetime "));
+            UITextBox lifetimeText = new UITextBox(Vec2.Zero, Resources.Font);
+            lifetimeText.Numeric = true;
+            UISlider lifetimeSlider = new UISlider(Vec2.Zero, 1, 3000, Resources.SliderIndicator, Resources.SliderBar, 200);
+            lifetimeSlider.Change += (object sender, EventArgs args) =>
+            {
+                particleSystem.DefaultLifetime = lifetimeSlider.Value;
+                lifetimeText.Text = lifetimeSlider.Value.ToString("0.00");
+            };
+            lifetimeText.Submit += (object sender, EventArgs args) =>
+            {
+                float value;
+                float.TryParse(lifetimeText.Text, out value);
+                lifetimeSlider.Value = value;
+            };
+            lifetimeStack.AddElement(lifetimeSlider);
+            lifetimeStack.AddElement(lifetimeText);
+            controlStack.AddElement(lifetimeStack);
+
             // RADIUS
             UIStack radiusStack = new UIStack(Vec2.Zero, vertical: false);
             radiusStack.Gap = 12;
             radiusStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Radius "));
             UITextBox radiusText = new UITextBox(Vec2.Zero, Resources.Font);
+            radiusText.Numeric = true;
             UISlider radiusSlider = new UISlider(Vec2.Zero, 0, 128, Resources.SliderIndicator, Resources.SliderBar, 200);
             radiusSlider.Change += (object sender, EventArgs args) =>
             {

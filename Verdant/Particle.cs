@@ -8,7 +8,7 @@ namespace Verdant
     public class Particle
     {
 
-        int lifetime = int.MaxValue;
+        public Timer LifeTimer { get; private set; }
 
         public ParticleSystem System { get; set; }
 
@@ -39,19 +39,18 @@ namespace Verdant
         protected int HalfWidth { get; private set; }
         protected int HalfHeight { get; private set; }
 
-        public bool Dead { get { return lifetime <= 0; } }
+        public bool Dead { get; private set; }
 
         /// <summary>
         /// Initialize a new Particle.
         /// </summary>
         /// <param name="sprite">The Particle's sprite.</param>
-        /// <param name="position">The position of the Particle.</param>
         /// <param name="width">The width of the Particle.</param>
         /// <param name="height">The height of the Particle.</param>
-        /// <param name="lifetime">The number of frames the Particle should live before being marked as dead.</param>
         public Particle(RenderObject sprite, int width = -1, int height = -1)
         {
             Sprite = sprite;
+            LifeTimer = new Timer(1, (Timer timer) => { Dead = true; });
             Width = (width == -1 && sprite != RenderObject.None) ? sprite.Width : width;
             Height = (height == -1 && sprite != RenderObject.None) ? sprite.Height : height;
         }
@@ -61,9 +60,7 @@ namespace Verdant
         /// </summary>
         public void Update()
         {
-            lifetime--;
-            if (lifetime <= 0)
-                return;
+            
         }
 
         /// <summary>

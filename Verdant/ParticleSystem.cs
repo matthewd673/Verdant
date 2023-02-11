@@ -15,6 +15,18 @@ namespace Verdant
         // The radius that Particles may spawn within.
         public float Radius { get; set; } = 0f;
 
+        private bool overrideLifetime = false;
+        private float _defaultLifetime;
+        public float DefaultLifetime
+        { 
+            get { return _defaultLifetime; }
+            set
+            {
+                _defaultLifetime = value;
+                overrideLifetime = true;
+            }
+        }
+
         /// <summary>
         /// Initialize a new ParticleSystem.
         /// </summary>
@@ -28,6 +40,9 @@ namespace Verdant
         public void SpawnParticle(Particle particle)
         {
             particle.Position = GenerateParticlePos();
+            if (overrideLifetime)
+                particle.LifeTimer.Duration = DefaultLifetime;
+            particle.LifeTimer.Start();
             particles.Add(particle);
             particle.System = this;
         }
