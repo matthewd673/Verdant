@@ -39,6 +39,10 @@ namespace Verdant
         protected int HalfWidth { get; private set; }
         protected int HalfHeight { get; private set; }
 
+        public Vec2 Velocity { get; set; } = new Vec2(0, 0);
+        public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
+        public float Friction { get; set; } = 0;
+
         public bool Dead { get; private set; }
 
         /// <summary>
@@ -60,7 +64,10 @@ namespace Verdant
         /// </summary>
         public void Update()
         {
-            
+            Velocity += Acceleration;
+            Velocity *= 1 - Friction;
+
+            Position += Velocity;
         }
 
         /// <summary>

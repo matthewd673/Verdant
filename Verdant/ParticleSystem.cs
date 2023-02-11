@@ -27,6 +27,42 @@ namespace Verdant
             }
         }
 
+        private bool overrideAcceleration = false;
+        private Vec2 _defaultAcceleration = new Vec2(0, 0);
+        public Vec2 DefaultAcceleration
+        {
+            get { return _defaultAcceleration; }
+            set
+            {
+                _defaultAcceleration = value;
+                overrideAcceleration = true;
+            }
+        }
+
+        private bool overrideVelocity = false;
+        private Vec2 _defaultVelocity = new Vec2(0, 0);
+        public Vec2 DefaultVelocity
+        {
+            get { return _defaultVelocity; }
+            set
+            {
+                _defaultVelocity = value;
+                overrideVelocity = true;
+            }
+        }
+
+        private bool overrideFriction = false;
+        private float _defaultFriction = 0;
+        public float DefaultFriction
+        {
+            get { return _defaultFriction; }
+            set
+            {
+                _defaultFriction = value;
+                overrideFriction = true;
+            }
+        }
+
         /// <summary>
         /// Initialize a new ParticleSystem.
         /// </summary>
@@ -40,8 +76,16 @@ namespace Verdant
         public void SpawnParticle(Particle particle)
         {
             particle.Position = GenerateParticlePos();
+            
             if (overrideLifetime)
                 particle.LifeTimer.Duration = DefaultLifetime;
+            if (overrideAcceleration)
+                particle.Acceleration = DefaultAcceleration.Copy();
+            if (overrideVelocity)
+                particle.Velocity = DefaultVelocity.Copy();
+            if (overrideFriction)
+                particle.Friction = DefaultFriction;
+
             particle.LifeTimer.Start();
             particles.Add(particle);
             particle.System = this;

@@ -68,7 +68,7 @@ namespace Verdant.UI
         /// <param name="minValue">The minimum value of the slider.</param>
         /// <param name="maxValue">The maximum value of the slider.</param>
         /// <param name="barWidth">The visual width of the slider bar.</param>
-        public UISlider(Vec2 position, int minValue, int maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
+        public UISlider(Vec2 position, float minValue, float maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
             : base(position, Math.Max(barWidth, indicatorSprite.Width), Math.Max(barSprite.Height, indicatorSprite.Height))
         {
             IndicatorPosition = new Vec2(0, 0);
