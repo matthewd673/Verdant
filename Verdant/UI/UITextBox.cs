@@ -26,10 +26,11 @@ namespace Verdant.UI
                 _text = value;
                 _textMeasurements = Font.MeasureString(_text);
                 Width = (int)_textMeasurements.X;
+                OnChanged();
             }
         }
-        // The maximum number of characters allowed in the text string. Set to 0 or less for infinite length.
-        public int MaxLength { get; set; }
+        // The maximum number of characters allowed in the text string. Set to a negative number for infinite length.
+        public int MaxLength { get; set; } = -1;
 
         // The font used to draw the UITextBox.
         public SpriteFont Font { get; private set; }
@@ -187,6 +188,12 @@ namespace Verdant.UI
                         CaretPosition--;
                     }
 
+                    // delete
+                    if (k == Keys.Delete && Text.Length > CaretPosition)
+                    {
+                        Text = Text.Remove(CaretPosition, 1);
+                    }
+
                     // arrow keys
                     if (k == Keys.Left)
                     {
@@ -226,8 +233,8 @@ namespace Verdant.UI
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(Position.X - Padding - 2),
-                        (int)(Position.Y - Padding - 2),
+                        (int)(AbsolutePosition.X - Padding - 2),
+                        (int)(AbsolutePosition.Y - Padding - 2),
                         (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding + 4),
                         (int)(Height + 2 * Padding + 4)
                         ),
@@ -237,8 +244,8 @@ namespace Verdant.UI
             // draw background
             spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
-                    (int)(Position.X - Padding),
-                    (int)(Position.Y - Padding),
+                    (int)(AbsolutePosition.X - Padding),
+                    (int)(AbsolutePosition.Y - Padding),
                     (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding),
                     (int)(Height + 2 * Padding)
                 ),
@@ -246,15 +253,15 @@ namespace Verdant.UI
                 );
 
             // draw string
-            spriteBatch.DrawString(Font, Text, (Vector2)Position, Color);
+            spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition, Color);
 
             // draw caret
             if (ShowCaret && Focused)
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(Position.X + caretPreWidth),
-                        (int)Position.Y,
+                        (int)(AbsolutePosition.X + caretPreWidth),
+                        (int)AbsolutePosition.Y,
                         1,
                         (int)(Height)
                         ),
@@ -299,9 +306,9 @@ namespace Verdant.UI
         }
 
         public event EventHandler Changed;
-        protected virtual void OnChanged(string text)
+        protected virtual void OnChanged()
         {
-            Changed?.Invoke(this, new ChangedEventArgs(text));
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         private static char GetKeyChar(KeyboardState state, Keys k)
@@ -376,16 +383,6 @@ namespace Verdant.UI
         public KeyPressedEventArgs(Keys key)
         {
             Key = key;
-        }
-    }
-
-    public class ChangedEventArgs : EventArgs
-    {
-        public string Text { get; set; }
-
-        public ChangedEventArgs(string text)
-        {
-            Text = text;
         }
     }
 }

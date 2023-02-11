@@ -65,7 +65,7 @@ namespace Verdant
         /// <returns>A Vec2 representing the position in the world.</returns>
         public Vec2 ScreenToWorldPos(int x, int y)
         {
-            return new Vec2((x + Position.X) / Renderer.Scale, (y + Position.Y) / Renderer.Scale);
+            return new Vec2(x + Position.X, y + Position.Y) / Renderer.Scale;
         }
         /// <summary>
         /// Given a position on the screen, return the corresponding position in the world.

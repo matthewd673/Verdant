@@ -95,7 +95,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Generate a random float value.
+        /// Generate a random float value between 0 and 1.
         /// </summary>
         /// <returns>A random float value.</returns>
         public static float RandomFloat()
@@ -105,7 +105,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Generate a random float value within a given bounds.
+        /// Generate a random float value within the given bounds.
         /// </summary>
         /// <param name="min">The minimum value of the float.</param>
         /// <param name="max">The maximum value of the float.</param>
@@ -115,6 +115,17 @@ namespace Verdant
             double mantissa = Random.NextDouble() * 2.0 - 1.0;
             float final = (float)Math.Abs(mantissa) * (max - min) + min;
             return final;
+        }
+
+        /// <summary>
+        /// Generate a random integer value within the given bounds.
+        /// </summary>
+        /// <param name="min">The minimum value of the integer.</param>
+        /// <param name="max">The maximum value of the integer.</param>
+        /// <returns>A random integer value.</returns>
+        public static int RandomInt(int min, int max)
+        {
+            return Random.Next(max) - min;
         }
 
     }

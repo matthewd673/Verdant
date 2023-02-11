@@ -4,11 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
-    public class UIText : UIElement
+    public class UILabel : UIElement
     {
 
         private string _text;
-        // The string displayed by the UIText.
+        // The string displayed by the UILabel.
         public string Text
         {
             get { return _text; }
@@ -22,19 +22,19 @@ namespace Verdant.UI
             }
         }
 
-        // The font used to draw the UIText.
+        // The font used to draw the UILabel.
         public SpriteFont Font { get; private set; }
         // The color of the text.
         public Color Color { get; set; } = Color.Black;
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
         /// <summary>
-        /// Initialize a new UIText.
+        /// Initialize a new UILabel.
         /// </summary>
         /// <param name="position">The position of the text.</param>
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display.</param>
-        public UIText(Vec2 position, SpriteFont font, string text = "")
+        public UILabel(Vec2 position, SpriteFont font, string text = "")
             : base(position, font.MeasureString(text).X, font.MeasureString(text).Y)
         {
             Font = font;
@@ -50,7 +50,7 @@ namespace Verdant.UI
 
         public override void DrawBounds(SpriteBatch spriteBatch)
         {
-            // UIText width/height don't scale
+            // UILabel width/height don't scale
             Renderer.DrawRectangle(spriteBatch,
                                    AbsolutePosition * Renderer.Scale,
                                    (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),

@@ -76,8 +76,7 @@ namespace Verdant
         /// <param name="position">The position of the center of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) :
-            base()
+        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1)
         {
             if (sprite != RenderObject.None)
             {
@@ -129,7 +128,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Perfom a basic render of the Entity.
+        /// Draw the Entity.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
