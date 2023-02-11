@@ -37,7 +37,7 @@ namespace ParticleToy
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Sprites.LoadSprites(Content);
+            Resources.LoadSprites(Content);
         }
 
         protected override void Update(GameTime gameTime)

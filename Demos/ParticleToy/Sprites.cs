@@ -5,20 +5,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ParticleToy
 {
-    internal class Sprites
+    internal class Resources
     {
 
-        public static Sprite SliderIndicator;
-        public static Sprite SliderBar;
+        public static Sprite SliderIndicator { get; private set; }
+        public static Sprite SliderBar { get; private set; }
 
-        public static SpriteFont DebugFont;
+        public static Sprite Particle { get; private set; }
+
+        public static SpriteFont Font { get; private set; }
 
         public static void LoadSprites(ContentManager content)
         {
             SliderIndicator = content.Load<Texture2D>("slider-indicator");
             SliderBar = content.Load<Texture2D>("slider-bar");
 
-            DebugFont = content.Load<SpriteFont>("debug");
+            Particle = content.Load<Texture2D>("particle");
+
+            Font = content.Load<SpriteFont>("debug");
         }
 
     }

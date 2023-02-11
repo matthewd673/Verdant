@@ -1,46 +1,89 @@
 ﻿using Verdant.Physics;
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using System.Numerics;
 
 namespace Verdant
 {
-    public class Particle : PhysicsEntity
+    public class Particle
     {
 
-        int lifetime;
+        int lifetime = int.MaxValue;
+
+        public ParticleSystem System { get; set; }
+
+        public RenderObject Sprite { get; set; }
+        public virtual Vec2 Position { get; set; }
+
+        private int _width;
+        public int Width
+        { 
+            get { return _width; }
+            set 
+            {
+                _width = value;
+                HalfWidth = value / 2;
+            }
+        }
+        private int _height;
+        public int Height
+        { 
+            get { return _height; }
+            set
+            {
+                _height = value;
+                HalfHeight = value / 2;
+            }
+        }
+
+        protected int HalfWidth { get; private set; }
+        protected int HalfHeight { get; private set; }
+
+        public bool Dead { get { return lifetime <= 0; } }
 
         /// <summary>
         /// Initialize a new Particle.
         /// </summary>
         /// <param name="sprite">The Particle's sprite.</param>
-        /// <param name="pos">The position of the Particle.</param>
-        /// <param name="w">The width of the Particle.</param>
-        /// <param name="h">The height of the Particle.</param>
+        /// <param name="position">The position of the Particle.</param>
+        /// <param name="width">The width of the Particle.</param>
+        /// <param name="height">The height of the Particle.</param>
         /// <param name="lifetime">The number of frames the Particle should live before being marked as dead.</param>
-        public Particle(RenderObject sprite, Vec2 pos, int w, int h, int lifetime)
-                : base(sprite, pos, w, h, mass: 0)
+        public Particle(RenderObject sprite, int width = -1, int height = -1)
         {
-            this.lifetime = lifetime;
+            Sprite = sprite;
+            Width = (width == -1 && sprite != RenderObject.None) ? sprite.Width : width;
+            Height = (height == -1 && sprite != RenderObject.None) ? sprite.Height : height;
         }
 
         /// <summary>
         /// Update the Particle.
         /// </summary>
-        public override void Update()
+        public void Update()
         {
             lifetime--;
             if (lifetime <= 0)
                 return;
-            base.Update();
         }
 
         /// <summary>
-        /// Check if the Particle is dead.
+        /// Draw the Particle.
         /// </summary>
-        /// <returns>Returns true if the Particle is dead, false otherwise.</returns>
-        public bool IsDead()
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
+        public void Draw(SpriteBatch spriteBatch)
         {
-            return lifetime <= 0;
+            if (Sprite == RenderObject.None)
+            {
+                return;
+            }
+
+            Sprite.Draw(spriteBatch,
+                System.Manager.Scene.Camera.GetRenderBounds(
+                    Position.X - HalfWidth,
+                    Position.Y - HalfHeight,
+                    Width,
+                    Height)
+                );
         }
 
     }
