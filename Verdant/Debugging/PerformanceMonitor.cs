@@ -14,24 +14,50 @@ namespace Verdant.Debugging
 
         private static List<Metrics> history = new List<Metrics>();
         private static int maxHistory = 120;
+        private static int avgCounter = 0;
+        private static int smoothing = 3;
+
+        private static int scale = 2;
+
+        private static float runningUpdate = 0;
+        private static float runningRender = 0;
+        private static float runningUi = 0;
 
         public static void Draw(Scene scene, SpriteBatch spriteBatch)
         {
             Vec2Int position = new Vec2Int(Renderer.ScreenWidth - 32, Renderer.ScreenHeight - 32);
 
-            // update time
-            history.Add(new Metrics(
-                scene.EntityManager.UpdateDuration,
-                Renderer.RenderDuration
-                )
-                );
-            if (history.Count > maxHistory)
+            avgCounter++;
+            if (avgCounter < smoothing)
             {
-                history.RemoveAt(0);
+                runningUpdate += scene.EntityManager.UpdateDuration;
+                runningRender += Renderer.RenderDuration;
+                runningUi += scene.UIManager.UpdateDuration;
+            }
+            else
+            {
+                runningUpdate /= smoothing;
+                runningRender /= smoothing;
+                runningUi /= smoothing;
+
+                // update time
+                history.Add(new Metrics(
+                    runningUpdate,
+                    runningRender,
+                    runningUi
+                    )
+                    );
+                if (history.Count > maxHistory)
+                {
+                    history.RemoveAt(0);
+                }
+
+                avgCounter = 0;
             }
 
             // render all metrics in history
             int i = 0;
+            float totalOver = 0f;
             foreach (Metrics m in history)
             {
                 int stackHeight = 0;
@@ -40,23 +66,26 @@ namespace Verdant.Debugging
                 stackHeight += DrawOnStack(spriteBatch, m.RenderDuration, Color.Red, position, stackHeight, i);
 
                 i++;
+
+                // frame took longer than 16ms
+                if (m.Total > 16.67)
+                    totalOver += 1f;
             }
 
             // draw 16ms reference line
             spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
                     position.X - maxHistory - 4,
-                    position.Y - 16,
+                    position.Y - 16 * scale,
                     maxHistory + 8,
                     1),
                 Color.Black
                 );
-
         }
 
         private static int DrawOnStack(SpriteBatch spriteBatch, float value, Color color, Vec2Int position, int stackHeight, int histIndex)
         {
-            int height = (int)(value * 2);
+            int height = (int)(value * scale);
             spriteBatch.Draw(Renderer.Pixel,
                              new Rectangle(
                                  position.X - (maxHistory - histIndex),
@@ -71,11 +100,19 @@ namespace Verdant.Debugging
         {
             public float UpdateDuration { get; private set; }
             public float RenderDuration { get; private set; }
+            public float UIDuration { get; private set; }
 
-            public Metrics(float updateDuration, float renderDuration)
+            public float Total { get; private set; }
+
+            public Metrics(float updateDuration, float renderDuration, float uiDuration)
             {
                 UpdateDuration = updateDuration;
                 RenderDuration = renderDuration;
+                UIDuration = uiDuration;
+
+                Total = updateDuration +
+                        renderDuration +
+                        uiDuration;
             }
         }
 
