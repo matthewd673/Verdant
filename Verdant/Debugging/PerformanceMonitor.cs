@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Debugging
 {
+    /// <summary>
+    /// Visualize the computation time of each frame.
+    /// </summary>
     public static class PerformanceMonitor
     {
 
@@ -23,9 +26,14 @@ namespace Verdant.Debugging
         private static float runningRender = 0;
         private static float runningUi = 0;
 
-        // Determines if PerformanceMonitor should be rendered. Historical dat will still be collected while it is hidden.
+        // Determines if PerformanceMonitor should be rendered. Data will still be collected while it is hidden.
         public static bool Show { get; set; } = true;
 
+        /// <summary>
+        /// Draw the PerformanceMonitor.
+        /// </summary>
+        /// <param name="scene">The current Scene.</param>
+        /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public static void Draw(Scene scene, SpriteBatch spriteBatch)
         {
 

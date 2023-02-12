@@ -3,9 +3,14 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Smoothly animates between two TransformStates, according to a TimingFunction.
+    /// </summary>
     public class TransformAnimation
     {
+        // The initial TransformState (it will be filled backwards even if the animation hasn't started).
         public TransformState From { get; private set; }
+        // The final TransformState.
         public TransformState To { get; private set; }
 
         // True if either the starting or ending TransformState are multiplicative.
@@ -13,9 +18,12 @@ namespace Verdant
         private Timer animationTimer;
         private TimingFunction timingFunction;
 
+        // Indicates if the TransformAnimation is currently running.
         public bool Running { get; private set; }
+        // Indicates if the TransformAnimation is complete.
         public bool Complete { get; private set; }
 
+        // Determines if the final TransformState should fill forwards when the animation is complete.
         public bool FillForwards { get; set; } = true;
 
         private TransformState diff;
@@ -73,6 +81,9 @@ namespace Verdant
             this.diff = diff;
         }
 
+        /// <summary>
+        /// Start the TransformAnimation.
+        /// </summary>
         public void Start()
         {
             animationTimer.Reset();
@@ -81,6 +92,10 @@ namespace Verdant
             Complete = false;
         }
 
+        /// <summary>
+        /// Get the current state of the TransformAnimation.
+        /// </summary>
+        /// <returns>A TransformState with properties representing the current state of the TransformAnimation.</returns>
         public TransformState GetFrame()
         {
             if (FillForwards && Complete)
@@ -98,6 +113,10 @@ namespace Verdant
             return current;
         }
 
+        /// <summary>
+        /// Create a new TransformAnimation with the same properties as this one.
+        /// </summary>
+        /// <returns>A new TransformAnimation.</returns>
         public TransformAnimation Copy()
         {
             return new TransformAnimation(From, To, animationTimer.Duration, timingFunction, diff);

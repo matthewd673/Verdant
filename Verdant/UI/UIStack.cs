@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIGroup that automatically arranges its children in a stack.
+    /// </summary>
     public class UIStack : UIGroup
     {
 

@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// Manages the creation, deletion, and update logic of UIElements
+    /// </summary>
     public class UIManager
     {
 

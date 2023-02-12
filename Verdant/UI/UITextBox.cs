@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts text input.
+    /// </summary>
     public class UITextBox : UIElement
     {
 

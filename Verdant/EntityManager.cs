@@ -7,7 +7,7 @@ using Verdant.Physics;
 namespace Verdant
 {
     /// <summary>
-    /// Manages the creation, deletion, and update logic of all Entities.
+    /// Manages the creation, deletion, and update logic of Entities.
     /// </summary>
     public class EntityManager
     {
@@ -138,8 +138,7 @@ namespace Verdant
 
         /// <summary>
         /// Get all Entities of a current type currently in the manager.
-        /// NOTE: This call can be very expensive. Generally, GetEntitiesInBounds() or
-        /// GetNearEntities() will be a better choice.
+        /// NOTE: This can be very expensive. Generally, GetEntitiesInBounds() is a better choice.
         /// </summary>
         /// <typeparam name="T">The type of Entity to search for.</typeparam>
         /// <returns>A list of Entities of the given type in the manager.</returns>
@@ -159,8 +158,7 @@ namespace Verdant
 
         /// <summary>
         /// Get a list of all Entities currently in the manager.
-        /// NOTE: This call can be very expensive. Generally, GetEntitiesInBounds() or
-        /// GetNearEntities() will be a better choice.
+        /// NOTE: This can be very expensive. Generally, GetEntitiesInBounds() is a better choice.
         /// </summary>
         /// <returns>A list of all managed Entities.</returns>
         public List<Entity> GetAllEntities()

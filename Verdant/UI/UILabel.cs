@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that displays text.
+    /// </summary>
     public class UILabel : UIElement
     {
 

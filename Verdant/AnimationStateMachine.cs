@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// NOTE: The AnimationStateMachine API is incomplete and should not be used until it is updated.
+    /// </summary>
     public class AnimationStateMachine
     {
 

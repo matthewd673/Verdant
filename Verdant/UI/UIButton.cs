@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts mouse click input.
+    /// </summary>
     public class UIButton : UISprite
     {
 

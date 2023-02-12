@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Verdant.Debugging
 {
+    /// <summary>
+    /// Send messages over UDP to the Verdant LogConsole debug tool.
+    /// </summary>
     public static class Log
     {
 

@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Debugging
 {
+    /// <summary>
+    /// Display metrics about the current Scene and custom state information.
+    /// </summary>
     public static class SimpleStats
     {
 
@@ -21,7 +24,7 @@ namespace Verdant.Debugging
         public static bool Show { get; set; } = true;
 
         /// <summary>
-        /// Draw the SimpleStats output
+        /// Draw the SimpleStats output.
         /// </summary>
         /// <param name="scene">The current scene.</param>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>

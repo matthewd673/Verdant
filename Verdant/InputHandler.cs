@@ -48,7 +48,7 @@ namespace Verdant
         /// <summary>
         /// Determine if a mouse button is pressed and was released on the previous frame.
         /// </summary>
-        /// <param name="mouseButton">The mouse button to check. Defaults to LEFT.</param>
+        /// <param name="mouseButton">The mouse button to check.</param>
         /// <returns>Returns true if the mouse button is pressed and was released on the previous frame. Returns false otherwise.</returns>
         public static bool IsMouseFirstPressed(MouseButton mouseButton = MouseButton.Left)
         {

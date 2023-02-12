@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// An object within the UI.
+    /// </summary>
     public class UIElement
     {
 

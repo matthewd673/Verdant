@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A collection of UIElements.
+    /// </summary>
     public class UIGroup : UIElement
     {
 

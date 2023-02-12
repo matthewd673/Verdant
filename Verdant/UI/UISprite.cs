@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that displays a sprite.
+    /// </summary>
     public class UISprite : UIElement
     {
         // The RenderObject to draw.

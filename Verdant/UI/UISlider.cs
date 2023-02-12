@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts numeric input within a given range.
+    /// </summary>
     public class UISlider : UIElement
     {
 

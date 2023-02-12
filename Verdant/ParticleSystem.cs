@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Spawns and simulates a collection of Particles.
+    /// </summary>
     public class ParticleSystem : Entity
     {
 

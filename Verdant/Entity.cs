@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Verdant
 {
     /// <summary>
-    /// An object within the game world, to be extended for every type of object in the game.
+    /// An object within the game world, to be extended for every unique object in the game.
     /// </summary>
     public class Entity
     {

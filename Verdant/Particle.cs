@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// A Particle to be simulated within a ParticleSystem. Essentially a simplified Entity.
+    /// </summary>
     public class Particle
     {
 

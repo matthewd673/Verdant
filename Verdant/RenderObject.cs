@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Verdant
 {
     /// <summary>
-    /// An object, attached to an Entity, that determines what texture is used when rendering.
+    /// An object that determines what Texture2D should be rendered.
     /// </summary>
     public abstract class RenderObject
     {
