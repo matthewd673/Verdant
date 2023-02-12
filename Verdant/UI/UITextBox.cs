@@ -185,7 +185,7 @@ namespace Verdant.UI
                     }
 
                     // backspace
-                    if (k == Keys.Back && Text.Length > 0)
+                    if (k == Keys.Back && Text.Length > 0 && CaretPosition > 0)
                     {
                         Text = Text.Remove(CaretPosition - 1, 1);
                         CaretPosition--;

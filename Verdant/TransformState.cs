@@ -5,46 +5,51 @@ namespace Verdant
     public class TransformState
     {
 
-        public float X { get; set; }
-        public float Y { get; set; }
+        public bool Multiply { get; private set; } = true;
+
+        public Vec2 Position { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
-        public float Rotation { get; set; }
+        public float Angle { get; set; }
 
-        /// <summary>
-        /// Initialize a new TransformState.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="w">The width.</param>
-        /// <param name="h">The height.</param>
-        /// <param name="r">The rotation.</param>
-        public TransformState(float x, float y, float w, float h, float r)
+        public TransformState(bool mutliply = true)
         {
-            X = x;
-            Y = y;
-            Width = w;
-            Height = h;
-            Rotation = r;
+            Multiply = mutliply;
+
+            // adjust default position depending on if state is multiplicative
+            if (Multiply && Position == null)
+            {
+                Position = new Vec2(1, 1);
+            }
+            else if (!Multiply && Position == null)
+            {
+                Position = new Vec2(0, 0);
+            }
         }
 
-        /// <summary>
-        /// Initialize a new TransformState from an existing TransformState.
-        /// </summary>
-        /// <param name="state">The TransformState to copy from.</param>
-        public TransformState(TransformState state)
+        public TransformState(Vec2 position, float width, float height, float angle, bool multiply = true)
         {
-            X = state.X;
-            Y = state.Y;
-            Width = state.Width;
-            Height = state.Height;
-            Rotation = state.Rotation;
+            Position = position;
+            Width = width;
+            Height = height;
+            Angle = angle;
+            Multiply = multiply;
         }
 
-        public static TransformState operator +(TransformState a, TransformState b) => new TransformState(a.X + b.X, a.Y + b.Y, a.Width + b.Width, a.Height + b.Height, a.Rotation + b.Rotation);
-        public static TransformState operator -(TransformState a, TransformState b) => new TransformState(a.X - b.X, a.Y - b.Y, a.Width - b.Width, a.Height - b.Height, a.Rotation - b.Rotation);
-        public static TransformState operator *(TransformState a, TransformState b) => new TransformState(a.X * b.X, a.Y * b.Y, a.Width * b.Width, a.Height * b.Height, a.Rotation * b.Rotation);
-        public static TransformState operator /(TransformState a, TransformState b) => new TransformState(a.X / b.X, a.Y / b.Y, a.Width / b.Width, a.Height / b.Height, a.Rotation / b.Rotation);
+        public TransformState Copy()
+        {
+            TransformState newState = new(Multiply);
+            newState.Position = Position.Copy();
+            newState.Width = Width;
+            newState.Height = Height;
+            newState.Angle = Angle;
+            return newState;
+        }
+
+        public static TransformState operator +(TransformState a, TransformState b) => new TransformState(a.Position + b.Position, a.Width + b.Width, a.Height + b.Height, a.Angle + b.Angle);
+        public static TransformState operator -(TransformState a, TransformState b) => new TransformState(a.Position - b.Position, a.Width - b.Width, a.Height - b.Height, a.Angle - b.Angle);
+        public static TransformState operator *(TransformState a, TransformState b) => new TransformState(a.Position * b.Position, a.Width * b.Width, a.Height * b.Height, a.Angle * b.Angle);
+        public static TransformState operator /(TransformState a, TransformState b) => new TransformState(a.Position / b.Position, a.Width / b.Width, a.Height / b.Height, a.Angle / b.Angle);
 
     }
 }

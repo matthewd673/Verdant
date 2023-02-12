@@ -139,7 +139,7 @@ namespace Verdant
         /// <returns>A Rectangle representing the proper rendering bounds for the given TransformState.</returns>
         public Rectangle GetRenderBounds(TransformState transformState)
         {
-            return GetRenderBounds(transformState.X, transformState.Y, (int)transformState.Width, (int)transformState.Height);
+            return GetRenderBounds(transformState.Position, (int)transformState.Width, (int)transformState.Height);
         }
 
         /// <summary>

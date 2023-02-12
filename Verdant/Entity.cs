@@ -116,18 +116,6 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Set the Entity's bounds and rotation to be equal to those of a given TransformState.
-        /// </summary>
-        /// <param name="state">The TransformState to mirror.</param>
-        public void ApplyTransformState(TransformState state)
-        {
-            Position.X = state.X;
-            Position.Y = state.Y;
-            Width = (int)state.Width;
-            Height = (int)state.Height;
-        }
-
-        /// <summary>
         /// Draw the Entity.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>

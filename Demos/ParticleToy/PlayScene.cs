@@ -28,6 +28,14 @@ namespace ParticleToy
         {
             particleSystem = new ParticleSystem(new Vec2(600, 300));
             particleSystem.SelfRemove = false;
+
+            particleSystem.DefaultTransformAnimation = new TransformAnimation(
+                new TransformState() { Height = 1f, Width = 1f },
+                new TransformState() { Height = 0f, Width = 0f },
+                1000
+                );
+            particleSystem.DefaultTransformAnimation.FillForwards = true;
+            
             EntityManager.AddEntity(particleSystem);
 
             spawnTimer = new Timer(500, (Timer t) =>

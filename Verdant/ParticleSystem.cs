@@ -63,6 +63,18 @@ namespace Verdant
             }
         }
 
+        private bool overrideTransformAnimation = false;
+        private TransformAnimation _defaultTransformAnimation;
+        public TransformAnimation DefaultTransformAnimation
+        {
+            get { return _defaultTransformAnimation; }
+            set
+            {
+                _defaultTransformAnimation = value;
+                overrideTransformAnimation = true;
+            }
+        }
+
         /// <summary>
         /// Initialize a new ParticleSystem.
         /// </summary>
@@ -85,8 +97,11 @@ namespace Verdant
                 particle.Velocity = DefaultVelocity.Copy();
             if (overrideFriction)
                 particle.Friction = DefaultFriction;
+            if (overrideTransformAnimation)
+                particle.TransformAnimation = DefaultTransformAnimation?.Copy();
 
             particle.LifeTimer.Start();
+            particle.TransformAnimation?.Start();
             particles.Add(particle);
             particle.System = this;
         }

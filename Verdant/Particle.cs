@@ -43,6 +43,8 @@ namespace Verdant
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
         public float Friction { get; set; } = 0;
 
+        public TransformAnimation TransformAnimation { get; set; }
+
         public bool Dead { get; private set; }
 
         /// <summary>
@@ -81,13 +83,42 @@ namespace Verdant
                 return;
             }
 
-            Sprite.Draw(spriteBatch,
-                System.Manager.Scene.Camera.GetRenderBounds(
-                    Position.X - HalfWidth,
-                    Position.Y - HalfHeight,
-                    Width,
-                    Height)
-                );
+            if (TransformAnimation == null)
+            {
+                Sprite.Draw(spriteBatch,
+                    System.Manager.Scene.Camera.GetRenderBounds(
+                        Position.X - HalfWidth,
+                        Position.Y - HalfHeight,
+                        Width,
+                        Height)
+                    );
+            }
+            else
+            {
+                // TODO:
+                //   - Angle
+                TransformState animState = TransformAnimation.GetFrame();
+                if (animState.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
+                        System.Manager.Scene.Camera.GetRenderBounds(
+                            (Position.X - (Width * animState.Width / 2f)) * animState.Position.X,
+                            (Position.Y - (Height * animState.Height / 2f)) * animState.Position.Y,
+                            (int)(Width * animState.Width),
+                            (int)(Height * animState.Height)
+                            ));
+                }
+                else
+                {
+                    Sprite.Draw(spriteBatch,
+                        System.Manager.Scene.Camera.GetRenderBounds(
+                            (animState.Width / 2f) + animState.Position.X,
+                            (animState.Height / 2f) + animState.Position.Y,
+                            (int)animState.Width,
+                            (int)animState.Height
+                            ));
+                }
+            }
         }
 
     }
