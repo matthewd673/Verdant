@@ -16,14 +16,13 @@ namespace Verdant
         {
             Multiply = mutliply;
 
-            // adjust default position depending on if state is multiplicative
-            if (Multiply && Position == null)
+            // defaults to 1 if multiplicative
+            if (Multiply)
             {
                 Position = new Vec2(1, 1);
-            }
-            else if (!Multiply && Position == null)
-            {
-                Position = new Vec2(0, 0);
+                Width = 1;
+                Height = 1;
+                Angle = 1;
             }
         }
 

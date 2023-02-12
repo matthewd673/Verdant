@@ -1,7 +1,7 @@
 ﻿using Verdant.Physics;
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Numerics;
 
 namespace Verdant
 {
@@ -42,6 +42,8 @@ namespace Verdant
         public Vec2 Velocity { get; set; } = new Vec2(0, 0);
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
         public float Friction { get; set; } = 0;
+
+        public float Angle { get; set; } = 0;
 
         public TransformAnimation TransformAnimation { get; set; }
 
@@ -95,8 +97,6 @@ namespace Verdant
             }
             else
             {
-                // TODO:
-                //   - Angle
                 TransformState animState = TransformAnimation.GetFrame();
                 if (animState.Multiply)
                 {
@@ -106,6 +106,11 @@ namespace Verdant
                             (Position.Y - (Height * animState.Height / 2f)) * animState.Position.Y,
                             (int)(Width * animState.Width),
                             (int)(Height * animState.Height)
+                            ),
+                        Angle * animState.Angle,
+                        new Vector2(
+                            Sprite.Width * animState.Width / 2,
+                            Sprite.Height * animState.Height / 2
                             ));
                 }
                 else
@@ -116,6 +121,11 @@ namespace Verdant
                             (animState.Height / 2f) + animState.Position.Y,
                             (int)animState.Width,
                             (int)animState.Height
+                            ),
+                        animState.Angle,
+                        new Vector2(
+                            animState.Width / 2,
+                            animState.Height / 2
                             ));
                 }
             }

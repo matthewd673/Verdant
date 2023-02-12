@@ -76,8 +76,6 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            Vec2 origin = new Vec2(Sprite.Width / 2, Sprite.Height / 2);
-
             Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
                             Position.X,
@@ -86,8 +84,10 @@ namespace Verdant.Physics
                             Height
                             ),
                         ((Rectangle)Components[0]).Angle,
-                        (Vector2)origin
-                        );
+                        new Vector2(
+                            Sprite.Width / 2,
+                            Sprite.Height / 2
+                            ));
         }
     }
 }

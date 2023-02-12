@@ -64,18 +64,18 @@ namespace Verdant
         public static Vec2Int operator +(Vec2Int a) => a;
         public static Vec2Int operator -(Vec2Int a) => -a;
 
-        public static Vec2Int operator +(Vec2Int a, Vec2Int b) => new Vec2Int(a.X + b.X, a.Y + b.Y);
-        public static Vec2Int operator -(Vec2Int a, Vec2Int b) => new Vec2Int(a.X - b.X, a.Y - b.Y);
-        public static Vec2Int operator *(Vec2Int a, Vec2Int b) => new Vec2Int(a.X * b.X, a.Y * b.Y);
-        public static Vec2Int operator /(Vec2Int a, Vec2Int b) => new Vec2Int(a.X / b.X, a.Y / b.Y);
+        public static Vec2Int operator +(Vec2Int a, Vec2Int b) => new(a.X + b.X, a.Y + b.Y);
+        public static Vec2Int operator -(Vec2Int a, Vec2Int b) => new(a.X - b.X, a.Y - b.Y);
+        public static Vec2Int operator *(Vec2Int a, Vec2Int b) => new(a.X * b.X, a.Y * b.Y);
+        public static Vec2Int operator /(Vec2Int a, Vec2Int b) => new(a.X / b.X, a.Y / b.Y);
 
-        public static Vec2Int operator *(Vec2Int a, int c) => new Vec2Int(a.X * c, a.Y * c);
-        public static Vec2Int operator /(Vec2Int a, int c) => new Vec2Int(a.X / c, a.Y / c);
-        public static Vec2Int operator +(Vec2Int a, int c) => new Vec2Int(a.X + c, a.Y + c);
-        public static Vec2Int operator -(Vec2Int a, int c) => new Vec2Int(a.X - c, a.Y - c);
+        public static Vec2Int operator *(Vec2Int a, int c) => new(a.X * c, a.Y * c);
+        public static Vec2Int operator /(Vec2Int a, int c) => new(a.X / c, a.Y / c);
+        public static Vec2Int operator +(Vec2Int a, int c) => new(a.X + c, a.Y + c);
+        public static Vec2Int operator -(Vec2Int a, int c) => new(a.X - c, a.Y - c);
 
-        public static explicit operator Vector2(Vec2Int vec2Int) => new Vector2(vec2Int.X, vec2Int.Y);
-        public static explicit operator Vec2(Vec2Int vec2Int) => new Vec2(vec2Int.X, vec2Int.Y);
+        public static explicit operator Vector2(Vec2Int vec2Int) => new(vec2Int.X, vec2Int.Y);
+        public static explicit operator Vec2(Vec2Int vec2Int) => new(vec2Int.X, vec2Int.Y);
 
     }
 }
