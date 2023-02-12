@@ -79,18 +79,54 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            Sprite.Draw(spriteBatch,
+            if (TransformState == null)
+            {
+                Sprite.Draw(spriteBatch,
+                            Manager.Scene.Camera.GetRenderBounds(
+                                Position.X,
+                                Position.Y,
+                                Width,
+                                (int)(Height + 2 * ((Circle)Components[1]).Radius)
+                                ),
+                            ((Rectangle)Components[0]).Angle,
+                            new Vector2(
+                                Sprite.Width / 2,
+                                Sprite.Height / 2
+                                ));
+            }
+            else
+            {
+                if (TransformState.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            Position.X,
-                            Position.Y,
-                            Width,
-                            (int)(Height + 2 * ((Circle)Components[1]).Radius)
+                            Position.X * TransformState.Position.X,
+                            Position.Y * TransformState.Position.Y,
+                            (int)(Width * TransformState.Width),
+                            (int)((Height + 2 * ((Circle)Components[1]).Radius)* TransformState.Height)
                             ),
-                        ((Rectangle)Components[0]).Angle,
+                        ((Rectangle)Components[0]).Angle * TransformState.Angle,
                         new Vector2(
-                            Sprite.Width / 2,
-                            Sprite.Height / 2
+                            Sprite.Width * TransformState.Width / 2,
+                            Sprite.Height * TransformState.Height / 2
                             ));
+                }
+                else
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            TransformState.Position.X,
+                            TransformState.Position.Y,
+                            (int)TransformState.Width,
+                            (int)TransformState.Height
+                            ),
+                        TransformState.Angle,
+                        new Vector2(
+                            TransformState.Width / 2,
+                            TransformState.Height / 2
+                            ));
+                }
+            }
         }
     }
 }

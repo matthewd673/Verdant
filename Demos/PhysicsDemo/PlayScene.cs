@@ -15,7 +15,6 @@ namespace PhysicsDemo
         {
             base.Initialize();
 
-            //EntityManager.AddEntity(new Crate(new Vec2(20, 20), 32, 32, 5));
             BallController ball = new BallController(new Vec2(50, 50), 16, 2);
             ball.Speed = 0.8f;
             ball.Friction = 0.05f;

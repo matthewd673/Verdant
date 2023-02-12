@@ -51,12 +51,44 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            Sprite.Draw(spriteBatch,
+            if (TransformState == null)
+            {
+                Sprite.Draw(spriteBatch,
+                            Manager.Scene.Camera.GetRenderBounds(
+                                Position - new Vec2(radius, radius),
+                                drawDiam,
+                                drawDiam
+                                )
+                            );
+            }
+            else
+            {
+                if (TransformState.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            Position - new Vec2(radius, radius),
-                            drawDiam,
-                            drawDiam)
-                        );
+                            (Position.X - (drawDiam * TransformState.Width/2)) * TransformState.Position.X,
+                            (Position.Y - (drawDiam * TransformState.Height/2)) * TransformState.Position.Y,
+                            (int)(drawDiam * TransformState.Width),
+                            (int)(drawDiam * TransformState.Height)
+                            ));
+                }
+                else
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (TransformState.Width / 2f) + TransformState.Position.X,
+                            (TransformState.Height / 2f) + TransformState.Position.Y,
+                            (int)TransformState.Width,
+                            (int)TransformState.Height
+                            ),
+                        TransformState.Angle,
+                        new Vector2(
+                            TransformState.Width / 2,
+                            TransformState.Height / 2
+                            ));
+                }
+            }
         }
     }
 }

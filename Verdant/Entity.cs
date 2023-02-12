@@ -65,6 +65,9 @@ namespace Verdant
         // The z-index, used for sorting and depth-based rendering.
         public int ZIndex { get; set; } = 0;
 
+        // A TransformState that is automatically applied to the Entity when rendering.
+        public TransformState TransformState { get; set; }
+
         // Determines if the Entity should be removed at the end of the
         // next update loop.
         public bool ForRemoval { get; set; } = false;
@@ -126,13 +129,49 @@ namespace Verdant
                 return;
             }
 
-            Sprite.Draw(spriteBatch,
+            if (TransformState == null)
+            {
+                Sprite.Draw(spriteBatch,
+                    Manager.Scene.Camera.GetRenderBounds(
+                        Position.X - HalfWidth,
+                        Position.Y - HalfHeight,
+                        Width,
+                        Height
+                        ));
+            }
+            else
+            {
+                if (TransformState.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            Position.X - HalfWidth,
-                            Position.Y - HalfHeight,
-                            Width,
-                            Height
+                            (Position.X - (Width * TransformState.Width / 2)) * TransformState.Position.X,
+                            (Position.Y - (Height * TransformState.Height / 2)) * TransformState.Position.Y,
+                            (int)(Width * TransformState.Width),
+                            (int)(Height * TransformState.Height)
+                            ),
+                        0, // Entities do not have angles, so it'll always multiply by 0
+                        new Vector2(
+                            Sprite.Width * TransformState.Width / 2,
+                            Sprite.Height * TransformState.Height / 2
                             ));
+                }
+                else
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (TransformState.Width / 2f) + TransformState.Position.X,
+                            (TransformState.Height / 2f) + TransformState.Position.Y,
+                            (int)TransformState.Width,
+                            (int)TransformState.Height
+                            ),
+                        TransformState.Angle, // even though Entities don't have angles, this is an absolute change so it gets an angle
+                        new Vector2(
+                            TransformState.Width / 2,
+                            TransformState.Height / 2
+                            ));
+                }
+            }
         }
 
         /// <summary>
