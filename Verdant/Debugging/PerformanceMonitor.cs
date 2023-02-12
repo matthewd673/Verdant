@@ -78,6 +78,7 @@ namespace Verdant.Debugging
                 int stackHeight = 0;
 
                 stackHeight += DrawOnStack(spriteBatch, m.UpdateDuration, Color.Blue, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.UIDuration, Color.DarkBlue, position, stackHeight, i);
                 stackHeight += DrawOnStack(spriteBatch, m.RenderDuration, Color.Red, position, stackHeight, i);
 
                 i++;

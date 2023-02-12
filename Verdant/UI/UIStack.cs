@@ -12,9 +12,6 @@ namespace Verdant.UI
     /// </summary>
     public class UIStack : UIGroup
     {
-
-        private List<UIElement> children = new List<UIElement>();
-
         // Determines if the UIStack is aligned vertically or horizontally
         public bool Vertical { get; private set; }
         // The minimum padding between all elements in the stack.
@@ -24,30 +21,7 @@ namespace Verdant.UI
         public override Vec2 Position
         {
             get { return _position; }
-            set
-            {
-                if (_position.Equals(value)) return;
-                _position = value;
-
-                // reposition all elements
-                if (Vertical) Height = 0;
-                else Width = 0;
-                foreach(UIElement e in children)
-                {
-                    if (Vertical)
-                    {
-                        e.Position = new Vec2(_position.X, _position.Y + Height);
-                        Height += e.Height + Gap;
-                        Width = Math.Max(Width, e.Width);
-                    }
-                    else
-                    {
-                        e.Position = new Vec2(_position.X + Width, _position.Y);
-                        Width += e.Width + Gap;
-                        Height = Math.Max(Height, e.Height);
-                    }
-                }
-            }
+            set { _position = value; }
         }
 
         /// <summary>
@@ -62,41 +36,40 @@ namespace Verdant.UI
         }
 
         /// <summary>
-        /// Add an element onto the UIStack.
-        /// The element will be repositioned but will otherwise remain unchanged.
+        /// Add additional padding after the last element in the stack.
         /// </summary>
-        /// <param name="element">The element to add to the stack.</param>
-        public override void AddElement(UIElement element)
-        {
-            if (Vertical)
-            {
-                element.Position = new Vec2(0, Height + (Height > 0 ? Gap : 0));
-            }
-            else
-            {
-                element.Position = new Vec2(Width + (Width > 0 ? Gap : 0), 0);
-            }
-
-            base.AddElement(element);
-            // if (Vertical)
-            // {
-            //     element.Position = new Vec2(Position.X, Position.Y + Height);
-            //     Height += element.Height + Gap;
-            //     Width = Math.Max(Width, element.Width);
-            // }
-            // else
-            // {
-            //     element.Position = new Vec2(Position.X + Width, Position.Y);
-            //     Width += element.Width + Gap;
-            //     Height = Math.Max(Height, element.Height);
-            // }
-
-            // children.Add(element);
-        }
-
+        /// <param name="padding">The amount of padding to add.</param>
         public void AddPadding(float padding)
         {
-            Height += padding;
+            if (Vertical)
+                Height += padding;
+            else
+                Width += padding;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            float total = 0;
+            foreach (UIElement e in children)
+            {
+                if (Vertical)
+                {
+                    e.Position = new Vec2(e.Position.X, total);
+                    total += e.Height;
+                    total += Gap;
+                }
+                else
+                {
+                    e.Position = new Vec2(total, e.Position.Y);
+                    total += e.Width;
+                    total += Gap;
+                }
+
+                Width = Math.Max(Width, e.Position.X + e.Width);
+                Height = Math.Max(Height, e.Position.Y + e.Height);
+            }
         }
     }
 }

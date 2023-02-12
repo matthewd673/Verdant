@@ -56,10 +56,21 @@ namespace Verdant.UI
             Height = height;
         }
 
+        /// <summary>
+        /// Update the UIElement.
+        /// </summary>
         public virtual void Update() { }
 
+        /// <summary>
+        /// Draw the UIElement.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         public virtual void Draw(SpriteBatch spriteBatch) { }
 
+        /// <summary>
+        /// Draw the UIElement box model bounds.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         public virtual void DrawBounds(SpriteBatch spriteBatch)
         {
             Renderer.DrawRectangle(spriteBatch,
@@ -68,5 +79,16 @@ namespace Verdant.UI
                                    Color.Pink
                                    );
         }
+
+        /// <summary>
+        /// Check if this UIElement is of a given type.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <returns>True if the UIElement is of the given type or is a subclass of the given type.</returns>
+        public bool IsType(Type t)
+        {
+            return GetType() == t || GetType().IsSubclassOf(t);
+        }
+
     }
 }

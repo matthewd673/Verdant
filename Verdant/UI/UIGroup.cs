@@ -15,7 +15,7 @@ namespace Verdant.UI
     public class UIGroup : UIElement
     {
 
-        private List<UIElement> children = new List<UIElement>();
+        protected List<UIElement> children = new List<UIElement>();
 
         private List<UIElement> addQueue = new List<UIElement>();
         private List<UIElement> removeQueue = new List<UIElement>();

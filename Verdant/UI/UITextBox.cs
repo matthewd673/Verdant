@@ -78,15 +78,15 @@ namespace Verdant.UI
 
         private float _width;
         // The width of the UITextBox (may change when the text changes).
-        public new float Width
+        public override float Width
         {
             get { return (_width > MinWidth) ? _width : MinWidth; }
-            private set { _width = value; }
+            set { _width = value; }
         }
         // The minimum (pixel) width of the UITextBox.
         public float MinWidth { get; set; } = 64;
         // The height of the UITextBox (does not change when the text changes).
-        public new float Height { get { return Font.LineSpacing; } }
+        public override float Height { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UITextBox.
