@@ -20,8 +20,8 @@ namespace Verdant.UI
                 if (value.Equals(_text)) return;
 
                 _text = value;
-                Width = Font.MeasureString(_text).X;
-                Height = Font.MeasureString(_text).Y;
+                AbsoluteWidth = Font.MeasureString(_text).X;
+                AbsoluteHeight = Font.MeasureString(_text).Y;
             }
         }
 
@@ -47,19 +47,19 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // TODO: Doesn't this need to be scaled?
-            spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)AbsolutePosition.X, (int)AbsolutePosition.Y, (int)Width, (int)Height), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition * Renderer.Scale, Color);
+            spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)InnerPosition.X, (int)InnerPosition.Y, (int)InnerWidth, (int)InnerHeight), BackgroundColor);
+            spriteBatch.DrawString(Font, Text, (Vector2)(InnerPosition + new Vec2(Padding.Left, Padding.Top)) * Renderer.Scale, Color);
         }
 
         public override void DrawBounds(SpriteBatch spriteBatch)
         {
+            base.DrawBounds(spriteBatch);
             // UILabel width/height don't scale
-            Renderer.DrawRectangle(spriteBatch,
-                                   AbsolutePosition * Renderer.Scale,
-                                   (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),
-                                   Color.Pink
-                                   );
+            //Renderer.DrawRectangle(spriteBatch,
+            //                       AbsolutePosition * Renderer.Scale,
+            //                       (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),
+            //                       Color.Pink
+            //                       );
         }
 
     }

@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using Verdant.Debugging;
+
 namespace Verdant.UI
 {
     /// <summary>
@@ -42,9 +44,9 @@ namespace Verdant.UI
         public void AddPadding(float padding)
         {
             if (Vertical)
-                Height += padding;
+                AbsoluteHeight += padding;
             else
-                Width += padding;
+                AbsoluteWidth += padding;
         }
 
         public override void Update()
@@ -52,24 +54,31 @@ namespace Verdant.UI
             base.Update();
 
             float total = 0;
+
+            // recalculate group size
+            AbsoluteWidth = 0;
+            AbsoluteHeight = 0;
             foreach (UIElement e in children)
             {
                 if (Vertical)
                 {
-                    e.Position = new Vec2(e.Position.X, total);
+                    e.Position = new Vec2(e.Position.X, Padding.Top + total);
                     total += e.Height;
                     total += Gap;
                 }
                 else
                 {
-                    e.Position = new Vec2(total, e.Position.Y);
+                    e.Position = new Vec2(Padding.Left + total, e.Position.Y);
                     total += e.Width;
                     total += Gap;
                 }
 
-                Width = Math.Max(Width, e.Position.X + e.Width);
-                Height = Math.Max(Height, e.Position.Y + e.Height);
+                AbsoluteWidth = Math.Max(e.Position.X + e.Width, AbsoluteWidth);
+                AbsoluteHeight = Math.Max(e.Position.Y + e.Height, AbsoluteHeight);
             }
+
+            AbsoluteWidth -= Padding.Left;
+            AbsoluteHeight -= Padding.Top;
         }
     }
 }

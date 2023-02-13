@@ -28,7 +28,7 @@ namespace Verdant.UI
                     value = value[..MaxLength];
                 _text = value;
                 _textMeasurements = Font.MeasureString(_text);
-                Width = (int)_textMeasurements.X;
+                AbsoluteWidth = (int)_textMeasurements.X;
                 OnChanged();
             }
         }
@@ -41,11 +41,11 @@ namespace Verdant.UI
         public Color Color { get; set; } = Color.Black;
         // The color of the background box.
         public Color BackgroundColor { get; set; } = Color.White;
-        // The color of the focus outline (if DrawFocusOutline is enabled).
+        // The color of the focus outline (if enabled).
         public Color OutlineColor { get; set; } = Color.Black;
+        // The thickness of the focus outline (if enabled).
+        public int OutlineThickness { get; set; } = 1;
 
-        // The amount of padding on each side of the box.
-        public float Padding { get; set; } = 0f;
         // Determines if an outline should be drawn when the UITextBox is focused.
         public bool ShowFocusOutline { get; set; } = true;
         // Determines if a caret should be drawn when typing. 
@@ -78,7 +78,7 @@ namespace Verdant.UI
 
         private float _width;
         // The width of the UITextBox (may change when the text changes).
-        public override float Width
+        protected override float AbsoluteWidth
         {
             get { return (_width > MinWidth) ? _width : MinWidth; }
             set { _width = value; }
@@ -86,7 +86,7 @@ namespace Verdant.UI
         // The minimum (pixel) width of the UITextBox.
         public float MinWidth { get; set; } = 64;
         // The height of the UITextBox (does not change when the text changes).
-        public override float Height { get { return Font.LineSpacing; } }
+        protected override float AbsoluteHeight { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UITextBox.
@@ -108,10 +108,10 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.CheckPointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (AbsolutePosition.X - Padding) * Renderer.Scale,
-                (AbsolutePosition.Y - Padding) * Renderer.Scale,
-                (int)(Width + 2 * Padding) * Renderer.Scale,
-                (int)(Height + 2 * Padding) * Renderer.Scale))
+                (InnerPosition.X) * Renderer.Scale,
+                (InnerPosition.Y) * Renderer.Scale,
+                (int)(InnerWidth) * Renderer.Scale,
+                (int)(InnerHeight) * Renderer.Scale))
             {
                 if (!Hovered)
                     OnHover();
@@ -239,10 +239,10 @@ namespace Verdant.UI
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(AbsolutePosition.X - Padding - 2),
-                        (int)(AbsolutePosition.Y - Padding - 2),
-                        (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding + 4),
-                        (int)(Height + 2 * Padding + 4)
+                        (int)(InnerPosition.X - OutlineThickness),
+                        (int)(InnerPosition.Y - OutlineThickness),
+                        (int)((AbsoluteWidth >= MinWidth ? InnerWidth : MinWidth + Padding.Left + Padding.Right) + 2*OutlineThickness),
+                        (int)(InnerHeight + 2*OutlineThickness)
                         ),
                     OutlineColor
                     );
@@ -250,26 +250,26 @@ namespace Verdant.UI
             // draw background
             spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
-                    (int)(AbsolutePosition.X - Padding),
-                    (int)(AbsolutePosition.Y - Padding),
-                    (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding),
-                    (int)(Height + 2 * Padding)
+                    (int)(InnerPosition.X),
+                    (int)(InnerPosition.Y),
+                    (int)(AbsoluteWidth >= MinWidth ? InnerWidth: MinWidth + Padding.Left + Padding.Right),
+                    (int)(InnerHeight)
                 ),
                 BackgroundColor
                 );
 
             // draw string
-            spriteBatch.DrawString(Font, Text, (Vector2)AbsolutePosition, Color);
+            spriteBatch.DrawString(Font, Text, new Vector2(AbsolutePosition.X + Padding.Left, AbsolutePosition.Y + Padding.Top), Color);
 
             // draw caret
             if (ShowCaret && Focused)
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(AbsolutePosition.X + caretPreWidth),
-                        (int)AbsolutePosition.Y,
+                        (int)(InnerPosition.X + caretPreWidth),
+                        (int)InnerPosition.Y,
                         1,
-                        (int)(Height)
+                        (int)(AbsoluteHeight)
                         ),
                     Color.Black);
             }

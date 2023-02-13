@@ -50,15 +50,16 @@ namespace ParticleToy
         private void InitializeControls()
         {
             UIStack controlStack = new UIStack(new Vec2(20, 20));
+            controlStack.Padding = new(4);
             controlStack.Gap = 12;
 
             // SPAWN RATE
             UIStack rateStack = new UIStack(Vec2.Zero, vertical: false);
             rateStack.Gap = 12;
             rateStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Spawn Delay "));
-            UITextBox rateText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox rateText = new(Vec2.Zero);
             rateText.Numeric = true;
-            UISlider rateSlider = new UISlider(Vec2.Zero, 50, 3000, Resources.SliderIndicator, Resources.SliderBar, 200);
+            ControlSlider rateSlider = new(Vec2.Zero, 50, 3000, 200);
             rateSlider.Change += (object sender, EventArgs args) =>
             {
                 spawnTimer.Duration = rateSlider.Value;
@@ -78,9 +79,9 @@ namespace ParticleToy
             UIStack lifetimeStack = new UIStack(Vec2.Zero, vertical: false);
             lifetimeStack.Gap = 12;
             lifetimeStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Particle Lifetime "));
-            UITextBox lifetimeText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox lifetimeText = new(Vec2.Zero);
             lifetimeText.Numeric = true;
-            UISlider lifetimeSlider = new UISlider(Vec2.Zero, 1, 3000, Resources.SliderIndicator, Resources.SliderBar, 200);
+            ControlSlider lifetimeSlider = new(Vec2.Zero, 1, 3000, 200);
             lifetimeSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultLifetime = lifetimeSlider.Value;
@@ -100,9 +101,9 @@ namespace ParticleToy
             UIStack radiusStack = new UIStack(Vec2.Zero, vertical: false);
             radiusStack.Gap = 12;
             radiusStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Radius "));
-            UITextBox radiusText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox radiusText = new(Vec2.Zero);
             radiusText.Numeric = true;
-            UISlider radiusSlider = new UISlider(Vec2.Zero, 0, 128, Resources.SliderIndicator, Resources.SliderBar, 200);
+            ControlSlider radiusSlider = new(Vec2.Zero, 0, 128, 200);
             radiusSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.Radius = radiusSlider.Value;
@@ -123,9 +124,9 @@ namespace ParticleToy
             accStack.Gap = 12;
             // X
             accStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Acc X "));
-            UITextBox accXText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox accXText = new(Vec2.Zero);
             accXText.Numeric = true;
-            UISlider accXSlider = new UISlider(Vec2.Zero, -2, 2, Resources.SliderIndicator, Resources.SliderBar, 75);
+            ControlSlider accXSlider = new(Vec2.Zero, -2, 2, 75);
             accXSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultAcceleration = new Vec2(accXSlider.Value, particleSystem.DefaultAcceleration.Y);
@@ -141,9 +142,9 @@ namespace ParticleToy
             accStack.AddElement(accXText);
             // Y
             accStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Acc Y "));
-            UITextBox accYText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox accYText = new(Vec2.Zero);
             accYText.Numeric = true;
-            UISlider accYSlider = new UISlider(Vec2.Zero, -2, 2, Resources.SliderIndicator, Resources.SliderBar, 75);
+            ControlSlider accYSlider = new(Vec2.Zero, -2, 2, 75);
             accYSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultAcceleration = new Vec2(particleSystem.DefaultAcceleration.X, accYSlider.Value);
@@ -164,9 +165,9 @@ namespace ParticleToy
             velStack.Gap = 12;
             // X
             velStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Vel X "));
-            UITextBox velXText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox velXText = new(Vec2.Zero);
             velXText.Numeric = true;
-            UISlider velXSlider = new UISlider(Vec2.Zero, -2, 2, Resources.SliderIndicator, Resources.SliderBar, 75);
+            ControlSlider velXSlider = new(Vec2.Zero, -2, 2, 75);
             velXSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultAcceleration = new Vec2(velXSlider.Value, particleSystem.DefaultAcceleration.Y);
@@ -182,9 +183,9 @@ namespace ParticleToy
             velStack.AddElement(velXText);
             // Y
             velStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Vel Y "));
-            UITextBox velYText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox velYText = new(Vec2.Zero);
             velYText.Numeric = true;
-            UISlider velYSlider = new UISlider(Vec2.Zero, -2, 2, Resources.SliderIndicator, Resources.SliderBar, 75);
+            ControlSlider velYSlider = new(Vec2.Zero, -2, 2, 75);
             velYSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultAcceleration = new Vec2(particleSystem.DefaultAcceleration.X, velYSlider.Value);
@@ -204,9 +205,9 @@ namespace ParticleToy
             UIStack frictionStack = new UIStack(Vec2.Zero, vertical: false);
             frictionStack.Gap = 12;
             frictionStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Friction "));
-            UITextBox frictionText = new UITextBox(Vec2.Zero, Resources.Font);
+            ControlTextBox frictionText = new(Vec2.Zero);
             frictionText.Numeric = true;
-            UISlider frictionSlider = new UISlider(Vec2.Zero, 0, 1, Resources.SliderIndicator, Resources.SliderBar, 200);
+            ControlSlider frictionSlider = new(Vec2.Zero, 0, 1, 200);
             frictionSlider.Change += (object sender, EventArgs args) =>
             {
                 particleSystem.DefaultFriction = frictionSlider.Value;
@@ -232,7 +233,8 @@ namespace ParticleToy
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            //base.Draw(spriteBatch);
+            Renderer.Render(spriteBatch, this, visualizeUIBounds: true);
 
             Vector2 systemRenderPos = (Vector2)Camera.GetRenderPos(particleSystem);
             spriteBatch.Draw(Renderer.Pixel,

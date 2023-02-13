@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using Microsoft.Xna.Framework.Graphics;
 
@@ -47,37 +44,23 @@ namespace Verdant.UI
 
         private void ApplyQueues()
         {
+            // add
             foreach (UIElement e in addQueue)
             {
                 e.Parent = this;
-
-                // calculate new width/height
-                Width = Math.Max(e.Position.X + e.Width, Width);
-                Height = Math.Max(e.Position.Y + e.Height, Height);
+                e.Position = new Vec2(e.Position.X + Padding.Left, e.Position.Y + Padding.Top);
 
                 children.Add(e);
                 ChildCount++;
             }
 
+            // remove
             foreach (UIElement e in removeQueue)
             {
                 if (children.Remove(e))
                 {
                     e.Parent = null;
                     ChildCount--;
-                }
-            }
-
-            // if elements were removed, must recompute width/height
-            // hopefully, removing an element will be pretty rare
-            if (removeQueue.Any())
-            {
-                Width = 0;
-                Height = 0;
-                foreach (UIElement e in children)
-                {
-                    Width = Math.Max(e.Position.X + e.Width, Width);
-                    Height = Math.Max(e.Position.Y + e.Height, Height);
                 }
             }
 
@@ -98,13 +81,13 @@ namespace Verdant.UI
 
             ApplyQueues();
 
-            // recalculate bounds
-            Width = 0;
-            Height = 0;
+            // calculate new width/height
+            AbsoluteWidth = 0;
+            AbsoluteHeight = 0;
             foreach (UIElement e in children)
             {
-                Width = Math.Max(e.Position.X + e.Width, Width);
-                Height = Math.Max(e.Position.Y + e.Height, Height);
+                AbsoluteWidth = Math.Max(e.Position.X + e.Width, AbsoluteWidth);
+                AbsoluteHeight = Math.Max(e.Position.Y + e.Height, AbsoluteHeight);
             }
         }
 
