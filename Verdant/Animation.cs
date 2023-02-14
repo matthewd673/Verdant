@@ -11,6 +11,9 @@ namespace Verdant
     /// </summary>
     public class Animation : SpriteSheet
     {
+
+        public delegate void AnimationCallback(Animation sender);
+
         private FrameSet frameSet;
 
         private int frameDelay;
@@ -46,6 +49,12 @@ namespace Verdant
         { 
             get { return frameSet.endFrame - frameSet.startFrame; }
         }
+
+        // The number of loops the Animation has completed.
+        public int Loops { get; private set; }
+
+        // A callback that will be called every time an Animation complete a loop.
+        public AnimationCallback Callback { get; set; }
 
         /// <summary>
         /// Initialize a new Animation.
@@ -121,6 +130,8 @@ namespace Verdant
                         frameIndex = frameSet.endFrame - 1;
                         settled = true;
                     }
+                    Loops++;
+                    Callback.Invoke(this);
                 }
 
             }
