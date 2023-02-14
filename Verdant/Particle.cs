@@ -60,7 +60,19 @@ namespace Verdant
         /// <param name="height">The height of the Particle.</param>
         public Particle(RenderObject sprite, int width = -1, int height = -1)
         {
-            Sprite = sprite;
+            if (sprite != RenderObject.None)
+            {
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
+                {
+                    Sprite = ((Animation)sprite).Copy();
+                }
+                else
+                {
+                    Sprite = sprite;
+                }
+            }
+
             LifeTimer = new Timer(1, (Timer timer) => { Dead = true; });
             Width = (width == -1 && sprite != RenderObject.None) ? sprite.Width : width;
             Height = (height == -1 && sprite != RenderObject.None) ? sprite.Height : height;

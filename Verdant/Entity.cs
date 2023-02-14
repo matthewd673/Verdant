@@ -84,7 +84,8 @@ namespace Verdant
             if (sprite != RenderObject.None)
             {
                 // if the sprite is an animation, copy it automatically
-                if (sprite.GetType() == typeof(Animation) || sprite.GetType().IsSubclassOf(typeof(Animation)))
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
                 {
                     Sprite = ((Animation)sprite).Copy();
                 }

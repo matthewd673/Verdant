@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
@@ -18,6 +19,8 @@ namespace Verdant.UI
         private List<UIElement> removeQueue = new List<UIElement>();
 
         public int ChildCount { get; protected set; } = 0;
+
+        public Color BackgroundColor { get; set; } = Color.Transparent;
 
         public UIGroup(Vec2 position) : base(position, 0, 0) { }
 
@@ -93,12 +96,24 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // sort children
             IEnumerable<UIElement> renderList;
             if (Renderer.SortUIElements)
                 renderList = children.OrderBy(n => n.ZIndex);
             else
                 renderList = children;
 
+            // draw background
+            spriteBatch.Draw(Renderer.Pixel,
+                             new Rectangle(
+                                 (int)InnerPosition.X,
+                                 (int)InnerPosition.Y,
+                                 (int)InnerWidth,
+                                 (int)InnerHeight
+                                 ),
+                             BackgroundColor);
+
+            // draw children
             foreach (UIElement e in renderList)
             {
                 if (e.Show)
