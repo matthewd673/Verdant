@@ -266,8 +266,8 @@ namespace Verdant.UI
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(InnerPosition.X + caretPreWidth),
-                        (int)InnerPosition.Y,
+                        (int)(InnerPosition.X + Padding.Left + caretPreWidth),
+                        (int)(InnerPosition.Y + Padding.Top),
                         1,
                         (int)(AbsoluteHeight)
                         ),

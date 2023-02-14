@@ -18,18 +18,36 @@ namespace Verdant.UI
         private List<UIElement> addQueue = new List<UIElement>();
         private List<UIElement> removeQueue = new List<UIElement>();
 
+        // The number of children currently in the UIGroup.
         public int ChildCount { get; protected set; } = 0;
 
+        // The background color of the UIGroup.
         public Color BackgroundColor { get; set; } = Color.Transparent;
+        // The alignment of the UIGroup. For UIGroups that don't reposition children this will have no effect.
+        public Alignment Alignment { get; set; } = Alignment.Beginning;
 
+        /// <summary>
+        /// Initialize a new UIGroup.
+        /// </summary>
+        /// <param name="position">The position of the UIGroup.</param>
         public UIGroup(Vec2 position) : base(position, 0, 0) { }
 
+        /// <summary>
+        /// Add an element to the UIGroup.
+        /// This UIElement will be managed by the UIGroup's UIManager.
+        /// </summary>
+        /// <param name="element"></param>
         public virtual void AddElement(UIElement element)
         {
             addQueue.Add(element);
             if (Manager == null || !Manager.Updating) ApplyQueues();
         }
 
+        /// <summary>
+        /// Add a set of elements to the UIGroup.
+        /// These UIElements will be managed by the UIGroup's UIManager.
+        /// </summary>
+        /// <param name="elements"></param>
         public void AddElementRange(List<UIElement> elements)
         {
             foreach (UIElement e in elements)
@@ -39,6 +57,10 @@ namespace Verdant.UI
             if (Manager == null || !Manager.Updating) ApplyQueues();
         }
 
+        /// <summary>
+        /// Remove an element from the UIGroup.
+        /// </summary>
+        /// <param name="element">The element to remove.</param>
         public virtual void RemoveElement(UIElement element)
         {
             removeQueue.Add(element);

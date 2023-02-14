@@ -50,12 +50,12 @@ namespace ParticleToy
         private void InitializeControls()
         {
             UIStack controlStack = new UIStack(new Vec2(20, 20));
-            controlStack.Padding = new(4);
-            controlStack.Gap = 12;
+            controlStack.Gap = 4;
 
             // SPAWN RATE
             UIStack rateStack = new UIStack(Vec2.Zero, vertical: false);
-            rateStack.Gap = 12;
+            rateStack.Gap = 6;
+            rateStack.Alignment = Alignment.Center;
             rateStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Spawn Delay "));
             ControlTextBox rateText = new(Vec2.Zero);
             rateText.Numeric = true;
@@ -77,7 +77,8 @@ namespace ParticleToy
 
             // LIFETIME
             UIStack lifetimeStack = new UIStack(Vec2.Zero, vertical: false);
-            lifetimeStack.Gap = 12;
+            lifetimeStack.Gap = 6;
+            lifetimeStack.Alignment = Alignment.Center;
             lifetimeStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Particle Lifetime "));
             ControlTextBox lifetimeText = new(Vec2.Zero);
             lifetimeText.Numeric = true;
@@ -99,7 +100,8 @@ namespace ParticleToy
 
             // RADIUS
             UIStack radiusStack = new UIStack(Vec2.Zero, vertical: false);
-            radiusStack.Gap = 12;
+            radiusStack.Gap = 6;
+            radiusStack.Alignment = Alignment.Center;
             radiusStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Radius "));
             ControlTextBox radiusText = new(Vec2.Zero);
             radiusText.Numeric = true;
@@ -121,7 +123,8 @@ namespace ParticleToy
 
             // ACCELERATION
             UIStack accStack = new UIStack(Vec2.Zero, vertical: false);
-            accStack.Gap = 12;
+            accStack.Gap = 6;
+            accStack.Alignment = Alignment.Center;
             // X
             accStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Acc X "));
             ControlTextBox accXText = new(Vec2.Zero);
@@ -162,7 +165,8 @@ namespace ParticleToy
 
             // VELOCITY
             UIStack velStack = new UIStack(Vec2.Zero, vertical: false);
-            velStack.Gap = 12;
+            velStack.Gap = 6;
+            velStack.Alignment = Alignment.Center;
             // X
             velStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Vel X "));
             ControlTextBox velXText = new(Vec2.Zero);
@@ -203,7 +207,8 @@ namespace ParticleToy
 
             // FRICTION
             UIStack frictionStack = new UIStack(Vec2.Zero, vertical: false);
-            frictionStack.Gap = 12;
+            frictionStack.Gap = 6;
+            frictionStack.Alignment = Alignment.Center;
             frictionStack.AddElement(new UILabel(Vec2.Zero, Resources.Font, "Friction "));
             ControlTextBox frictionText = new(Vec2.Zero);
             frictionText.Numeric = true;
@@ -234,7 +239,7 @@ namespace ParticleToy
         public override void Draw(SpriteBatch spriteBatch)
         {
             //base.Draw(spriteBatch);
-            Renderer.Render(spriteBatch, this, visualizeUIBounds: true);
+            Renderer.Render(spriteBatch, this, visualizeUIBounds: false);
 
             Vector2 systemRenderPos = (Vector2)Camera.GetRenderPos(particleSystem);
             spriteBatch.Draw(Renderer.Pixel,

@@ -10,13 +10,13 @@ using Verdant.Debugging;
 namespace Verdant.UI
 {
     /// <summary>
-    /// A UIGroup that automatically arranges its children in a stack.
+    /// A UIGroup that automatically positions its children in a stack.
     /// </summary>
     public class UIStack : UIGroup
     {
-        // Determines if the UIStack is aligned vertically or horizontally
+        // Indicates if the UIStack is aligned vertically or horizontally
         public bool Vertical { get; private set; }
-        // The minimum padding between all elements in the stack.
+        // The minimum margin between all elements in the stack.
         public float Gap { get; set; } = 0f;
 
         private Vec2 _position = Vec2.Zero;
@@ -29,7 +29,7 @@ namespace Verdant.UI
         /// <summary>
         /// Initialize a new UIStack.
         /// </summary>
-        /// <param name="position">The position of the UIStack (and its first element).</param>
+        /// <param name="position">The position of the UIStack.</param>
         /// <param name="vertical">Determines if the UIStack is aligned vertically or horizontally.</param>
         public UIStack(Vec2 position, bool vertical = true) : base(position)
         {
@@ -38,15 +38,15 @@ namespace Verdant.UI
         }
 
         /// <summary>
-        /// Add additional padding after the last element in the stack.
+        /// Add an additional gap after the last element in the stack.
         /// </summary>
-        /// <param name="padding">The amount of padding to add.</param>
-        public void AddPadding(float padding)
+        /// <param name="gap">The size of the gap.</param>
+        public void AddGap(float gap)
         {
             if (Vertical)
-                AbsoluteHeight += padding;
+                AbsoluteHeight += gap;
             else
-                AbsoluteWidth += padding;
+                AbsoluteWidth += gap;
         }
 
         public override void Update()
@@ -62,19 +62,48 @@ namespace Verdant.UI
             {
                 if (Vertical)
                 {
-                    e.Position = new Vec2(e.Position.X, Padding.Top + total);
+                    e.Position = new Vec2(Padding.Left, Padding.Top + total);
                     total += e.Height;
                     total += Gap;
                 }
                 else
                 {
-                    e.Position = new Vec2(Padding.Left + total, e.Position.Y);
+                    e.Position = new Vec2(Padding.Left + total, Padding.Top);
                     total += e.Width;
                     total += Gap;
                 }
 
                 AbsoluteWidth = Math.Max(e.Position.X + e.Width, AbsoluteWidth);
                 AbsoluteHeight = Math.Max(e.Position.Y + e.Height, AbsoluteHeight);
+            }
+
+            // reposition into alignment
+            if (Alignment != Alignment.Beginning)
+            {
+                foreach (UIElement e in children)
+                {
+                    switch (Alignment)
+                    {
+                        case Alignment.Center:
+                            if (Vertical)
+                            {
+                                float center = (InnerWidth - Padding.Left - Padding.Right) / 2;
+                                e.Position.X = center - (e.Width / 2) + Padding.Left/2;
+                            }
+                            else
+                            {
+                                float center = (InnerHeight - Padding.Top - Padding.Bottom) / 2;
+                                e.Position.Y = center - (e.Height / 2) + Padding.Top/2;
+                            }
+                            break;
+                        case Alignment.End:
+                            if (Vertical)
+                                e.Position.X = InnerWidth - 2*Padding.Right - e.Width;
+                            else
+                                e.Position.Y = InnerHeight - 2*Padding.Bottom - e.Height;
+                            break;
+                    }
+                }
             }
 
             AbsoluteWidth -= Padding.Left;
