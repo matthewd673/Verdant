@@ -34,9 +34,9 @@ namespace Verdant
         // The position (center) of the Entity.
         public virtual Vec2 Position { get; set; }
 
-        private int _width;
+        private float _width;
         // The draw width of the Entity.
-        public int Width
+        public float Width
         {
             get { return _width; }
             set
@@ -45,9 +45,9 @@ namespace Verdant
                 HalfWidth = value / 2;
             }
         }
-        private int _height;
+        private float _height;
         // The draw height of the Entity.
-        public int Height
+        public float Height
         {
             get { return _height; }
             set
@@ -56,8 +56,8 @@ namespace Verdant
                 HalfHeight = value / 2;
             }
         }
-        protected int HalfWidth { get; private set; }
-        protected int HalfHeight { get; private set; }
+        protected float HalfWidth { get; private set; }
+        protected float HalfHeight { get; private set; }
 
         // The method by which to update the ZIndex.
         public EntityManager.ZIndexMode ZIndexMode { get; set; } = EntityManager.ZIndexMode.ByIndex;
@@ -79,7 +79,7 @@ namespace Verdant
         /// <param name="position">The position of the center of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1)
+        public Entity(RenderObject sprite, Vec2 position, float width = -1, float height = -1)
         {
             if (sprite != RenderObject.None)
             {
@@ -136,8 +136,8 @@ namespace Verdant
                     Manager.Scene.Camera.GetRenderBounds(
                         Position.X - HalfWidth,
                         Position.Y - HalfHeight,
-                        Width,
-                        Height
+                        (int)Width,
+                        (int)Height
                         ));
             }
             else
@@ -148,8 +148,8 @@ namespace Verdant
                         Manager.Scene.Camera.GetRenderBounds(
                             (Position.X - (Width * TransformState.Width / 2)) * TransformState.Position.X,
                             (Position.Y - (Height * TransformState.Height / 2)) * TransformState.Position.Y,
-                            (int)(Width * TransformState.Width),
-                            (int)(Height * TransformState.Height)
+                            Width * TransformState.Width,
+                            Height * TransformState.Height
                             ),
                         0, // Entities do not have angles, so it'll always multiply by 0
                         new Vector2(
@@ -163,8 +163,8 @@ namespace Verdant
                         Manager.Scene.Camera.GetRenderBounds(
                             (TransformState.Width / 2f) + TransformState.Position.X,
                             (TransformState.Height / 2f) + TransformState.Position.Y,
-                            (int)TransformState.Width,
-                            (int)TransformState.Height
+                            TransformState.Width,
+                            TransformState.Height
                             ),
                         TransformState.Angle, // even though Entities don't have angles, this is an absolute change so it gets an angle
                         new Vector2(

@@ -477,8 +477,8 @@ namespace Verdant
             UpdateList(GetEntitiesInBounds(
                 Scene.Camera.Position.X - CellSize,
                 Scene.Camera.Position.Y - CellSize,
-                Scene.Camera.Width + (CellSize * 2),
-                Scene.Camera.Height + (CellSize * 2)));
+                (int)(Scene.Camera.Width + (CellSize * 2)),
+                (int)(Scene.Camera.Height + (CellSize * 2))));
 
             updatePerformanceTimer.Stop();
             UpdateDuration = updatePerformanceTimer.ElapsedMilliseconds;

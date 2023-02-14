@@ -79,9 +79,9 @@ namespace Verdant
             // render entities
             IEnumerable<Entity> entities;
             if (SortEntities)
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, (int)scene.Camera.Width, (int)scene.Camera.Height).OrderBy(n => n.ZIndex);
             else
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height);
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, (int)scene.Camera.Width, (int)scene.Camera.Height);
 
             foreach (Entity e in entities)
             {

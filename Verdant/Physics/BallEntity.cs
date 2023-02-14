@@ -69,8 +69,8 @@ namespace Verdant.Physics
                         Manager.Scene.Camera.GetRenderBounds(
                             (Position.X - (drawDiam * TransformState.Width/2)) * TransformState.Position.X,
                             (Position.Y - (drawDiam * TransformState.Height/2)) * TransformState.Position.Y,
-                            (int)(drawDiam * TransformState.Width),
-                            (int)(drawDiam * TransformState.Height)
+                            drawDiam * TransformState.Width,
+                            drawDiam * TransformState.Height
                             ));
                 }
                 else
@@ -79,8 +79,8 @@ namespace Verdant.Physics
                         Manager.Scene.Camera.GetRenderBounds(
                             (TransformState.Width / 2f) + TransformState.Position.X,
                             (TransformState.Height / 2f) + TransformState.Position.Y,
-                            (int)TransformState.Width,
-                            (int)TransformState.Height
+                            TransformState.Width,
+                            TransformState.Height
                             ),
                         TransformState.Angle,
                         new Vector2(

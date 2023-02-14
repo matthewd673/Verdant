@@ -99,8 +99,8 @@ namespace Verdant.Physics
                         Manager.Scene.Camera.GetRenderBounds(
                             Position.X * TransformState.Position.X,
                             Position.Y * TransformState.Position.Y,
-                            (int)(Width * TransformState.Width),
-                            (int)(Height * TransformState.Height)
+                            Width * TransformState.Width,
+                            Height * TransformState.Height
                             ),
                         ((Rectangle)Components[0]).Angle * TransformState.Angle,
                         new Vector2(
@@ -114,8 +114,8 @@ namespace Verdant.Physics
                         Manager.Scene.Camera.GetRenderBounds(
                             TransformState.Position.X,
                             TransformState.Position.Y,
-                            (int)TransformState.Width,
-                            (int)TransformState.Height
+                            TransformState.Width,
+                            TransformState.Height
                             ),
                         TransformState.Angle,
                         new Vector2(

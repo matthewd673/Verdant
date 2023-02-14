@@ -18,8 +18,8 @@ namespace Verdant
         public RenderObject Sprite { get; set; }
         public virtual Vec2 Position { get; set; }
 
-        private int _width;
-        public int Width
+        private float _width;
+        public float Width
         { 
             get { return _width; }
             set 
@@ -28,8 +28,8 @@ namespace Verdant
                 HalfWidth = value / 2;
             }
         }
-        private int _height;
-        public int Height
+        private float _height;
+        public float Height
         { 
             get { return _height; }
             set
@@ -39,8 +39,8 @@ namespace Verdant
             }
         }
 
-        protected int HalfWidth { get; private set; }
-        protected int HalfHeight { get; private set; }
+        protected float HalfWidth { get; private set; }
+        protected float HalfHeight { get; private set; }
 
         public Vec2 Velocity { get; set; } = new Vec2(0, 0);
         public Vec2 Acceleration { get; set; } = new Vec2(0, 0);
@@ -119,8 +119,8 @@ namespace Verdant
                         System.Manager.Scene.Camera.GetRenderBounds(
                             (Position.X - (Width * animState.Width / 2f)) * animState.Position.X,
                             (Position.Y - (Height * animState.Height / 2f)) * animState.Position.Y,
-                            (int)(Width * animState.Width),
-                            (int)(Height * animState.Height)
+                            Width * animState.Width,
+                            Height * animState.Height
                             ),
                         Angle * animState.Angle,
                         new Vector2(
@@ -134,8 +134,8 @@ namespace Verdant
                         System.Manager.Scene.Camera.GetRenderBounds(
                             (animState.Width / 2f) + animState.Position.X,
                             (animState.Height / 2f) + animState.Position.Y,
-                            (int)animState.Width,
-                            (int)animState.Height
+                            animState.Width,
+                            animState.Height
                             ),
                         animState.Angle,
                         new Vector2(

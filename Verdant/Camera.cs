@@ -102,24 +102,24 @@ namespace Verdant
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
-        /// <param name="w">The width.</param>
-        /// <param name="h">The height.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <returns>A Rectangle representing the proper rendering bounds for the given coordinates.</returns>
-        public Rectangle GetRenderBounds(float x, float y, int w, int h)
+        public Rectangle GetRenderBounds(float x, float y, float width, float height)
         {
-            return new Rectangle((int)((x - GetCameraRenderPos().X) * Renderer.Scale), (int)((y - GetCameraRenderPos().Y) * Renderer.Scale), w * Renderer.Scale, h * Renderer.Scale);
+            return new Rectangle((int)((x - GetCameraRenderPos().X) * Renderer.Scale), (int)((y - GetCameraRenderPos().Y) * Renderer.Scale), (int)(width * Renderer.Scale), (int)(height * Renderer.Scale));
         }
 
         /// <summary>
         /// Given rectangular dimensions, calculate the Rectangle bounds to render at through the Camera.
         /// </summary>
         /// <param name="pos">The position.</param>
-        /// <param name="w">The width.</param>
-        /// <param name="h">The height.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
         /// <returns>A Rectangle representing the proper rendering bounds for the given coordinates.</returns>
-        public Rectangle GetRenderBounds(Vec2 pos, int w, int h)
+        public Rectangle GetRenderBounds(Vec2 pos, float width, float height)
         {
-            return GetRenderBounds(pos.X, pos.Y, w, h);
+            return GetRenderBounds(pos.X, pos.Y, width, height);
         }
 
         /// <summary>
