@@ -21,7 +21,7 @@ Currently built on .NET 7.0 for compatibility with MonoGame 3.8.x.
 ## Demos
 
 - **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple game that makes use of `Debugging.Log` and the LogConsole.
-- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations. Entirely unfinished.
+- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations.
 - **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates all physics bodies.
 - **[TopdownShooter](https://github.com/matthewd673/Verdant/tree/master/Demos/TopdownShooter):** A bare-bones topdown shooter demonstrating the `PhysicsEntity`, `Pathfinder`, and `Timer` APIs.
 

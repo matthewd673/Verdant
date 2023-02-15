@@ -29,7 +29,7 @@ namespace Verdant
 
         // Is true after a non-looping Animation has completed or a looping Animation has completed at least one loop.
         public bool Complete
-        { 
+        {
             get { return Looping ? hasLooped : settled; }
         }
 
@@ -46,7 +46,7 @@ namespace Verdant
 
         // The number of frames in the Animation
         public int Count
-        { 
+        {
             get { return frameSet.endFrame - frameSet.startFrame; }
         }
 
@@ -54,7 +54,7 @@ namespace Verdant
         public int Loops { get; private set; }
 
         // A callback that will be called every time an Animation complete a loop.
-        public AnimationCallback Callback { get; set; }
+        public AnimationCallback OnComplete { get; set; }
 
         /// <summary>
         /// Initialize a new Animation.
@@ -131,7 +131,7 @@ namespace Verdant
                         settled = true;
                     }
                     Loops++;
-                    Callback.Invoke(this);
+                    OnComplete.Invoke(this);
                 }
 
             }
@@ -145,7 +145,7 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping);
+            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping) { Loops = 0, };
         }
 
         public struct FrameSet
