@@ -6,26 +6,45 @@ using System.Threading.Tasks;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// Simple implementation of inverse kinematics.
+    /// </summary>
     public class IKSegment : Entity
     {
+        // The head of the segment (point that moves/follows).
         public Vec2 Head { get; private set; }
+        // The tail of the segment (which moves according to the head).
         public Vec2 Tail { get; private set; } = new Vec2(0, 0);
 
+        // The angle of the IKSegment.
         public float Angle { get; set; }
+        // The length of the IKSegment.
         public float Length { get; set; }
 
-        public IKSegment(Vec2 pos, float angle, float length) : base(null, pos)
+        /// <summary>
+        /// Initialize a new IKSegment.
+        /// </summary>
+        /// <param name="position">The position of the IKSegment's head.</param>
+        /// <param name="length">The length of the IKSegment</param>
+        /// <param name="angle">The initial angle of the IKSegment.</param>
+        public IKSegment(Vec2 position, float length, float angle = 0f) : base(null, position)
         {
-            Head = pos;
-            Angle = angle;
+            Head = position;
             Length = length;
+            Angle = angle;
         }
 
-        public IKSegment(IKSegment parent, float angle, float length) : base(null, parent.Tail)
+        /// <summary>
+        /// Initialize a new IKSegment.
+        /// </summary>
+        /// <param name="parent">The IKSegment to follow (the new IKSegment's head will be the parent's tail).</param>
+        /// <param name="length">The length of the IKSegment.</param>
+        /// <param name="angle">The initial angle of the IKSegment.</param>
+        public IKSegment(IKSegment parent, float length, float angle = 0f) : base(null, parent.Tail)
         {
             Head = parent.Tail.Copy();
-            Angle = angle;
             Length = length;
+            Angle = angle;
         }
 
         private void CalculateTail()
@@ -36,6 +55,10 @@ namespace Verdant.Physics
             Tail.Y = Head.Y + dY;
         }
 
+        /// <summary>
+        /// Point and move towards a target point.
+        /// </summary>
+        /// <param name="target">The point to follow.</param>
         public void Follow(Vec2 target)
         {
             Vec2 dir = target - Head;
