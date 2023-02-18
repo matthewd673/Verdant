@@ -22,8 +22,20 @@ namespace Verdant.UI
         public UISprite(RenderObject sprite, Vec2 position)
             : base(position, sprite.Width, sprite.Height)
         {
-            Sprite = sprite;
+            if (sprite != RenderObject.None)
+            {
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
+                {
+                    Sprite = ((Animation)sprite).Copy();
+                }
+                else
+                {
+                    Sprite = sprite;
+                }
+            }
         }
+
         /// <summary>
         /// Initialize a new UISprite.
         /// </summary>

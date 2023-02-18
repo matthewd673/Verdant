@@ -43,7 +43,7 @@ namespace Verdant.UI
             }
             set
             {
-                AbsoluteWidth = Width; // TODO: this seems right, but may not be intuitive
+                AbsoluteWidth = value; // TODO: this seems right, but may not be intuitive
             }
         }
         // The height of the UIElement in screen space (including padding and margin).
@@ -55,7 +55,7 @@ namespace Verdant.UI
             }
             set
             {
-                AbsoluteHeight = Height;
+                AbsoluteHeight = value;
             }
         }
 
