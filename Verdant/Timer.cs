@@ -63,6 +63,8 @@ namespace Verdant
         /// </summary>
         public void Start()
         {
+            if (Running) return;
+
             timers.Add(this);
             Running = true;
         }
