@@ -139,6 +139,11 @@ namespace Verdant
             DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
         }
 
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
+        {
+            Draw(spriteBatch, bounds, 0f, new Vector2(0, 0)); // TODO: clean up
+        }
+
         /// <summary>
         /// Copy the settings of the current animation to a new instance.
         /// </summary>
