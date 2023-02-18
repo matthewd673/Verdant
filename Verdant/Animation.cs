@@ -102,10 +102,10 @@ namespace Verdant
         /// Perform the next step of the Animation and return the current frame.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
         {
             if (settled) // skip other steps if settled
-                DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
+                DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
 
             // tick towards next frame
             frameTimeCounter--;
@@ -131,12 +131,12 @@ namespace Verdant
                         settled = true;
                     }
                     Loops++;
-                    OnComplete.Invoke(this);
+                    OnComplete?.Invoke(this);
                 }
 
             }
 
-            DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
+            DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
         }
 
         /// <summary>
