@@ -34,8 +34,8 @@ namespace Verdant
         // Determines if UIElements should be sorted according to z-index before rendering.
         public static bool SortUIElements { get; set; } = true;
 
-        // The window's GraphicsDevice.
-        public static GraphicsDevice GraphicsDevice { get; private set; }
+        // The window's GraphicsDeviceManager.
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
 
         private static Stopwatch renderPerformanceTimer = new Stopwatch();
         // The duration (in milliseconds) of the last Render call.
@@ -47,19 +47,19 @@ namespace Verdant
         /// <summary>
         /// Initialize the Renderer. Create a Camera, establish a consistent render scale, etc.
         /// </summary>
-        /// <param name="graphicsDevice">A GraphicsDevice, used to build the automatic pixel texture.</param>
+        /// <param name="graphicsDeviceManager">The window's GraphicsDeviceManager.</param>
         /// <param name="screenWidth">The width of the screen.</param>
         /// <param name="screenHeight">The height of the screen.</param>
         /// <param name="scale">The render scale.</param>
-        public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
+        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int scale)
         {
-            ScreenWidth = screenWidth;
-            ScreenHeight = screenHeight;
-            GraphicsDevice = graphicsDevice;
+            GraphicsDeviceManager = graphicsDeviceManager;
+            ScreenWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
+            ScreenHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
             Scale = scale;
 
-            //build pixel texture
-            Texture2D texturePixel = new Texture2D(graphicsDevice, 1, 1);
+            // build pixel texture
+            Texture2D texturePixel = new Texture2D(GraphicsDeviceManager.GraphicsDevice, 1, 1);
             Color[] data = new Color[1] { Color.White };
             texturePixel.SetData(data);
             pixel = texturePixel;
@@ -168,8 +168,8 @@ namespace Verdant
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
             DrawLine(spriteBatch,
-                camera.WorldToScreenPos(start),
-                camera.WorldToScreenPos(end),
+                camera.WorldToScreenPosition(start),
+                camera.WorldToScreenPosition(end),
                 color
                 );
         }

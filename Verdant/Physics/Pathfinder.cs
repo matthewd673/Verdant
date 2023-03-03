@@ -49,7 +49,7 @@ namespace Verdant.Physics
         public List<Vec2> FindPath(Vec2 start, Vec2 end, int maxSeekDistance = -1)
         {
             // ensure that the target is within the appropriate range before finding a path
-            if (GameMath.GetDistance(start, end) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
+            if (GameMath.DistanceBetweenPoints(start, end) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
             {
                 return GeneratePath(start, end);
             }

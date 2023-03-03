@@ -38,7 +38,7 @@ namespace Verdant
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <returns>The distance between the two points.</returns>
-        public static float GetDistance(Vec2 a, Vec2 b)
+        public static float DistanceBetweenPoints(Vec2 a, Vec2 b)
         {
             return (float)Math.Sqrt(Math.Pow(b.Y - a.Y, 2) + Math.Pow(b.X - a.X, 2));
         }
