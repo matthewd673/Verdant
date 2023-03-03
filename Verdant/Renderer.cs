@@ -215,7 +215,7 @@ namespace Verdant
         {
             int diam = radius * 2;
 
-            Texture2D circleTex = new Texture2D(GraphicsDevice, diam+1, diam+1);
+            Texture2D circleTex = new Texture2D(GraphicsDeviceManager.GraphicsDevice, diam+1, diam+1);
             Color[] colorData = new Color[(diam+1) * (diam+1)];
 
             // Bresenham's
