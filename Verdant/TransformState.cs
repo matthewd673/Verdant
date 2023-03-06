@@ -39,6 +39,10 @@ namespace Verdant
                 Height = 1;
                 Angle = 1;
             }
+            else
+            {
+                Position = new Vec2(0, 0);
+            }
         }
 
         /// <summary>

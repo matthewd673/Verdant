@@ -101,6 +101,15 @@ namespace Verdant
         }
 
         /// <summary>
+        /// Called when the Entity is added to an EntityManager.
+        /// </summary>
+        public virtual void OnAdd() { }
+        /// <summary>
+        /// Called when the Entity is removed from an EntityManager.
+        /// </summary>
+        public virtual void OnRemove() { }
+
+        /// <summary>
         /// Perform the Entity's basic update actions - a good place to look for input events. Called in the EntityManager update loop.
         /// </summary>
         public virtual void Update()

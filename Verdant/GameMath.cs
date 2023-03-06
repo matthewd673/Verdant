@@ -55,7 +55,7 @@ namespace Verdant
         /// <param name="w2">The width of the second AABB.</param>
         /// <param name="h2">The height of the second AABB.</param>
         /// <returns>Returns true if the AABBs are intersecting, and false otherwise.</returns>
-        public static bool CheckRectIntersection(float x1, float y1, int w1, int h1, float x2, float y2, int w2, int h2)
+        public static bool RectIntersection(float x1, float y1, int w1, int h1, float x2, float y2, int w2, int h2)
         {
             return (x1 < x2 + w2 &&
                 x1 + w1 > x2 &&
@@ -72,9 +72,9 @@ namespace Verdant
         /// <param name="w2">The width of the second AABB.</param>
         /// <param name="h2">The height of the second AABB.</param>
         /// <returns>Returns true if the AABBs are intersecting, and false otherwise.</returns>
-        public static bool CheckRectIntersection(Vec2 pos1, int w1, int h1, Vec2 pos2, int w2, int h2)
+        public static bool RectIntersection(Vec2 pos1, int w1, int h1, Vec2 pos2, int w2, int h2)
         {
-            return CheckRectIntersection(pos1.X, pos1.Y, w1, h1, pos2.X, pos2.Y, w2, h2);
+            return RectIntersection(pos1.X, pos1.Y, w1, h1, pos2.X, pos2.Y, w2, h2);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Verdant
         /// <param name="w">The width of the AABB.</param>
         /// <param name="h">The height of the AABB.</param>
         /// <returns>Returns true if the point is within the AABB, and false otherwise.</returns>
-        public static bool CheckPointOnRectIntersection(Vec2 point, float x, float y, float w, float h)
+        public static bool PointOnRectIntersection(Vec2 point, float x, float y, float w, float h)
         {
             return (point.X < x + w &&
                 point.X > x &&

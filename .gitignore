@@ -1,6 +1,8 @@
 ## CUSTOM
 # Ignore wiki build script
 BUILDWIKI.bat
+# Ignore .DS_Store
+.DS_Store
 
 # Ignore .vscode
 .vscode

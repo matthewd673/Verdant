@@ -115,6 +115,8 @@ namespace Verdant
                     cellList.Add(e);
                 else
                     entityTable.Add(e.Key, new List<Entity>() { e });
+
+                e.OnAdd(); // trigger event
                 EntityCount++; // keep track
             }
 
@@ -127,6 +129,7 @@ namespace Verdant
                     if (cellList.Remove(e))
                     {
                         e.Manager = null;
+                        e.OnRemove(); // trigger event
                         EntityCount--; // keep track
                     }
                 }

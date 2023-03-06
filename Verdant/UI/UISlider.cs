@@ -97,7 +97,7 @@ namespace Verdant.UI
         public override void Update()
         {
             // check for hover
-            if (GameMath.CheckPointOnRectIntersection(
+            if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
                 (IndicatorPosition.X + InnerPosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
                 (IndicatorPosition.Y + InnerPosition.Y) * Renderer.Scale,
