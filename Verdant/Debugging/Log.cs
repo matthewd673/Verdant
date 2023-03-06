@@ -52,8 +52,21 @@ namespace Verdant.Debugging
                 }
             }
 
-            byte[] messageBytes = Encoding.ASCII.GetBytes(value.ToString());
-            client.Send(messageBytes, messageBytes.Length);
+            // hanlde printing null values
+            string s = "null";
+            if (value?.ToString() != null)
+                s = value.ToString();
+            byte[] messageBytes = Encoding.ASCII.GetBytes(s);
+
+            // fail silently if message doesn't send
+            try
+            {
+                client.Send(messageBytes, messageBytes.Length);
+            }
+            catch (Exception e)
+            {
+                ConnectionFailed = true;
+            }
 #endif
         }
 
