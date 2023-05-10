@@ -27,7 +27,7 @@ namespace Verdant
         // The Scene that this EntityManager belongs to.
         public Scene Scene { get; set; }
 
-        private readonly Dictionary<string, List<Entity>> entityTable = new();
+        private readonly EntityTable table = new();
         // The width and height of each cell in the internal Entity table.
         public int CellSize { get; }
 
@@ -54,7 +54,7 @@ namespace Verdant
         /// </summary>
         public EntityManager()
         {
-            CellSize = 128;
+            CellSize = 64;
         }
         /// <summary>
         /// Initialize a new EntityManager.
@@ -109,12 +109,8 @@ namespace Verdant
                 if (e.ZIndexMode == ZIndexMode.ByIndex)
                     e.ZIndex = EntityCount;
 
-                //add to appropriate list in table (create if necessary)
-                List<Entity> cellList;
-                if (entityTable.TryGetValue(e.Key, out cellList))
-                    cellList.Add(e);
-                else
-                    entityTable.Add(e.Key, new List<Entity>() { e });
+                // add to table
+                table.Insert(e.Key.X, e.Key.Y, e);
 
                 e.OnAdd(); // trigger event
                 EntityCount++; // keep track
@@ -123,50 +119,17 @@ namespace Verdant
             // remove marked
             foreach (Entity e in removeQueue)
             {
-                List<Entity> cellList;
-                if (entityTable.TryGetValue(e.ForRemoval ? e.PreviousKey : e.Key, out cellList))
+                Vec2Int key = e.ForRemoval ? e.PreviousKey : e.Key;
+                if (table.Remove(key.X, key.Y, e))
                 {
-                    if (cellList.Remove(e))
-                    {
-                        e.Manager = null;
-                        e.OnRemove(); // trigger event
-                        EntityCount--; // keep track
-                    }
+                    e.Manager = null;
+                    e.OnRemove(); // trigger event
+                    EntityCount--; // keep track
                 }
             }
 
             addQueue.Clear();
             removeQueue.Clear();
-        }
-
-        /// <summary>
-        /// Get all Entities of a current type currently in the manager.
-        /// NOTE: This can be very expensive. Generally, GetEntitiesInBounds() is a better choice.
-        /// </summary>
-        /// <typeparam name="T">The type of Entity to search for.</typeparam>
-        /// <returns>A list of Entities of the given type in the manager.</returns>
-        public List<T> GetAllEntities<T>() where T : Entity
-        {
-            List<T> found = new List<T>();
-            foreach (string key in entityTable.Keys)
-            {
-                foreach (Entity e in entityTable[key])
-                {
-                    if (e.IsType(typeof(T))) found.Add((T)e);
-                }
-            }
-
-            return found;
-        }
-
-        /// <summary>
-        /// Get a list of all Entities currently in the manager.
-        /// NOTE: This can be very expensive. Generally, GetEntitiesInBounds() is a better choice.
-        /// </summary>
-        /// <returns>A list of all managed Entities.</returns>
-        public List<Entity> GetAllEntities()
-        {
-            return GetAllEntities<Entity>();
         }
 
         /// <summary>
@@ -178,18 +141,16 @@ namespace Verdant
         public List<TEntity> GetNearEntities<TEntity>(Entity e) where TEntity : Entity
         {
             List<TEntity> nearEntities = new List<TEntity>();
-            Vec2Int cell = GetCellFromKey(e.Key);
 
             //loop through all neighboring cells and check
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    string checkKey = GetKeyFromCell(cell.X + i, cell.Y + j);
-                    List<Entity> cellList;
-                    if (entityTable.TryGetValue(checkKey, out cellList))
+                    List<Entity> cell;
+                    if (table.GetCell(e.Key.X + i, e.Key.Y + j, out cell))
                     {
-                        foreach (Entity b in cellList)
+                        foreach (Entity b in cell)
                         {
                             if (b.IsType(typeof(TEntity)))
                                 nearEntities.Add((TEntity)b);
@@ -238,13 +199,14 @@ namespace Verdant
             {
                 for (int j = minCellY; j <= maxCellY; j++)
                 {
-                    string checkKey = GetKeyFromCell(i, j);
-                    if (!entityTable.ContainsKey(checkKey)) continue;
-
-                    foreach (Entity b in entityTable[checkKey])
+                    List<Entity> cell;
+                    if (table.GetCell(i, j, out cell))
                     {
-                        if (b.IsType(typeof(TEntity)))
-                            boundedEntities.Add((TEntity)b);
+                        foreach (Entity b in cell)
+                        {
+                            if (b.IsType(typeof(TEntity)))
+                                boundedEntities.Add((TEntity)b);
+                        }
                     }
                 }
             }
@@ -367,17 +329,17 @@ namespace Verdant
         /// <param name="e">The Entity to move.</param>
         protected void MoveEntityCell(Entity e)
         {
+            if (e.Key.X == e.PreviousKey.X &&
+                e.Key.Y == e.PreviousKey.Y)
+                return;
+
             List<Entity> currentCellList;
-            if (entityTable.TryGetValue(e.PreviousKey, out currentCellList))
+            if (table.GetCell(e.PreviousKey.X, e.PreviousKey.Y, out currentCellList))
             {
                 if (!currentCellList.Remove(e)) // attempt to remove
                     return; // if it couldn't be removed for some reason, assume it has already been moved and stop to avoid dupllicates
 
-                List<Entity> newCellList;
-                if (entityTable.TryGetValue(e.Key, out newCellList))
-                    newCellList.Add(e);
-                else
-                    entityTable.Add(e.Key, new List<Entity> { e });
+                table.Insert(e.Key.X, e.Key.Y, e);
             }
         }
 
@@ -387,28 +349,39 @@ namespace Verdant
 
             for (int i = 0; i < updateList.Count; i++)
             {
-                updateList[i].Colliding.Clear();
+                PhysicsEntity a = updateList[i];
+                a.Colliding.Clear();
 
-                // TODO: cut down on physics checks
-                for (int j = i + 1; j < updateList.Count; j++)
+                Vec2Int searchKey = a.Key;
+                List<Entity>[] range = table.GetCellRange(searchKey.X - 1, searchKey.Y - 1, searchKey.X + 1, searchKey.Y + 1);
+                for (int m = 0; m < range.Length; m++)
                 {
-                    PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
-
-                    for (int k = 0; k < updateList[i].Components.Length; k++)
+                    for (int j = 0; j < range[m].Count; j++)
                     {
-                        for (int l = 0; l < updateList[j].Components.Length; l++)
+                        // don't check non-physics entities
+                        if (!range[m][j].IsType(typeof(PhysicsEntity))) continue;
+                        PhysicsEntity b = ((PhysicsEntity)range[m][j]);
+
+                        // don't check against your own self
+                        if (b == a) continue;
+
+                        PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+                        for (int k = 0; k < a.Components.Length; k++)
                         {
-                            PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(updateList[i].Components[k], updateList[j].Components[l]);
-                            if (currentSAT.Penetration > bestSAT.Penetration)
+                            for (int l = 0; l < b.Components.Length; l++)
                             {
-                                bestSAT = currentSAT;
+                                PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(a.Components[k], b.Components[l]);
+                                if (currentSAT.Penetration > bestSAT.Penetration)
+                                {
+                                    bestSAT = currentSAT;
+                                }
                             }
                         }
-                    }
 
-                    if (bestSAT.Overlap)
-                    {
-                        collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+                        if (bestSAT.Overlap)
+                        {
+                            collisions.Add(new CollisionData(a, b, bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+                        }
                     }
                 }
             }
@@ -459,8 +432,7 @@ namespace Verdant
                     PhysicsEntityUpdateCount++; // count physics updates
                 }
 
-                if (!e.Key.Equals(e.PreviousKey))
-                    MoveEntityCell(e);
+                MoveEntityCell(e);
             }
 
             PhysicsLoop(physicsList);
@@ -489,54 +461,14 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Given an Entity key value, get the coordinates of the corresponding cell.
-        /// </summary>
-        /// <param name="key">The key value.</param>
-        /// <returns>A Vec2Int containing the coordinates of the cell corresponding to the key.</returns>
-        public static Vec2Int GetCellFromKey(string key)
-        {
-            string[] splitKey = key.Split(',');
-            return new Vec2Int(Convert.ToInt32(splitKey[0]), Convert.ToInt32(splitKey[1]));
-        }
-
-        /// <summary>
-        /// Given cell coordinates, build the proper Entity key.
-        /// </summary>
-        /// <param name="x">The cell x.</param>
-        /// <param name="y">The cell y.</param>
-        /// <returns>An Entity key.</returns>
-        public static string GetKeyFromCell(int x, int y)
-        {
-            return x.ToString() + "," + y.ToString();
-        }
-        /// <summary>
-        /// Given a Vec2 representing cell coordinates, build the proper Entity key.
-        /// </summary>
-        /// <param name="cell">The cell coordinates.</param>
-        /// <returns>An Entity key.</returns>
-        public static string GetKeyFromCell(Vec2Int cell)
-        {
-            return GetKeyFromCell(cell.X, cell.Y);
-        }
-
-        /// <summary>
-        /// Given a position in the world, build an appropriate Entity key.
-        /// </summary>
-        /// <param name="x">The x position.</param>
-        /// <param name="y">The y position.</param>
-        /// <returns>An Entity key.</returns>
-        public string GetKeyFromPos(float x, float y)
-        {
-            return GetKeyFromCell((int)(x / CellSize), (int)(y / CellSize));
-        }
-        /// <summary>
         /// Given a position in the world, build an appropriate Entity key.
         /// </summary>
         /// <param name="pos">The position.</param>
         /// <returns>An Entity key.</returns>
-        public string GetKeyFromPos(Vec2 pos)
+        public void SetEntityKey(Entity e)
         {
-            return GetKeyFromPos(pos.X, pos.Y);
+            e.Key = new((int)e.Position.X / CellSize,
+                        (int)e.Position.Y / CellSize);
         }
 
     }

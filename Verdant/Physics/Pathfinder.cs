@@ -229,18 +229,10 @@ namespace Verdant.Physics
         /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
         /// <param name="topLeft">The top left corner of the path map's bounds.</param>
         /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
-        public void BuildPathMap<T>(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null) where T : PhysicsEntity
+        public void BuildPathMap<T>(EntityManager entityManager, Vec2 topLeft, Vec2 bottomRight) where T : PhysicsEntity
         {
             // get a list of obstacles
-            List<T> obstacles;
-            if (topLeft == null || bottomRight == null)
-            {
-                obstacles = entityManager.GetAllEntities<T>();
-            }
-            else
-            {
-                obstacles = entityManager.CheckRectCollisions<T>(topLeft.X, topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
-            }
+            List<T> obstacles = entityManager.CheckRectCollisions<T>(topLeft.X, topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
 
             // create a list of colliders for all obstacles
             List<Shape> obsColliders = new List<Shape>();

@@ -19,14 +19,14 @@ namespace Verdant
             {
                 _manager = value;
                 if (_manager != null)
-                    Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
+                    _manager.SetEntityKey(this); // set initial key if manager isn't null
             }
         }
 
         // The key of the Entity within the manager's hash table.
-        public string Key { get; private set; }
+        public Vec2Int Key { get; internal set; }
         // The key of the Entity at the end of the last update.
-        public string PreviousKey { get; private set; } = "";
+        public Vec2Int PreviousKey { get; private set; } = new();
 
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
@@ -117,8 +117,9 @@ namespace Verdant
             // update key
             if (Manager != null) //only if a managed entity (not Particles, for example)
             {
-                PreviousKey = Key;
-                Key = Manager.GetKeyFromPos(Position);
+                PreviousKey.X = Key.X;
+                PreviousKey.Y = Key.Y;
+                Manager.SetEntityKey(this);
             }
 
             // update z index
