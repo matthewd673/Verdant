@@ -21,6 +21,11 @@ namespace Verdant
         // The scale at which everything will be rendered.
         public static int Scale { get; private set; }
 
+        // Determines if PhysicsEntity component bodies should be drawn. Will likely impact render duration.
+        public static bool VisualizeBodies { get; set; } = false;
+        // Determines if UIElement bounds should be drawn. Will likely NOT impact render duration.
+        public static bool VisualizeUIBounds { get; set; } = false;
+
         private static Sprite pixel;
 
         // A custom cursor Sprite, which will be rendered if ShowCursor is true.
@@ -70,25 +75,31 @@ namespace Verdant
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="scene">The Scene to render.</param>
-        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible.</param>
-        /// <param name="visualizeUIBounds">For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false, bool visualizeUIBounds = false)
+        public static void Render(SpriteBatch spriteBatch, Scene scene)
         {
             renderPerformanceTimer.Start();
 
             // render entities
             IEnumerable<Entity> entities;
             if (SortEntities)
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, (int)scene.Camera.Width, (int)scene.Camera.Height).OrderBy(n => n.ZIndex);
+            {
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position - scene.EntityManager.CellSize,
+                                                                   (int)scene.Camera.Width,
+                                                                   (int)scene.Camera.Height).OrderBy(n => n.ZIndex);
+            }
             else
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, (int)scene.Camera.Width, (int)scene.Camera.Height);
+            {
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position - scene.EntityManager.CellSize,
+                                                                   (int)scene.Camera.Width,
+                                                                   (int)scene.Camera.Height);
+            }
 
             foreach (Entity e in entities)
             {
                 e.Draw(spriteBatch);
             }
 
-            if (visualizeBodies)
+            if (VisualizeBodies)
             {
                 foreach (Entity e in entities)
                 {
@@ -109,7 +120,7 @@ namespace Verdant
                 if (e.Show) e.Draw(spriteBatch);
             }
 
-            if (visualizeUIBounds)
+            if (VisualizeUIBounds)
             {
                 foreach (UIElement e in scene.UIManager.GetElements())
                 {
