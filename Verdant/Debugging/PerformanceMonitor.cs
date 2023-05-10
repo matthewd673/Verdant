@@ -23,6 +23,7 @@ namespace Verdant.Debugging
         private static int scale = 2;
 
         private static float runningUpdate = 0;
+        private static float runningPhysics = 0;
         private static float runningRender = 0;
         private static float runningUi = 0;
 
@@ -43,18 +44,21 @@ namespace Verdant.Debugging
             if (avgCounter < smoothing)
             {
                 runningUpdate += scene.EntityManager.UpdateDuration;
+                runningPhysics += scene.EntityManager.PhysicsDuration;
                 runningRender += Renderer.RenderDuration;
                 runningUi += scene.UIManager.UpdateDuration;
             }
             else
             {
                 runningUpdate /= smoothing;
+                runningPhysics /= smoothing;
                 runningRender /= smoothing;
                 runningUi /= smoothing;
 
                 // update time
                 history.Add(new Metrics(
                     runningUpdate,
+                    runningPhysics,
                     runningRender,
                     runningUi
                     )
@@ -77,8 +81,9 @@ namespace Verdant.Debugging
             {
                 int stackHeight = 0;
 
-                stackHeight += DrawOnStack(spriteBatch, m.UpdateDuration, Color.Blue, position, stackHeight, i);
-                stackHeight += DrawOnStack(spriteBatch, m.UIDuration, Color.DarkBlue, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.UpdateDuration - m.PhysicsDuration, Color.Blue, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.PhysicsDuration, Color.Green, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.UIDuration, Color.LightBlue, position, stackHeight, i);
                 stackHeight += DrawOnStack(spriteBatch, m.RenderDuration, Color.Red, position, stackHeight, i);
 
                 i++;
@@ -115,18 +120,20 @@ namespace Verdant.Debugging
         private struct Metrics
         {
             public float UpdateDuration { get; private set; }
+            public float PhysicsDuration { get; private set; }
             public float RenderDuration { get; private set; }
             public float UIDuration { get; private set; }
 
             public float Total { get; private set; }
 
-            public Metrics(float updateDuration, float renderDuration, float uiDuration)
+            public Metrics(float updateDuration, float physicsDuration, float renderDuration, float uiDuration)
             {
                 UpdateDuration = updateDuration;
+                PhysicsDuration = physicsDuration;
                 RenderDuration = renderDuration;
                 UIDuration = uiDuration;
 
-                Total = updateDuration +
+                Total = updateDuration + // physics is within update
                         renderDuration +
                         uiDuration;
             }

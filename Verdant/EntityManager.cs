@@ -44,6 +44,10 @@ namespace Verdant
         private Stopwatch updatePerformanceTimer = new Stopwatch();
         // The duration (in milliseconds) of the last Update call.
         public float UpdateDuration { get; protected set; }
+        private Stopwatch physicsPerformanceTimer = new Stopwatch();
+        // The duration (in milliseconds) of the last physics loop (within the last Update call).
+        public float PhysicsDuration { get; protected set; }
+
         // Indicates if the EntityManager has entered the update loop.
         public bool Updating { get; protected set; } = false;
 
@@ -395,9 +399,6 @@ namespace Verdant
                 if (c.a.Trigger || c.b.Trigger) // skip triggers
                     continue;
 
-                if (c.a.Mass == 0 && c.b.Mass == 0)
-                    continue;
-
                 c.PenetrationResolution();
                 c.CollisionResolution();
             }
@@ -439,7 +440,11 @@ namespace Verdant
                 MoveEntityCell(e);
             }
 
+            physicsPerformanceTimer.Start();
             PhysicsLoop(physicsList);
+            physicsPerformanceTimer.Stop();
+            PhysicsDuration = physicsPerformanceTimer.ElapsedMilliseconds;
+            physicsPerformanceTimer.Reset();
 
             ApplyQueues();
         }
