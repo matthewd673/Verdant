@@ -152,7 +152,7 @@ namespace Verdant
             }
             else
             {
-                if (TransformState.Multiply)
+                if (TransformState.BlendMode == TransformStateBlendMode.Multiply)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
@@ -167,7 +167,22 @@ namespace Verdant
                             Sprite.Height * TransformState.Height / 2
                             ));
                 }
-                else
+                else if (TransformState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (Position.X - ((Width + TransformState.Width) / 2)) + TransformState.Position.X,
+                            (Position.Y - ((Height + TransformState.Height) / 2)) + TransformState.Position.Y,
+                            Width + TransformState.Width,
+                            Height + TransformState.Height
+                            ),
+                        TransformState.Angle, // Entities don't have angles, so add 0
+                        new Vector2(
+                            (Sprite.Width + TransformState.Width) / 2,
+                            (Sprite.Height + TransformState.Height) / 2
+                        ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Override)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(

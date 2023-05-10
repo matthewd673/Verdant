@@ -13,8 +13,8 @@ namespace Verdant
         // The final TransformState.
         public TransformState To { get; private set; }
 
-        // True if either the starting or ending TransformState are multiplicative.
-        public bool Multiply { get; private set; }
+        // Should be the same for both TransformStates, but will be set to the "from" state's blend mode.
+        public TransformStateBlendMode BlendMode { get; private set; }
         private Timer animationTimer;
         private TimingFunction timingFunction;
 
@@ -39,10 +39,10 @@ namespace Verdant
         {
             From = from;
             To = to;
-            Multiply = from.Multiply || to.Multiply; // you can't mix them
+            BlendMode = From.BlendMode; // you can't mix them
             animationTimer = new Timer(duration, AnimationTimerCallback);
             timingFunction = AnimationTimingFunctions.Linear;
-            current = new(Multiply);
+            current = new(BlendMode);
             diff = to - from;
         }
 
@@ -57,10 +57,10 @@ namespace Verdant
         {
             From = from;
             To = to;
-            Multiply = from.Multiply || to.Multiply; // you can't mix them
+            BlendMode = From.BlendMode; // you can't mix them
             animationTimer = new Timer(duration, AnimationTimerCallback);
             this.timingFunction = timingFunction;
-            current = new(Multiply);
+            current = new(BlendMode);
             diff = to - from;
         }
 
@@ -74,10 +74,10 @@ namespace Verdant
         {
             From = from;
             To = to;
-            Multiply = from.Multiply || to.Multiply;
+            BlendMode = From.BlendMode;
             animationTimer = new Timer(duration, (Timer) => { Running = false; Complete = true; });
             this.timingFunction = timingFunction;
-            current = new(Multiply);
+            current = new(BlendMode);
             this.diff = diff;
         }
 
