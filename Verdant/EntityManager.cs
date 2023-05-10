@@ -54,7 +54,7 @@ namespace Verdant
         /// </summary>
         public EntityManager()
         {
-            CellSize = 128;
+            CellSize = 64;
         }
         /// <summary>
         /// Initialize a new EntityManager.
@@ -349,28 +349,39 @@ namespace Verdant
 
             for (int i = 0; i < updateList.Count; i++)
             {
-                updateList[i].Colliding.Clear();
+                PhysicsEntity a = updateList[i];
+                a.Colliding.Clear();
 
-                // TODO: cut down on physics checks
-                for (int j = i + 1; j < updateList.Count; j++)
+                Vec2Int searchKey = a.Key;
+                List<Entity>[] range = table.GetCellRange(searchKey.X - 1, searchKey.Y - 1, searchKey.X + 1, searchKey.Y + 1);
+                for (int m = 0; m < range.Length; m++)
                 {
-                    PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
-
-                    for (int k = 0; k < updateList[i].Components.Length; k++)
+                    for (int j = 0; j < range[m].Count; j++)
                     {
-                        for (int l = 0; l < updateList[j].Components.Length; l++)
+                        // don't check non-physics entities
+                        if (!range[m][j].IsType(typeof(PhysicsEntity))) continue;
+                        PhysicsEntity b = ((PhysicsEntity)range[m][j]);
+
+                        // don't check against your own self
+                        if (b == a) continue;
+
+                        PhysicsMath.SATResult bestSAT = new PhysicsMath.SATResult(false, float.MinValue, null, null);
+                        for (int k = 0; k < a.Components.Length; k++)
                         {
-                            PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(updateList[i].Components[k], updateList[j].Components[l]);
-                            if (currentSAT.Penetration > bestSAT.Penetration)
+                            for (int l = 0; l < b.Components.Length; l++)
                             {
-                                bestSAT = currentSAT;
+                                PhysicsMath.SATResult currentSAT = PhysicsMath.SAT(a.Components[k], b.Components[l]);
+                                if (currentSAT.Penetration > bestSAT.Penetration)
+                                {
+                                    bestSAT = currentSAT;
+                                }
                             }
                         }
-                    }
 
-                    if (bestSAT.Overlap)
-                    {
-                        collisions.Add(new CollisionData(updateList[i], updateList[j], bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+                        if (bestSAT.Overlap)
+                        {
+                            collisions.Add(new CollisionData(a, b, bestSAT.Axis, bestSAT.Penetration, bestSAT.Vertex));
+                        }
                     }
                 }
             }

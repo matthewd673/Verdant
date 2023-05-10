@@ -48,6 +48,24 @@ namespace Verdant
 			return table.ContainsKey(Hash(x, y));
 		}
 
+		public List<Entity>[] GetCellRange(int x1, int y1, int x2, int y2)
+		{
+			List<Entity>[] output = new List<Entity>[Math.Abs((x2 - x1 + 1) * (y2 - y1 + 1))];
+			int p = 0;
+			for (int i = x1; i <= x2; i++)
+			{
+				for (int j = y1; j <= y2; j++)
+				{
+					if (!GetCell(i, j, out output[p]))
+					{
+						output[p] = new List<Entity>();
+					}
+					p++;
+				}
+			}
+			return output;
+		}
+
 		private ulong Hash(int x, int y)
 		{
             ulong key = 0x0;
