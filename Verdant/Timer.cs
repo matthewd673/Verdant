@@ -74,6 +74,8 @@ namespace Verdant
         /// </summary>
         public void Stop()
         {
+            if (!Running) return;
+
             timers.Remove(this);
             Running = false;
         }
@@ -92,11 +94,21 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Reset the Timer's current time. If the Timer is running, it will continue running.
+        /// Stop the Timer and reset its current time.
         /// </summary>
         public void Reset()
         {
+            Stop();
             ElapsedTime = 0;
+        }
+
+        /// <summary>
+        /// Reset the Timer's elapsed time and start it.
+        /// </summary>
+        public void Restart()
+        {
+            ElapsedTime = 0;
+            Start();
         }
 
     }

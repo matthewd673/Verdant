@@ -364,8 +364,7 @@ namespace Verdant
                     for (int j = 0; j < cellPhysicsEntities.Count; j++)
                     {
                         // don't check non-physics entities
-                        if (!cellPhysicsEntities[j].IsType(typeof(PhysicsEntity))) continue;
-                        PhysicsEntity b = ((PhysicsEntity)cellPhysicsEntities[j]);
+                        PhysicsEntity b = cellPhysicsEntities[j];
 
                         // don't check against your own self
                         if (b == a) continue;
