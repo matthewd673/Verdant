@@ -113,7 +113,7 @@ namespace Verdant
             else
             {
                 TransformState animState = TransformAnimation.GetFrame();
-                if (animState.Multiply)
+                if (animState.BlendMode == TransformStateBlendMode.Multiply)
                 {
                     Sprite.Draw(spriteBatch,
                         System.Manager.Scene.Camera.GetRenderBounds(
@@ -128,7 +128,22 @@ namespace Verdant
                             Sprite.Height * animState.Height / 2
                             ));
                 }
-                else
+                else if (animState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        System.Manager.Scene.Camera.GetRenderBounds(
+                            (Position.X - ((Width + animState.Width) / 2)) + animState.Position.X,
+                            (Position.Y - ((Height + animState.Height) / 2)) + animState.Position.Y,
+                            Width + animState.Width,
+                            Height + animState.Height
+                            ),
+                        Angle + animState.Angle,
+                        new Vector2(
+                            (Sprite.Width + animState.Width) / 2,
+                            (Sprite.Height + animState.Height) / 2
+                            ));
+                }
+                else if (animState.BlendMode == TransformStateBlendMode.Override)
                 {
                     Sprite.Draw(spriteBatch,
                         System.Manager.Scene.Camera.GetRenderBounds(

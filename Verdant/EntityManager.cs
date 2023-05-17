@@ -44,6 +44,10 @@ namespace Verdant
         private Stopwatch updatePerformanceTimer = new Stopwatch();
         // The duration (in milliseconds) of the last Update call.
         public float UpdateDuration { get; protected set; }
+        private Stopwatch physicsPerformanceTimer = new Stopwatch();
+        // The duration (in milliseconds) of the last physics loop (within the last Update call).
+        public float PhysicsDuration { get; protected set; }
+
         // Indicates if the EntityManager has entered the update loop.
         public bool Updating { get; protected set; } = false;
 
@@ -147,10 +151,10 @@ namespace Verdant
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    List<Entity> cell;
+                    EntityList cell;
                     if (table.GetCell(e.Key.X + i, e.Key.Y + j, out cell))
                     {
-                        foreach (Entity b in cell)
+                        foreach (Entity b in cell.GetEntities())
                         {
                             if (b.IsType(typeof(TEntity)))
                                 nearEntities.Add((TEntity)b);
@@ -199,10 +203,10 @@ namespace Verdant
             {
                 for (int j = minCellY; j <= maxCellY; j++)
                 {
-                    List<Entity> cell;
+                    EntityList cell;
                     if (table.GetCell(i, j, out cell))
                     {
-                        foreach (Entity b in cell)
+                        foreach (Entity b in cell.GetEntities())
                         {
                             if (b.IsType(typeof(TEntity)))
                                 boundedEntities.Add((TEntity)b);
@@ -333,7 +337,7 @@ namespace Verdant
                 e.Key.Y == e.PreviousKey.Y)
                 return;
 
-            List<Entity> currentCellList;
+            EntityList currentCellList;
             if (table.GetCell(e.PreviousKey.X, e.PreviousKey.Y, out currentCellList))
             {
                 if (!currentCellList.Remove(e)) // attempt to remove
@@ -353,14 +357,14 @@ namespace Verdant
                 a.Colliding.Clear();
 
                 Vec2Int searchKey = a.Key;
-                List<Entity>[] range = table.GetCellRange(searchKey.X - 1, searchKey.Y - 1, searchKey.X + 1, searchKey.Y + 1);
+                EntityList[] range = table.GetCellRange(searchKey.X - 1, searchKey.Y - 1, searchKey.X + 1, searchKey.Y + 1);
                 for (int m = 0; m < range.Length; m++)
                 {
-                    for (int j = 0; j < range[m].Count; j++)
+                    List<PhysicsEntity> cellPhysicsEntities = range[m].GetPhysicsEntities();
+                    for (int j = 0; j < cellPhysicsEntities.Count; j++)
                     {
                         // don't check non-physics entities
-                        if (!range[m][j].IsType(typeof(PhysicsEntity))) continue;
-                        PhysicsEntity b = ((PhysicsEntity)range[m][j]);
+                        PhysicsEntity b = cellPhysicsEntities[j];
 
                         // don't check against your own self
                         if (b == a) continue;
@@ -435,7 +439,11 @@ namespace Verdant
                 MoveEntityCell(e);
             }
 
+            physicsPerformanceTimer.Start();
             PhysicsLoop(physicsList);
+            physicsPerformanceTimer.Stop();
+            PhysicsDuration = physicsPerformanceTimer.ElapsedMilliseconds;
+            physicsPerformanceTimer.Reset();
 
             ApplyQueues();
         }

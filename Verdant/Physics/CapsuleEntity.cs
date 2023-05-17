@@ -96,14 +96,14 @@ namespace Verdant.Physics
             }
             else
             {
-                if (TransformState.Multiply)
+                if (TransformState.BlendMode == TransformStateBlendMode.Multiply)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
                             Position.X * TransformState.Position.X,
                             Position.Y * TransformState.Position.Y,
                             (int)(Width * TransformState.Width),
-                            (int)((Height + 2 * ((Circle)Components[1]).Radius)* TransformState.Height)
+                            (int)((Height + 2 * ((Circle)Components[1]).Radius) * TransformState.Height)
                             ),
                         ((Rectangle)Components[0]).Angle * TransformState.Angle,
                         new Vector2(
@@ -111,7 +111,22 @@ namespace Verdant.Physics
                             Sprite.Height * TransformState.Height / 2
                             ));
                 }
-                else
+                else if (TransformState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position.X + TransformState.Position.X,
+                            Position.Y + TransformState.Position.Y,
+                            (int)(Width + TransformState.Width),
+                            (int)((Height + 2 * ((Circle)Components[1]).Radius) + TransformState.Height)
+                            ),
+                        ((Rectangle)Components[0]).Angle + TransformState.Angle,
+                        new Vector2(
+                            (Sprite.Width + TransformState.Width) / 2,
+                            (Sprite.Height + TransformState.Height) / 2
+                            ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Override)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(

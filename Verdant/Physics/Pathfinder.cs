@@ -319,18 +319,6 @@ namespace Verdant.Physics
                         pathMap[i, j] = false;
                 }
             }
-
-        }
-
-        /// <summary>
-        /// Build the Pathfinder's map of obstacles.
-        /// </summary>
-        /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
-        /// <param name="topLeft">The top left corner of the path map's bounds.</param>
-        /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
-        public void BuildPathMap(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null)
-        {
-            BuildPathMap<PhysicsEntity>(entityManager, topLeft, bottomRight);
         }
 
         /// <summary>

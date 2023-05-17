@@ -93,7 +93,7 @@ namespace Verdant.Physics
             }
             else
             {
-                if (TransformState.Multiply)
+                if (TransformState.BlendMode == TransformStateBlendMode.Multiply)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
@@ -108,7 +108,22 @@ namespace Verdant.Physics
                             Sprite.Height * TransformState.Height / 2
                             ));
                 }
-                else
+                else if (TransformState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            Position.X + TransformState.Position.X,
+                            Position.Y + TransformState.Position.Y,
+                            Width + TransformState.Width,
+                            Height + TransformState.Height
+                            ),
+                        ((Rectangle)Components[0]).Angle * TransformState.Angle,
+                        new Vector2(
+                            (Sprite.Width + TransformState.Width) / 2,
+                            (Sprite.Height + TransformState.Height) / 2
+                            ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Override)
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(

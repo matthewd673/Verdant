@@ -5,7 +5,7 @@ namespace Verdant
 {
 	internal class EntityTable
 	{
-		private Dictionary<ulong, List<Entity>> table;
+		private Dictionary<ulong, EntityList> table;
 
 		public EntityTable()
 		{
@@ -14,7 +14,7 @@ namespace Verdant
 
 		public void Insert(int x, int y, Entity e)
 		{
-			List<Entity> cell;
+			EntityList cell;
 			ulong key = Hash(x, y);
 
 			if (table.TryGetValue(key, out cell))
@@ -23,13 +23,15 @@ namespace Verdant
 			}
 			else
 			{
-				table.Add(key, new() { e });
+				EntityList l = new();
+				l.Add(e);
+				table.Add(key, l);
 			}
 		}
 
 		public bool Remove(int x, int y, Entity e)
 		{
-			List<Entity> cell;
+			EntityList cell;
 			if (table.TryGetValue(Hash(x, y), out cell))
 			{
 				return cell.Remove(e);
@@ -38,7 +40,7 @@ namespace Verdant
 			return false;
 		}
 
-		public bool GetCell(int x, int y, out List<Entity> cell)
+		public bool GetCell(int x, int y, out EntityList cell)
 		{
 			return table.TryGetValue(Hash(x, y), out cell);
 		}
@@ -48,9 +50,9 @@ namespace Verdant
 			return table.ContainsKey(Hash(x, y));
 		}
 
-		public List<Entity>[] GetCellRange(int x1, int y1, int x2, int y2)
+		public EntityList[] GetCellRange(int x1, int y1, int x2, int y2)
 		{
-			List<Entity>[] output = new List<Entity>[Math.Abs((x2 - x1 + 1) * (y2 - y1 + 1))];
+			EntityList[] output = new EntityList[Math.Abs((x2 - x1 + 1) * (y2 - y1 + 1))];
 			int p = 0;
 			for (int i = x1; i <= x2; i++)
 			{
@@ -58,7 +60,7 @@ namespace Verdant
 				{
 					if (!GetCell(i, j, out output[p]))
 					{
-						output[p] = new List<Entity>();
+						output[p] = new();
 					}
 					p++;
 				}
