@@ -128,5 +128,10 @@ namespace Verdant
             return Random.Next(max) - min;
         }
 
+        public static int RandomInt(int max)
+        {
+            return Random.Next(max);
+        }
+
     }
 }

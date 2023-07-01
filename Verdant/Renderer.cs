@@ -190,9 +190,9 @@ namespace Verdant
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="camera">The Camera to render through.</param>
-        /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
-        /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
-        /// <param name="color">The color of the Rectangle.</param>
+        /// <param name="topLeft">The coordinates of the top left corner of the rectangle.</param>
+        /// <param name="bottomRight">The coordinates of the bottom right corner of the rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
         public static void DrawRectangle(SpriteBatch spriteBatch, Camera camera, Vec2 topLeft, Vec2 bottomRight, Color color)
         {
             DrawLine(spriteBatch, camera, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
@@ -207,13 +207,27 @@ namespace Verdant
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
         /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
-        /// <param name="color">The color of the Rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
         public static void DrawRectangle(SpriteBatch spriteBatch, Vec2 topLeft, Vec2 bottomRight, Color color)
         {
             DrawLine(spriteBatch, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
             DrawLine(spriteBatch, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
             DrawLine(spriteBatch, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
             DrawLine(spriteBatch, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
+        }
+
+        /// <summary>
+        /// Fill a rectangle (using the pixel texture) in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="position">The coordinates of the top left corner of the rectangle.</param>
+        /// <param name="width">The width of the rectangle.</param>
+        /// <param name="height">The height of the rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
+        // TODO: add overloads
+        public static void FillRectangle(SpriteBatch spriteBatch, Vec2 position, float width, float height, Color color)
+        {
+            spriteBatch.Draw(Pixel, new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height), color);
         }
 
         /// <summary>
