@@ -86,10 +86,37 @@ namespace Verdant
         /// </summary>
         public void Start()
         {
-            animationTimer.Reset();
             animationTimer.Start();
             Running = true;
             Complete = false;
+        }
+
+        /// <summary>
+        /// Stop the TransformAnimation.
+        /// </summary>
+        public void Stop()
+        {
+            animationTimer.Stop();
+            Running = false;
+            Complete = false;
+        }
+
+        /// <summary>
+        /// Reset the TransformAnimation. If it is running it will be stopped.
+        /// </summary>
+        public void Reset()
+        {
+            animationTimer.Reset();
+            Running = false;
+        }
+
+        /// <summary>
+        /// Reset and start the TransformAnimation.
+        /// </summary>
+        public void Restart()
+        {
+            Reset();
+            Start();
         }
 
         /// <summary>
