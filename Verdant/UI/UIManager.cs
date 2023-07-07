@@ -81,6 +81,7 @@ namespace Verdant.UI
                 e.Manager = this;
                 elements.Add(e);
                 UIElementCount++;
+                e.OnAdd();
             }
 
             foreach (UIElement e in removeQueue)
@@ -89,6 +90,7 @@ namespace Verdant.UI
                 {
                     e.Manager = null;
                     UIElementCount--;
+                    e.OnRemove();
                 }
             }
 

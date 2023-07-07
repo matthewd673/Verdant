@@ -91,6 +91,19 @@ namespace Verdant.UI
         }
 
         /// <summary>
+        /// Called when the UIElement has been added to a UIManager and is ready to use.
+        /// NOTE: This occurs immediately after the UIElement has been processed through the add queue.
+        /// </summary>
+        public virtual void OnAdd() { }
+
+        /// <summary>
+        /// Called when the UIElement has been removed from a UIManager.
+        /// NOTE: This occurs immediately after the UIElement has been processed through the remove queue.
+        /// This will not be called if a UIElement is removed from a UIManager that it wasn't managed by.
+        /// </summary>
+        public virtual void OnRemove() { }
+
+        /// <summary>
         /// Update the UIElement.
         /// </summary>
         public virtual void Update() { }

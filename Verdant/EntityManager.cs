@@ -116,8 +116,8 @@ namespace Verdant
                 // add to table
                 table.Insert(e.Key.X, e.Key.Y, e);
 
-                e.OnAdd(); // trigger event
                 EntityCount++; // keep track
+                e.OnAdd(); // trigger event
             }
 
             // remove marked
@@ -127,8 +127,8 @@ namespace Verdant
                 if (table.Remove(key.X, key.Y, e))
                 {
                     e.Manager = null;
-                    e.OnRemove(); // trigger event
                     EntityCount--; // keep track
+                    e.OnRemove(); // trigger event
                 }
             }
 

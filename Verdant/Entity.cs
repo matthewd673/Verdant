@@ -101,11 +101,15 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Called when the Entity is added to an EntityManager.
+        /// Called when the Entity has been added to an EntityManager and is ready to use.
+        /// NOTE: This occurs immediately after the Entity has been processed through the add queue.
         /// </summary>
         public virtual void OnAdd() { }
+
         /// <summary>
-        /// Called when the Entity is removed from an EntityManager.
+        /// Called when the Entity has been removed from an EntityManager.
+        /// NOTE: This occurs immediately after the Entity has been processed through the remove queue.
+        /// This will not be called if the Entity is removed from an EntityManager that it wasn't managed by.
         /// </summary>
         public virtual void OnRemove() { }
 
