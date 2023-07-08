@@ -29,7 +29,7 @@ namespace Verdant.Debugging
         /// NOTE: Log is not intended for production use. WriteLine will not do anything unless the game is running in a debug build.
         /// </summary>
         /// <param name="value">The value to write.</param>
-        public static void WriteLine(object value)
+        public static void WriteLine(params object[] values)
         {
 #if DEBUG
             if (ConnectionFailed) { return; } //only try to connect once
@@ -53,9 +53,7 @@ namespace Verdant.Debugging
             }
 
             // hanlde printing null values
-            string s = "null";
-            if (value?.ToString() != null)
-                s = value.ToString();
+            string s = ObjectsToString(values);
             byte[] messageBytes = Encoding.ASCII.GetBytes(s);
 
             // fail silently if message doesn't send
@@ -68,6 +66,26 @@ namespace Verdant.Debugging
                 ConnectionFailed = true;
             }
 #endif
+        }
+
+        private static string ObjectsToString(object[] objects)
+        {
+            if (objects == null)
+                return "null.";
+
+            StringBuilder output = new();
+            for (int i = 0; i < objects.Length; i++)
+            {
+                string objStr = objects[i].ToString();
+                if (objStr == null)
+                    output.Append("null");
+                else
+                    output.Append(objStr);
+
+                if (i < objects.Length - 1)
+                    output.Append(", ");
+            }
+            return output.ToString();
         }
 
     }
