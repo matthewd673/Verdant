@@ -73,7 +73,7 @@ namespace Verdant.UI
             foreach (UIElement e in addQueue)
             {
                 e.Parent = this;
-                e.Position = new Vec2(e.Position.X + Padding.Left, e.Position.Y + Padding.Top);
+                e.Position = new Vec2(e.Position.X + BoxModel.Padding.Left, e.Position.Y + BoxModel.Padding.Top);
 
                 children.Add(e);
                 ChildCount++;
@@ -107,12 +107,12 @@ namespace Verdant.UI
             ApplyQueues();
 
             // calculate new width/height
-            AbsoluteWidth = 0;
-            AbsoluteHeight = 0;
+            BoxModel.Width = 0;
+            BoxModel.Height = 0;
             foreach (UIElement e in children)
             {
-                AbsoluteWidth = Math.Max(e.Position.X + e.Width, AbsoluteWidth);
-                AbsoluteHeight = Math.Max(e.Position.Y + e.Height, AbsoluteHeight);
+                BoxModel.Width = Math.Max(e.Position.X + e.BoxModel.TotalWidth, BoxModel.Width);
+                BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.Height);
             }
         }
 
@@ -128,10 +128,10 @@ namespace Verdant.UI
             // draw background
             spriteBatch.Draw(Renderer.Pixel,
                              new Rectangle(
-                                 (int)InnerPosition.X,
-                                 (int)InnerPosition.Y,
-                                 (int)InnerWidth,
-                                 (int)InnerHeight
+                                 (int)AbsoluteElementPosition.X,
+                                 (int)AbsoluteElementPosition.Y,
+                                 (int)BoxModel.ElementWidth,
+                                 (int)BoxModel.ElementHeight
                                  ),
                              BackgroundColor);
 

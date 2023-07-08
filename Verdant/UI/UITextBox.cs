@@ -28,7 +28,7 @@ namespace Verdant.UI
                     value = value[..MaxLength];
                 _text = value;
                 _textMeasurements = Font.MeasureString(_text);
-                AbsoluteWidth = (int)_textMeasurements.X;
+                BoxModel.Width = (int)_textMeasurements.X;
                 OnChanged();
             }
         }
@@ -76,17 +76,8 @@ namespace Verdant.UI
         private int currentHoldFrames = 0;
         private bool repeatingHold = false;
 
-        private float _width;
-        // The width of the UITextBox (may change when the text changes).
-        protected override float AbsoluteWidth
-        {
-            get { return (_width > MinWidth) ? _width : MinWidth; }
-            set { _width = value; }
-        }
         // The minimum (pixel) width of the UITextBox.
         public float MinWidth { get; set; } = 64;
-        // The height of the UITextBox (does not change when the text changes).
-        protected override float AbsoluteHeight { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UITextBox.
@@ -95,7 +86,7 @@ namespace Verdant.UI
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display by default.</param>
         public UITextBox(Vec2 position, SpriteFont font, string text = "")
-            : base(position, 0, font.LineSpacing) // TODO: 0 width?
+            : base(position, 0, font.LineSpacing) // TODO: is 0 width a good default?
         {
             Font = font;
             Text = text;
@@ -108,10 +99,10 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (InnerPosition.X) * Renderer.Scale,
-                (InnerPosition.Y) * Renderer.Scale,
-                (int)(InnerWidth) * Renderer.Scale,
-                (int)(InnerHeight) * Renderer.Scale))
+                AbsoluteElementPosition.X * Renderer.Scale,
+                AbsoluteElementPosition.Y * Renderer.Scale,
+                (int)(BoxModel.ElementWidth) * Renderer.Scale,
+                (int)(BoxModel.ElementHeight) * Renderer.Scale))
             {
                 if (!Hovered)
                     OnHover();
@@ -239,10 +230,10 @@ namespace Verdant.UI
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(InnerPosition.X - OutlineThickness),
-                        (int)(InnerPosition.Y - OutlineThickness),
-                        (int)((AbsoluteWidth >= MinWidth ? InnerWidth : MinWidth + Padding.Left + Padding.Right) + 2*OutlineThickness),
-                        (int)(InnerHeight + 2*OutlineThickness)
+                        (int)(AbsoluteElementPosition.X - OutlineThickness),
+                        (int)(AbsoluteElementPosition.Y - OutlineThickness),
+                        (int)((BoxModel.ElementWidth >= MinWidth ? BoxModel.Width : MinWidth + BoxModel.Padding.Left + BoxModel.Padding.Right) + 2*OutlineThickness),
+                        (int)(BoxModel.ElementHeight + 2*OutlineThickness)
                         ),
                     OutlineColor
                     );
@@ -250,26 +241,26 @@ namespace Verdant.UI
             // draw background
             spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
-                    (int)(InnerPosition.X),
-                    (int)(InnerPosition.Y),
-                    (int)(AbsoluteWidth >= MinWidth ? InnerWidth: MinWidth + Padding.Left + Padding.Right),
-                    (int)(InnerHeight)
+                    (int)(AbsoluteElementPosition.X),
+                    (int)(AbsoluteElementPosition.Y),
+                    (int)(BoxModel.ElementWidth),
+                    (int)(BoxModel.ElementHeight)
                 ),
                 BackgroundColor
                 );
 
             // draw string
-            spriteBatch.DrawString(Font, Text, new Vector2(AbsolutePosition.X + Padding.Left, AbsolutePosition.Y + Padding.Top), Color);
+            spriteBatch.DrawString(Font, Text, new Vector2(AbsoluteContentPosition.X, AbsoluteContentPosition.Y), Color);
 
             // draw caret
             if (ShowCaret && Focused)
             {
                 spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(InnerPosition.X + Padding.Left + caretPreWidth),
-                        (int)(InnerPosition.Y + Padding.Top),
+                        (int)(AbsoluteContentPosition.X + caretPreWidth),
+                        (int)(AbsoluteContentPosition.X),
                         1,
-                        (int)(AbsoluteHeight)
+                        (int)BoxModel.ElementHeight
                         ),
                     Color.Black);
             }
@@ -384,6 +375,31 @@ namespace Verdant.UI
         private static bool CharIsNumeric(char c)
         {
             return (c >= 48 && c <= 57) || c == '.' || c == '-';
+        }
+    }
+
+    public class UITextBoxBoxModel : BoxModel
+    {
+        private UITextBox parent;
+
+        private float _width;
+        // The width of the UITextBox (may change when the text changes).
+        public override float Width
+        {
+            get { return _width < parent.MinWidth ? parent.MinWidth : _width; }
+            set { _width = value; }
+        }
+
+        // The height of the UITextBox (does not change when the text changes).
+        public override float Height
+        {
+            get { return parent.Font.LineSpacing; }
+        }
+
+        public UITextBoxBoxModel(UITextBox parent)
+            : base()
+        {
+            this.parent = parent;
         }
     }
 

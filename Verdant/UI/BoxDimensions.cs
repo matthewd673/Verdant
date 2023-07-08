@@ -17,6 +17,16 @@ namespace Verdant.UI
         public float Left { get; set; }
         public float Right { get; set; }
 
+        public float Vertical
+        {
+            get { return Top + Bottom; }
+        }
+
+        public float Horizontal
+        {
+            get { return Left + Right; }
+        }
+
         /// <summary>
         /// Initialize a new BoxDimensions.
         /// </summary>

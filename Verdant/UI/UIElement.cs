@@ -13,60 +13,52 @@ namespace Verdant.UI
 
         // The UIManager managing the element.
         public UIManager Manager { get; set; }
-        // The UIGroup that contains the element. Not all UIElements have a parent.
+        // The UIGroup that contains the element. UIElements don't need to have a parent.
         public UIGroup Parent { get; set; }
 
-        // The position of the UIElement relative to its parent.
+        // The relative position of the UIElement.
         public virtual Vec2 Position { get; set; }
-        // The position of the UIElement on the screen. Calculated by summing this element's Position and its parent's AbsolutePosition.
+        // The absolute screen position of the UIElement.
         public Vec2 AbsolutePosition
         {
-            get
-            {
-                if (Parent != null)
-                    return Parent.InnerPosition + Position;
-                return Position;
-            }
+            get { return Position + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
         }
 
-        // The width of the UIElement, not including padding or margin.
-        protected virtual float AbsoluteWidth { get; set; }
-        // The height of the UIElement, not including padding or margin.
-        protected virtual float AbsoluteHeight { get; set; }
-
-        // The width of the UIElement in screen space (including padding and margin).
-        public float Width
+        // The position of the visible part of the UIElement (its position + margin).
+        public Vec2 ElementPosition
         {
             get
             {
-                return AbsoluteWidth + Padding.Left + Padding.Right + Margin.Left + Margin.Right;
-            }
-            set
-            {
-                AbsoluteWidth = value; // TODO: this seems right, but may not be intuitive
+                return Position +
+                    new Vec2(BoxModel.Margin.Left, BoxModel.Margin.Top);
             }
         }
-        // The height of the UIElement in screen space (including padding and margin).
-        public float Height
+        // The absolute screen position of the visible part of the UIElement (its position + margin).
+        public Vec2 AbsoluteElementPosition
+        {
+            get { return ElementPosition + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
+        }
+
+        // The position of the content of the UIElement (its position + margin + padding).
+        public Vec2 ContentPosition
         {
             get
             {
-                return AbsoluteHeight + Padding.Top + Padding.Bottom + Margin.Top + Margin.Bottom;
-            }
-            set
-            {
-                AbsoluteHeight = value;
+                return Position +
+                    new Vec2(
+                        BoxModel.Margin.Left + BoxModel.Padding.Left,
+                        BoxModel.Margin.Top + BoxModel.Margin.Left
+                        );
             }
         }
+        // The absolute screen position of the content of the UIElement (its position + margin + padding).
+        public Vec2 AbsoluteContentPosition
+        {
+            get { return ContentPosition + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
+        }
 
-        // The margin surrounding the UIElement.
-        public BoxDimensions Margin { get; set; }
-        // The padding within the UIElement.
-        public BoxDimensions Padding { get; set; }
-
-        protected Vec2 InnerPosition { get { return AbsolutePosition + new Vec2(Margin.Left, Margin.Top); } }
-        protected float InnerWidth { get { return AbsoluteWidth + Padding.Left + Padding.Right; } }
-        protected float InnerHeight { get { return AbsoluteHeight + Padding.Top + Padding.Bottom; } }
+        // The UIElement's box model, including width, height, margin, and padding.
+        public virtual BoxModel BoxModel { get; set; } = new();
 
         // Determines if the UIElement will be removed at the end of the update loop.
         public bool ForRemoval { get; set; }
@@ -86,8 +78,8 @@ namespace Verdant.UI
         public UIElement(Vec2 position, float width, float height)
         {
             Position = position;
-            AbsoluteWidth = width;
-            AbsoluteHeight = height;
+            BoxModel.Width = width;
+            BoxModel.Height = height;
         }
 
         /// <summary>
@@ -123,19 +115,19 @@ namespace Verdant.UI
             // draw with margin
             Renderer.DrawRectangle(spriteBatch,
                 AbsolutePosition * Renderer.Scale,
-                (AbsolutePosition + new Vec2(Width, Height)) * Renderer.Scale,
+                (AbsolutePosition + new Vec2(BoxModel.TotalWidth, BoxModel.TotalHeight)) * Renderer.Scale,
                 Color.PaleGreen
                 );
             // draw padding
             Renderer.DrawRectangle(spriteBatch,
-                                   (InnerPosition + new Vec2(Padding.Left, Padding.Top)) * Renderer.Scale,
-                                   (InnerPosition + new Vec2(InnerWidth, InnerHeight) - new Vec2(Padding.Right, Padding.Bottom)) * Renderer.Scale,
+                                   AbsoluteContentPosition * Renderer.Scale,
+                                   (AbsoluteContentPosition - new Vec2(BoxModel.Padding.Right, BoxModel.Padding.Bottom)) * Renderer.Scale,
                                    Color.Pink
                                    );
             // draw border
             Renderer.DrawRectangle(spriteBatch,
-                InnerPosition,
-                (InnerPosition + new Vec2(InnerWidth, InnerHeight)) * Renderer.Scale,
+                AbsoluteElementPosition,
+                (AbsoluteElementPosition + new Vec2(BoxModel.ElementWidth, BoxModel.ElementHeight)) * Renderer.Scale,
                 Color.Black
                 );
         }

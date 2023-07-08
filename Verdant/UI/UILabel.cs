@@ -20,8 +20,8 @@ namespace Verdant.UI
                 if (value.Equals(_text)) return;
 
                 _text = value;
-                AbsoluteWidth = Font.MeasureString(_text).X;
-                AbsoluteHeight = Font.MeasureString(_text).Y;
+                BoxModel.Width = Font.MeasureString(_text).X;
+                BoxModel.Height = Font.MeasureString(_text).Y;
             }
         }
 
@@ -47,8 +47,8 @@ namespace Verdant.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)InnerPosition.X, (int)InnerPosition.Y, (int)InnerWidth, (int)InnerHeight), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)(InnerPosition + new Vec2(Padding.Left, Padding.Top)) * Renderer.Scale, Color);
+            spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)AbsoluteElementPosition.X, (int)AbsoluteElementPosition.Y, (int)BoxModel.ElementWidth, (int)BoxModel.ElementHeight), BackgroundColor);
+            spriteBatch.DrawString(Font, Text, (Vector2)AbsoluteContentPosition * Renderer.Scale, Color);
         }
 
         public override void DrawBounds(SpriteBatch spriteBatch)

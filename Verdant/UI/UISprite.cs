@@ -24,13 +24,13 @@ namespace Verdant.UI
                 _repeat = value;
                 if (_repeatVertical)
                 {
-                    AbsoluteWidth = Sprite.Width;
-                    AbsoluteHeight = Sprite.Height * Repeat;
+                    BoxModel.Width = Sprite.Width;
+                    BoxModel.Height = Sprite.Height * Repeat;
                 }
                 else
                 {
-                    AbsoluteWidth = Sprite.Width * Repeat;
-                    AbsoluteHeight = Sprite.Height * Repeat;
+                    BoxModel.Width = Sprite.Width * Repeat;
+                    BoxModel.Height = Sprite.Height * Repeat;
                 }
             }
         }
@@ -45,13 +45,13 @@ namespace Verdant.UI
                 _repeatVertical = value;
                 if (_repeatVertical)
                 {
-                    AbsoluteWidth = Sprite.Width;
-                    AbsoluteHeight = Sprite.Height * Repeat;
+                    BoxModel.Width = Sprite.Width;
+                    BoxModel.Height = Sprite.Height * Repeat;
                 }
                 else
                 {
-                    AbsoluteWidth = Sprite.Width * Repeat;
-                    AbsoluteHeight = Sprite.Height * Repeat;
+                    BoxModel.Width = Sprite.Width * Repeat;
+                    BoxModel.Height = Sprite.Height * Repeat;
                 }
             }
         }
@@ -106,10 +106,10 @@ namespace Verdant.UI
         {
             Sprite.DrawIndex(spriteBatch,
                              new Rectangle(
-                                 (int)((InnerPosition.X + Padding.Left) * Renderer.Scale),
-                                 (int)((InnerPosition.Y + Padding.Top) * Renderer.Scale),
-                                 (int)(AbsoluteWidth * Renderer.Scale),
-                                 (int)(AbsoluteHeight * Renderer.Scale)),
+                                 (int)(AbsoluteContentPosition.X * Renderer.Scale),
+                                 (int)(AbsoluteContentPosition.Y * Renderer.Scale),
+                                 (int)(BoxModel.Width * Renderer.Scale),
+                                 (int)(BoxModel.Height * Renderer.Scale)),
                              SpriteIndex);
         }
 

@@ -44,9 +44,9 @@ namespace Verdant.UI
         public void AddGap(float gap)
         {
             if (Vertical)
-                AbsoluteHeight += gap;
+                BoxModel.Height += gap;
             else
-                AbsoluteWidth += gap;
+                BoxModel.Width += gap;
         }
 
         public override void Update()
@@ -56,25 +56,25 @@ namespace Verdant.UI
             float total = 0;
 
             // recalculate group size
-            AbsoluteWidth = 0;
-            AbsoluteHeight = 0;
+            BoxModel.Width = 0;
+            BoxModel.Height = 0;
             foreach (UIElement e in children)
             {
                 if (Vertical)
                 {
-                    e.Position = new Vec2(Padding.Left, Padding.Top + total);
-                    total += e.Height;
+                    e.Position = new Vec2(BoxModel.Padding.Left, BoxModel.Padding.Top + total);
+                    total += e.BoxModel.TotalHeight;
                     total += Gap;
                 }
                 else
                 {
-                    e.Position = new Vec2(Padding.Left + total, Padding.Top);
-                    total += e.Width;
+                    e.Position = new Vec2(BoxModel.Padding.Left + total, BoxModel.Padding.Top);
+                    total += e.BoxModel.TotalWidth;
                     total += Gap;
                 }
 
-                AbsoluteWidth = Math.Max(e.Position.X + e.Width, AbsoluteWidth);
-                AbsoluteHeight = Math.Max(e.Position.Y + e.Height, AbsoluteHeight);
+                BoxModel.Width = Math.Max(e.Position.X + e.BoxModel.TotalWidth, BoxModel.ElementWidth);
+                BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.ElementHeight);
             }
 
             // reposition into alignment
@@ -87,27 +87,27 @@ namespace Verdant.UI
                         case Alignment.Center:
                             if (Vertical)
                             {
-                                float center = (InnerWidth - Padding.Left - Padding.Right) / 2;
-                                e.Position.X = center - (e.Width / 2) + Padding.Left/2;
+                                float center = BoxModel.Width / 2;
+                                e.Position.X = center - (e.BoxModel.ElementWidth / 2) + BoxModel.Padding.Left/2;
                             }
                             else
                             {
-                                float center = (InnerHeight - Padding.Top - Padding.Bottom) / 2;
-                                e.Position.Y = center - (e.Height / 2) + Padding.Top/2;
+                                float center = BoxModel.Height / 2;
+                                e.Position.Y = center - (e.BoxModel.ElementHeight / 2) + BoxModel.Padding.Top/2;
                             }
                             break;
                         case Alignment.End:
                             if (Vertical)
-                                e.Position.X = InnerWidth - 2*Padding.Right - e.Width;
+                                e.Position.X = BoxModel.Width - e.BoxModel.TotalWidth;
                             else
-                                e.Position.Y = InnerHeight - 2*Padding.Bottom - e.Height;
+                                e.Position.Y = BoxModel.Height - e.BoxModel.TotalHeight;
                             break;
                     }
                 }
             }
 
-            AbsoluteWidth -= Padding.Left;
-            AbsoluteHeight -= Padding.Top;
+            BoxModel.Width -= BoxModel.Padding.Left;
+            BoxModel.Height -= BoxModel.Padding.Top;
         }
     }
 }

@@ -99,8 +99,8 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (IndicatorPosition.X + InnerPosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
-                (IndicatorPosition.Y + InnerPosition.Y) * Renderer.Scale,
+                (IndicatorPosition.X + AbsoluteElementPosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
+                (IndicatorPosition.Y + AbsoluteElementPosition.Y) * Renderer.Scale,
                 indicatorWidth * Renderer.Scale,
                 indicatorHeight * Renderer.Scale
                 ))
@@ -174,16 +174,16 @@ namespace Verdant.UI
         {
             BarSprite.Draw(spriteBatch,
                            new Rectangle(
-                               (int)(InnerPosition.X * Renderer.Scale),
-                               (int)(InnerPosition.Y - IndicatorDrawOffsetY * Renderer.Scale),
+                               (int)(AbsoluteElementPosition.X * Renderer.Scale),
+                               (int)(AbsoluteElementPosition.Y - IndicatorDrawOffsetY * Renderer.Scale),
                                barWidth * Renderer.Scale,
                                barHeight * Renderer.Scale)
                            );
 
             IndicatorSprite.Draw(spriteBatch,
                                  new Rectangle(
-                                    (int)((IndicatorPosition.X + InnerPosition.X + IndicatorDrawOffsetX) * Renderer.Scale),
-                                    (int)((IndicatorPosition.Y + InnerPosition.Y) * Renderer.Scale),
+                                    (int)((IndicatorPosition.X + AbsoluteElementPosition.X + IndicatorDrawOffsetX) * Renderer.Scale),
+                                    (int)((IndicatorPosition.Y + AbsoluteElementPosition.Y) * Renderer.Scale),
                                     indicatorWidth * Renderer.Scale,
                                     indicatorHeight * Renderer.Scale)
                                  );

@@ -35,10 +35,10 @@ namespace Verdant.UI
             // check for hover
             if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                InnerPosition.X * Renderer.Scale,
-                InnerPosition.Y * Renderer.Scale,
-                (int)InnerWidth * Renderer.Scale,
-                (int)InnerHeight * Renderer.Scale
+                AbsoluteElementPosition.X * Renderer.Scale,
+                AbsoluteElementPosition.Y * Renderer.Scale,
+                (int)BoxModel.ElementWidth * Renderer.Scale,
+                (int)BoxModel.ElementHeight * Renderer.Scale
                 ))
             { // button is being hovered
                 if (!Hovered) //it wasn't hovered last time, so trigger
