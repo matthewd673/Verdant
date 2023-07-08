@@ -10,9 +10,6 @@ namespace Verdant.UI
     /// </summary>
     public class UITextBox : UIElement
     {
-
-        // Denotes if the UITextBox is hovered.
-        public bool Hovered { get; private set; }
         // Denotes if the UITextBox is focused. If the UITextBox is focused, it is accepting input.
         public bool Focused { get; private set; }
 
@@ -95,25 +92,6 @@ namespace Verdant.UI
         public override void Update()
         {
             base.Update();
-
-            // check for hover
-            if (GameMath.PointOnRectIntersection(
-                (Vec2)InputHandler.MousePosition,
-                AbsoluteElementPosition.X * Renderer.Scale,
-                AbsoluteElementPosition.Y * Renderer.Scale,
-                (int)(BoxModel.ElementWidth) * Renderer.Scale,
-                (int)(BoxModel.ElementHeight) * Renderer.Scale))
-            {
-                if (!Hovered)
-                    OnHover();
-                Hovered = true;
-            }
-            else
-            {
-                if (Hovered)
-                    OnHoverExit();
-                Hovered = false;
-            }
 
             // check for focus
             if (Hovered && InputHandler.IsMouseFirstPressed())
@@ -266,47 +244,15 @@ namespace Verdant.UI
             }
         }
 
-        public event EventHandler Hover;
-        protected virtual void OnHover()
-        {
-            Hover?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnFocus() { }
 
-        public event EventHandler HoverExit;
-        protected virtual void OnHoverExit()
-        {
-            HoverExit?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnFocusLost() { }
 
-        public event EventHandler Focus;
-        protected virtual void OnFocus()
-        {
-            Focus?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnSubmit() { }
 
-        public event EventHandler FocusLost;
-        protected virtual void OnFocusLost()
-        {
-            FocusLost?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnKeyPressed(Keys key) { }
 
-        public event EventHandler Submit;
-        protected virtual void OnSubmit()
-        {
-            Submit?.Invoke(this, EventArgs.Empty);
-        }
-
-        public event EventHandler KeyPressed;
-        protected virtual void OnKeyPressed(Keys key)
-        {
-            KeyPressed?.Invoke(this, new KeyPressedEventArgs(key));
-        }
-
-        public event EventHandler Changed;
-        protected virtual void OnChanged()
-        {
-            Changed?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnChanged() { }
 
         private static char GetKeyChar(KeyboardState state, Keys k)
         {

@@ -69,6 +69,12 @@ namespace Verdant.UI
         // Determines if the UIElement should be rendered.
         public bool Show { get; set; } = true;
 
+        private bool wasHovered = false;
+        // Determines if the mouse is hovering over this UIElement.
+        public bool Hovered { get; protected set; } = false;
+
+        private bool clickBeganOnElement = false;
+
         /// <summary>
         /// Initialize a new UIElement.
         /// </summary>
@@ -98,7 +104,42 @@ namespace Verdant.UI
         /// <summary>
         /// Update the UIElement.
         /// </summary>
-        public virtual void Update() { }
+        public virtual void Update()
+        {
+            // calculate hover
+            wasHovered = Hovered;
+            Hovered = GameMath.PointOnRectIntersection(
+                (Vec2)InputHandler.MousePosition,
+                AbsoluteElementPosition.X, AbsoluteElementPosition.Y,
+                BoxModel.ElementWidth, BoxModel.ElementHeight);
+
+            if (!wasHovered && Hovered)
+                OnHoverBegin();
+            else if (wasHovered && !Hovered)
+                OnHoverEnd();
+
+            // calculate click
+            if (Hovered && InputHandler.IsMouseFirstPressed())
+            {
+                OnMouseDown();
+                clickBeganOnElement = true;
+            }
+            else if (InputHandler.IsMouseFirstPressed())
+            {
+                clickBeganOnElement = false;
+            }
+
+            if (Hovered && InputHandler.IsMouseFirstReleased())
+            {
+                OnMouseUp();
+            }
+            // a click only counts if you pressed and released on the element
+            // (a click will trigger (in this order):  OnMouseDown(), OnMouseUp(), OnClick())
+            if (Hovered && InputHandler.IsMouseFirstReleased() && clickBeganOnElement)
+            {
+                OnClick();
+            }
+        }
 
         /// <summary>
         /// Draw the UIElement.
@@ -141,6 +182,30 @@ namespace Verdant.UI
         {
             return GetType() == t || GetType().IsSubclassOf(t);
         }
+
+        /// <summary>
+        /// Called when the mouse starts hovering over the UIElement.
+        /// </summary>
+        public virtual void OnHoverBegin() { }
+        /// <summary>
+        /// Called when the mouse stops hovering over the UIElement.
+        /// </summary>
+        public virtual void OnHoverEnd() { }
+
+        /// <summary>
+        /// Called when the mouse is first pressed on this UIElement.
+        /// </summary>
+        public virtual void OnMouseDown() { }
+        /// <summary>
+        /// Called when the mouse is first released on this UIElement.
+        /// </summary>
+        public virtual void OnMouseUp() { }
+        /// <summary>
+        /// Called when the UIElement is formally clicked.
+        /// A click means the mouse is pressed over a UIElement and then released over the same UIElement.
+        /// A click will call OnMouseDown(), OnMouseUp(), and OnClick() in that order.
+        /// </summary>
+        public virtual void OnClick() { }
 
     }
 }

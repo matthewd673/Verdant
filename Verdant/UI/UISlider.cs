@@ -10,8 +10,6 @@ namespace Verdant.UI
     public class UISlider : UIElement
     {
 
-        // Indicates if the mouse is hovering on the slider's indicator.
-        public bool Hovered { get; private set; } = false;
         // Indicates if the mouse is grabbing the slider's indicator.
         public bool Grabbed { get; private set; } = false;
 
@@ -96,30 +94,10 @@ namespace Verdant.UI
 
         public override void Update()
         {
-            // check for hover
-            if (GameMath.PointOnRectIntersection(
-                (Vec2)InputHandler.MousePosition,
-                (IndicatorPosition.X + AbsoluteElementPosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
-                (IndicatorPosition.Y + AbsoluteElementPosition.Y) * Renderer.Scale,
-                indicatorWidth * Renderer.Scale,
-                indicatorHeight * Renderer.Scale
-                ))
-            { // indicator is being hovered
-                if (!Hovered)
-                    OnHover();
-                Hovered = true;
-            }
-            else // indicator is no longer hovered
-            {
-                if (Hovered)
-                    OnHoverExit();
-                Hovered = false;
-            }
-
             // check for grab start
             if (Hovered && InputHandler.IsMouseFirstPressed())
             {
-                OnGrab();
+                OnGrabBegin();
                 Grabbed = true;
 
                 // prepare for dragging
@@ -128,7 +106,7 @@ namespace Verdant.UI
             // check for grab end
             if (Grabbed && InputHandler.IsMouseFirstReleased())
             {
-                OnDrop();
+                OnGrabEnd();
                 Grabbed = false;
             }
 
@@ -140,35 +118,11 @@ namespace Verdant.UI
             }
         }
 
-        public event EventHandler Hover;
-        protected virtual void OnHover()
-        {
-            Hover?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnGrabBegin() { }
 
-        public event EventHandler HoverExit;
-        protected virtual void OnHoverExit()
-        {
-            HoverExit?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnGrabEnd() { }
 
-        public event EventHandler Grab;
-        protected virtual void OnGrab()
-        {
-            Grab?.Invoke(this, EventArgs.Empty);
-        }
-
-        public event EventHandler Drop;
-        protected virtual void OnDrop()
-        {
-            Drop?.Invoke(this, EventArgs.Empty);
-        }
-
-        public event EventHandler Change;
-        protected virtual void OnChanged()
-        {
-            Change?.Invoke(this, EventArgs.Empty);
-        }
+        protected virtual void OnChanged() { }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
