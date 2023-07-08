@@ -11,6 +11,9 @@ namespace Verdant
     /// </summary>
     public class Animation : SpriteSheet
     {
+
+        public delegate void AnimationCallback(Animation sender);
+
         private FrameSet frameSet;
 
         private int frameDelay;
@@ -26,7 +29,7 @@ namespace Verdant
 
         // Is true after a non-looping Animation has completed or a looping Animation has completed at least one loop.
         public bool Complete
-        { 
+        {
             get { return Looping ? hasLooped : settled; }
         }
 
@@ -43,9 +46,15 @@ namespace Verdant
 
         // The number of frames in the Animation
         public int Count
-        { 
+        {
             get { return frameSet.endFrame - frameSet.startFrame; }
         }
+
+        // The number of loops the Animation has completed.
+        public int Loops { get; private set; }
+
+        // A callback that will be called every time an Animation complete a loop.
+        public AnimationCallback OnComplete { get; set; }
 
         /// <summary>
         /// Initialize a new Animation.
@@ -93,10 +102,10 @@ namespace Verdant
         /// Perform the next step of the Animation and return the current frame.
         /// </summary>
         /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
         {
             if (settled) // skip other steps if settled
-                DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
+                DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
 
             // tick towards next frame
             frameTimeCounter--;
@@ -121,11 +130,18 @@ namespace Verdant
                         frameIndex = frameSet.endFrame - 1;
                         settled = true;
                     }
+                    Loops++;
+                    OnComplete?.Invoke(this);
                 }
 
             }
 
-            DrawIndex(spriteBatch, bounds, frameIndex, frameSet.row);
+            DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
+        {
+            Draw(spriteBatch, bounds, 0f, new Vector2(0, 0)); // TODO: clean up
         }
 
         /// <summary>
@@ -134,7 +150,7 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping);
+            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping) { Loops = 0, };
         }
 
         public struct FrameSet

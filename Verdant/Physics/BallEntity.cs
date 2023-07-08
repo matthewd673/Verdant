@@ -51,12 +51,54 @@ namespace Verdant.Physics
         {
             if (Sprite == RenderObject.None) return;
 
-            Sprite.Draw(spriteBatch,
+            if (TransformState == null)
+            {
+                Sprite.Draw(spriteBatch,
+                            Manager.Scene.Camera.GetRenderBounds(
+                                Position - new Vec2(radius, radius),
+                                drawDiam,
+                                drawDiam
+                                )
+                            );
+            }
+            else
+            {
+                if (TransformState.BlendMode == TransformStateBlendMode.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            Position - new Vec2(radius, radius),
-                            drawDiam,
-                            drawDiam)
-                        );
+                            (Position.X - (drawDiam * TransformState.Width/2)) * TransformState.Position.X,
+                            (Position.Y - (drawDiam * TransformState.Height/2)) * TransformState.Position.Y,
+                            drawDiam * TransformState.Width,
+                            drawDiam * TransformState.Height
+                            ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (Position.X - ((drawDiam + TransformState.Width) / 2)) + TransformState.Position.X,
+                            (Position.Y - ((drawDiam + TransformState.Height) / 2)) + TransformState.Position.Y,
+                            drawDiam + TransformState.Width,
+                            drawDiam + TransformState.Height
+                            ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Override)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (TransformState.Width / 2f) + TransformState.Position.X,
+                            (TransformState.Height / 2f) + TransformState.Position.Y,
+                            TransformState.Width,
+                            TransformState.Height
+                            ),
+                        TransformState.Angle,
+                        new Vector2(
+                            TransformState.Width / 2,
+                            TransformState.Height / 2
+                            ));
+                }
+            }
         }
     }
 }

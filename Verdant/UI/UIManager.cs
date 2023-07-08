@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// Manages the creation, deletion, and update logic of UIElements
+    /// </summary>
     public class UIManager
     {
 
@@ -78,6 +81,7 @@ namespace Verdant.UI
                 e.Manager = this;
                 elements.Add(e);
                 UIElementCount++;
+                e.OnAdd();
             }
 
             foreach (UIElement e in removeQueue)
@@ -86,6 +90,7 @@ namespace Verdant.UI
                 {
                     e.Manager = null;
                     UIElementCount--;
+                    e.OnRemove();
                 }
             }
 

@@ -3,113 +3,150 @@ using Microsoft.Xna.Framework;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Smoothly animates between two TransformStates, according to a TimingFunction.
+    /// </summary>
     public class TransformAnimation
     {
+        // The initial TransformState (it will be filled backwards even if the animation hasn't started).
+        public TransformState From { get; private set; }
+        // The final TransformState.
+        public TransformState To { get; private set; }
 
-        TransformState from;
-        TransformState to;
+        // Should be the same for both TransformStates, but will be set to the "from" state's blend mode.
+        public TransformStateBlendMode BlendMode { get; private set; }
+        private Timer animationTimer;
+        private TimingFunction timingFunction;
 
-        int animateDuration;
-        int animateCountdown;
+        // Indicates if the TransformAnimation is currently running.
+        public bool Running { get; private set; }
+        // Indicates if the TransformAnimation is complete.
+        public bool Complete { get; private set; }
 
-        TransformState current;
-        TransformState intervals;
+        // Determines if the final TransformState should fill forwards when the animation is complete.
+        public bool FillForwards { get; set; } = true;
+
+        private TransformState diff;
+        private TransformState current;
 
         /// <summary>
         /// Initialize a new TransformAnimation.
         /// </summary>
         /// <param name="from">The beginning TransformState.</param>
         /// <param name="to">The ending TransformState.</param>
-        /// <param name="duration">The duration of the animation (number of frames).</param>
-        public TransformAnimation(TransformState from, TransformState to, int duration)
+        /// <param name="duration">The duration of the animation (ms).</param>
+        public TransformAnimation(TransformState from, TransformState to, float duration)
         {
-            this.from = from;
-            this.to = to;
-            animateDuration = duration;
-            animateCountdown = duration;
-
-            current = new TransformState(from);
-            intervals = CalculateIntervals(from, to, duration);
+            From = from;
+            To = to;
+            BlendMode = From.BlendMode; // you can't mix them
+            animationTimer = new Timer(duration, AnimationTimerCallback);
+            timingFunction = AnimationTimingFunctions.Linear;
+            current = new(BlendMode);
+            diff = to - from;
         }
 
         /// <summary>
-        /// Given a beginning and ending TransformState, and a duration, calculate the intervals that each property will change at.
+        /// Initialize a new TransformAnimation.
         /// </summary>
         /// <param name="from">The beginning TransformState.</param>
         /// <param name="to">The ending TransformState.</param>
-        /// <param name="duration">The duration of the animation (number of frames).</param>
-        /// <returns>A TransformState containing the intervals that each property should change at.</returns>
-        TransformState CalculateIntervals(TransformState from, TransformState to, int duration)
+        /// <param name="duration">The duration of the animation (ms).</param>
+        /// <param name="timingFunction">The timing function of the animation.</param>
+        public TransformAnimation(TransformState from, TransformState to, float duration, TimingFunction timingFunction)
         {
-            //calculate total differences
-            float dX = to.X - from.Y;
-            float dY = to.Y - from.Y;
-            float dW = to.Width - from.Width;
-            float dH = to.Height - from.Height;
-            float dR = to.Rotation - from.Rotation;
+            From = from;
+            To = to;
+            BlendMode = From.BlendMode; // you can't mix them
+            animationTimer = new Timer(duration, AnimationTimerCallback);
+            this.timingFunction = timingFunction;
+            current = new(BlendMode);
+            diff = to - from;
+        }
 
-            //build intervals into new transformstate
-            return new TransformState(
-                dX / duration,
-                dY / duration,
-                dW / duration,
-                dH / duration,
-                dR / duration
-                );
+        private void AnimationTimerCallback(Timer t)
+        {
+            Running = false;
+            Complete = true;
+        }
+
+        private TransformAnimation(TransformState from, TransformState to, float duration, TimingFunction timingFunction, TransformState diff)
+        {
+            From = from;
+            To = to;
+            BlendMode = From.BlendMode;
+            animationTimer = new Timer(duration, (Timer) => { Running = false; Complete = true; });
+            this.timingFunction = timingFunction;
+            current = new(BlendMode);
+            this.diff = diff;
         }
 
         /// <summary>
-        /// Perform the next step of the animation, and return a TransformState representing the current state.
+        /// Start the TransformAnimation.
         /// </summary>
-        /// <returns>A TransformState representing the current state of the animation.</returns>
-        public TransformState Animate()
+        public void Start()
         {
-            //perform animation if it isn't complete
-            if (animateCountdown > 0)
-            {
-                //update current according to intervals
-                current.X += intervals.X;
-                current.Y += intervals.Y;
-                current.Width += intervals.Width;
-                current.Height += intervals.Height;
-                current.Rotation += intervals.Rotation;
-
-                //tick animation
-                animateCountdown--;
-
-                return current; //return current state
-            }
-
-            return to; //if animation complete, return final state
+            animationTimer.Start();
+            Running = true;
+            Complete = false;
         }
 
         /// <summary>
-        /// Get the current state of the animation without performing any animation.
+        /// Stop the TransformAnimation.
         /// </summary>
-        /// <returns>A TransformState representing the current state of the animation.</returns>
-        public TransformState GetCurrentFrame()
+        public void Stop()
         {
+            animationTimer.Stop();
+            Running = false;
+            Complete = false;
+        }
+
+        /// <summary>
+        /// Reset the TransformAnimation. If it is running it will be stopped.
+        /// </summary>
+        public void Reset()
+        {
+            animationTimer.Reset();
+            Running = false;
+        }
+
+        /// <summary>
+        /// Reset and start the TransformAnimation.
+        /// </summary>
+        public void Restart()
+        {
+            Reset();
+            Start();
+        }
+
+        /// <summary>
+        /// Get the current state of the TransformAnimation.
+        /// </summary>
+        /// <returns>A TransformState with properties representing the current state of the TransformAnimation.</returns>
+        public TransformState GetFrame()
+        {
+            if (FillForwards && Complete)
+                return To;
+
+            float percentage = animationTimer.ElapsedTime / animationTimer.Duration;
+            float timingPercentage = timingFunction.Invoke(percentage);
+
+            current.Position.X = From.Position.X + (diff.Position.X * timingPercentage);
+            current.Position.Y = From.Position.Y + (diff.Position.Y * timingPercentage);
+            current.Width = From.Width + (diff.Width * timingPercentage);
+            current.Height = From.Height + (diff.Height * timingPercentage);
+            current.Angle = From.Angle + (diff.Angle * timingPercentage);
+
             return current;
         }
 
         /// <summary>
-        /// Reset the animation to its original state.
+        /// Create a new TransformAnimation with the same properties as this one.
         /// </summary>
-        public void Reset()
+        /// <returns>A new TransformAnimation.</returns>
+        public TransformAnimation Copy()
         {
-            current = new TransformState(from);
-            animateCountdown = animateDuration;
+            return new TransformAnimation(From, To, animationTimer.Duration, timingFunction, diff);
         }
-
-        /// <summary>
-        /// Create a TransformState from the current values of a given Entity.
-        /// </summary>
-        /// <param name="e">The Entity to read from.</param>
-        /// <returns>A TransformState representing the Entity's current state.</returns>
-        //public static TransformState CaptureState(Entity e)
-        //{
-        //    return new TransformState(e.Position.X, e.Position.Y, e.Width, e.Height, e.Rotation);
-        //}
-
     }
 }

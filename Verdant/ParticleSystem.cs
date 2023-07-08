@@ -4,74 +4,120 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant
 {
+    /// <summary>
+    /// Spawns and simulates a collection of Particles.
+    /// </summary>
     public class ParticleSystem : Entity
     {
 
         List<Particle> particles = new List<Particle>();
-        public int SpreadRadius { get; set; }
-        public bool AutoRemove { get; set; }
+        
+        // Determines if the system should remove itself from its EntityManager when every Particle is dead.
+        public bool SelfRemove { get; set; } = true;
 
-        // particle settings
-        protected RenderObject[] Sprites { get; set; }
-        protected int[] WidthRange;
-        protected int[] HeightRange;
-        protected float[] AngleRange;
-        protected float[] VelocityMagnitudeRange;
-        protected float[] AccelerationMagnitudeRange;
-        protected float[] FrictionRange;
-        protected int[] LifetimeRange;
+        // The radius that Particles may spawn within.
+        public float Radius { get; set; } = 0f;
+
+        private bool overrideLifetime = false;
+        private float _defaultLifetime;
+        public float DefaultLifetime
+        { 
+            get { return _defaultLifetime; }
+            set
+            {
+                _defaultLifetime = value;
+                overrideLifetime = true;
+            }
+        }
+
+        private bool overrideAcceleration = false;
+        private Vec2 _defaultAcceleration = new Vec2(0, 0);
+        public Vec2 DefaultAcceleration
+        {
+            get { return _defaultAcceleration; }
+            set
+            {
+                _defaultAcceleration = value;
+                overrideAcceleration = true;
+            }
+        }
+
+        private bool overrideVelocity = false;
+        private Vec2 _defaultVelocity = new Vec2(0, 0);
+        public Vec2 DefaultVelocity
+        {
+            get { return _defaultVelocity; }
+            set
+            {
+                _defaultVelocity = value;
+                overrideVelocity = true;
+            }
+        }
+
+        private bool overrideFriction = false;
+        private float _defaultFriction = 0;
+        public float DefaultFriction
+        {
+            get { return _defaultFriction; }
+            set
+            {
+                _defaultFriction = value;
+                overrideFriction = true;
+            }
+        }
+
+        private bool overrideTransformAnimation = false;
+        private TransformAnimation _defaultTransformAnimation;
+        public TransformAnimation DefaultTransformAnimation
+        {
+            get { return _defaultTransformAnimation; }
+            set
+            {
+                _defaultTransformAnimation = value;
+                overrideTransformAnimation = true;
+            }
+        }
 
         /// <summary>
         /// Initialize a new ParticleSystem.
         /// </summary>
         /// <param name="pos">The position of the system.</param>
-        /// <param name="spreadRadius">The radius that GetNewParticlePos will spawn within.</param>
-        /// <param name="autoRemove">Determine if dead particles should be removed automatically.</param>
-        public ParticleSystem(Vec2 pos, int spreadRadius, bool autoRemove = true) : base(Renderer.GetPixelSprite(), pos, 0, 0)
-        {
-            SpreadRadius = spreadRadius;
-            AutoRemove = autoRemove;
-        }
+        public ParticleSystem(Vec2 pos) : base(Renderer.PixelSprite, pos, 0, 0) { }
 
-        public void SpawnParticle()
+        /// <summary>
+        /// Spawn a Particle within the system, according to the system's properties.
+        /// </summary>
+        /// <param name="particle">The Particle to add.</param>
+        public void SpawnParticle(Particle particle)
         {
-            //determine particle spawn values
-            Vec2 spawnPos = GetNewParticlePos();
-            RenderObject sprite = Sprites[GameMath.Random.Next(Sprites.Length)]; //pick a random sprite from the list
-            int width = SelectIntFromRange(WidthRange);
-            int height = SelectIntFromRange(HeightRange);
-            float angle = SelectFloatFromRange(AngleRange); //get random angle in range set by array
-            float velocityMagnitude = SelectFloatFromRange(VelocityMagnitudeRange);
-            float accelerationMagnitude = SelectFloatFromRange(AccelerationMagnitudeRange);
-            float friction = SelectFloatFromRange(FrictionRange);
-            int lifetime = SelectIntFromRange(LifetimeRange);
+            particle.Position = GenerateParticlePos();
+            
+            if (overrideLifetime)
+                particle.LifeTimer.Duration = DefaultLifetime;
+            if (overrideAcceleration)
+                particle.Acceleration = DefaultAcceleration.Copy();
+            if (overrideVelocity)
+                particle.Velocity = DefaultVelocity.Copy();
+            if (overrideFriction)
+                particle.Friction = DefaultFriction;
+            if (overrideTransformAnimation)
+                particle.TransformAnimation = DefaultTransformAnimation?.Copy();
 
-            //create particle
-            Particle particle = new Particle(sprite, spawnPos, width, height, lifetime);
-            particle.Velocity = GameMath.Vec2FromAngle(angle) * velocityMagnitude;
-            particle.Acceleration = GameMath.Vec2FromAngle(angle) * accelerationMagnitude;
-            particle.Friction = friction;
+            particle.LifeTimer.Start();
+            particle.TransformAnimation?.Start();
             particles.Add(particle);
+            particle.System = this;
         }
 
         /// <summary>
         /// Get a new, random spawn point within the spawn radius. The spawn position is NOT relative to the ParticleSystem's position.
         /// </summary>
         /// <returns>A Vec2 representing a new possible spawn position.</returns>
-        public Vec2 GetNewParticlePos()
+        private Vec2 GenerateParticlePos()
         {
-            float pX = Position.X + GameMath.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
-            float pY = Position.Y + GameMath.Random.Next(0, SpreadRadius * 2) - SpreadRadius;
+            float pX = Position.X + GameMath.RandomFloat(-Radius, Radius);
+            float pY = Position.Y + GameMath.RandomFloat(-Radius, Radius);
             return new Vec2(pX, pY);
-        }
-
-        /// <summary>
-        /// Add a Particle to the system.
-        /// </summary>
-        /// <param name="particle">The Particle to add.</param>
-        public void AddParticle(Particle particle)
-        {
-            particles.Add(particle);
         }
 
         /// <summary>
@@ -83,14 +129,14 @@ namespace Verdant
             {
                 particles[i].Update();
                 //remove dead particles
-                if (particles[i].IsDead())
+                if (particles[i].Dead)
                 {
                     particles.RemoveAt(i);
                     i--;
                 }
             }
 
-            if (AutoRemove && particles.Count == 0)
+            if (SelfRemove && particles.Count == 0)
                 ForRemoval = true;
 
             base.Update();

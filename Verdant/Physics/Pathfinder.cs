@@ -49,7 +49,7 @@ namespace Verdant.Physics
         public List<Vec2> FindPath(Vec2 start, Vec2 end, int maxSeekDistance = -1)
         {
             // ensure that the target is within the appropriate range before finding a path
-            if (GameMath.GetDistance(start, end) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
+            if (GameMath.DistanceBetweenPoints(start, end) < (maxSeekDistance == -1 ? MaxSeekDistance : maxSeekDistance))
             {
                 return GeneratePath(start, end);
             }
@@ -229,18 +229,10 @@ namespace Verdant.Physics
         /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
         /// <param name="topLeft">The top left corner of the path map's bounds.</param>
         /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
-        public void BuildPathMap<T>(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null) where T : PhysicsEntity
+        public void BuildPathMap<T>(EntityManager entityManager, Vec2 topLeft, Vec2 bottomRight) where T : PhysicsEntity
         {
             // get a list of obstacles
-            List<T> obstacles;
-            if (topLeft == null || bottomRight == null)
-            {
-                obstacles = entityManager.GetAllEntities<T>();
-            }
-            else
-            {
-                obstacles = entityManager.CheckRectCollisions<T>(topLeft.X, topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
-            }
+            List<T> obstacles = entityManager.CheckRectCollisions<T>(topLeft.X, topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
 
             // create a list of colliders for all obstacles
             List<Shape> obsColliders = new List<Shape>();
@@ -327,18 +319,6 @@ namespace Verdant.Physics
                         pathMap[i, j] = false;
                 }
             }
-
-        }
-
-        /// <summary>
-        /// Build the Pathfinder's map of obstacles.
-        /// </summary>
-        /// <param name="entityManager">The EntityManager to search for obstacles within.</param>
-        /// <param name="topLeft">The top left corner of the path map's bounds.</param>
-        /// <param name="bottomRight">The bottom right corner of the path map's bounds.</param>
-        public void BuildPathMap(EntityManager entityManager, Vec2 topLeft = null, Vec2 bottomRight = null)
-        {
-            BuildPathMap<PhysicsEntity>(entityManager, topLeft, bottomRight);
         }
 
         /// <summary>

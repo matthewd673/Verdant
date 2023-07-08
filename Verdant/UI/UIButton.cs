@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts mouse click input.
+    /// </summary>
     public class UIButton : UISprite
     {
 
@@ -30,12 +33,12 @@ namespace Verdant.UI
             base.Update();
 
             // check for hover
-            if (GameMath.CheckPointOnRectIntersection(
+            if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                AbsolutePosition.X * Renderer.Scale,
-                AbsolutePosition.Y * Renderer.Scale,
-                (int)Width * Renderer.Scale,
-                (int)Height * Renderer.Scale
+                InnerPosition.X * Renderer.Scale,
+                InnerPosition.Y * Renderer.Scale,
+                (int)InnerWidth * Renderer.Scale,
+                (int)InnerHeight * Renderer.Scale
                 ))
             { // button is being hovered
                 if (!Hovered) //it wasn't hovered last time, so trigger
@@ -71,6 +74,5 @@ namespace Verdant.UI
         {
             Click?.Invoke(this, EventArgs.Empty);
         }
-
     }
 }

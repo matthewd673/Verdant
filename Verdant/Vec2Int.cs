@@ -9,9 +9,12 @@ namespace Verdant
     public class Vec2Int
     {
 
+        // The X coordinate.
         public int X { get; set; }
+        // The Y coordinate.
         public int Y { get; set; }
 
+        // A Vec2Int representing (0, 0)
         public static Vec2Int Zero { get; } = new Vec2Int(0, 0);
 
         /// <summary>
@@ -33,6 +36,11 @@ namespace Verdant
             Y = y;
         }
 
+        /// <summary>
+        /// Deep equality check.
+        /// </summary>
+        /// <param name="obj">The object to compare to.</param>
+        /// <returns>True if the object is equal to this Vec2Int (deep).</returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -56,18 +64,18 @@ namespace Verdant
         public static Vec2Int operator +(Vec2Int a) => a;
         public static Vec2Int operator -(Vec2Int a) => -a;
 
-        public static Vec2Int operator +(Vec2Int a, Vec2Int b) => new Vec2Int(a.X + b.X, a.Y + b.Y);
-        public static Vec2Int operator -(Vec2Int a, Vec2Int b) => new Vec2Int(a.X - b.X, a.Y - b.Y);
-        public static Vec2Int operator *(Vec2Int a, Vec2Int b) => new Vec2Int(a.X * b.X, a.Y * b.Y);
-        public static Vec2Int operator /(Vec2Int a, Vec2Int b) => new Vec2Int(a.X / b.X, a.Y / b.Y);
+        public static Vec2Int operator +(Vec2Int a, Vec2Int b) => new(a.X + b.X, a.Y + b.Y);
+        public static Vec2Int operator -(Vec2Int a, Vec2Int b) => new(a.X - b.X, a.Y - b.Y);
+        public static Vec2Int operator *(Vec2Int a, Vec2Int b) => new(a.X * b.X, a.Y * b.Y);
+        public static Vec2Int operator /(Vec2Int a, Vec2Int b) => new(a.X / b.X, a.Y / b.Y);
 
-        public static Vec2Int operator *(Vec2Int a, int c) => new Vec2Int(a.X * c, a.Y * c);
-        public static Vec2Int operator /(Vec2Int a, int c) => new Vec2Int(a.X / c, a.Y / c);
-        public static Vec2Int operator +(Vec2Int a, int c) => new Vec2Int(a.X + c, a.Y + c);
-        public static Vec2Int operator -(Vec2Int a, int c) => new Vec2Int(a.X - c, a.Y - c);
+        public static Vec2Int operator *(Vec2Int a, int c) => new(a.X * c, a.Y * c);
+        public static Vec2Int operator /(Vec2Int a, int c) => new(a.X / c, a.Y / c);
+        public static Vec2Int operator +(Vec2Int a, int c) => new(a.X + c, a.Y + c);
+        public static Vec2Int operator -(Vec2Int a, int c) => new(a.X - c, a.Y - c);
 
-        public static explicit operator Vector2(Vec2Int vec2Int) => new Vector2(vec2Int.X, vec2Int.Y);
-        public static explicit operator Vec2(Vec2Int vec2Int) => new Vec2(vec2Int.X, vec2Int.Y);
+        public static explicit operator Vector2(Vec2Int vec2Int) => new(vec2Int.X, vec2Int.Y);
+        public static explicit operator Vec2(Vec2Int vec2Int) => new(vec2Int.X, vec2Int.Y);
 
     }
 }

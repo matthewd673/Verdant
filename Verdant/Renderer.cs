@@ -21,6 +21,11 @@ namespace Verdant
         // The scale at which everything will be rendered.
         public static int Scale { get; private set; }
 
+        // Determines if PhysicsEntity component bodies should be drawn. Will likely impact render duration.
+        public static bool VisualizeBodies { get; set; } = false;
+        // Determines if UIElement bounds should be drawn. Will likely NOT impact render duration.
+        public static bool VisualizeUIBounds { get; set; } = false;
+
         private static Sprite pixel;
 
         // A custom cursor Sprite, which will be rendered if ShowCursor is true.
@@ -34,40 +39,32 @@ namespace Verdant
         // Determines if UIElements should be sorted according to z-index before rendering.
         public static bool SortUIElements { get; set; } = true;
 
-        // The window's GraphicsDevice.
-        public static GraphicsDevice GraphicsDevice { get; private set; }
+        // The window's GraphicsDeviceManager.
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
 
         private static Stopwatch renderPerformanceTimer = new Stopwatch();
         // The duration (in milliseconds) of the last Render call.
         public static float RenderDuration { get; private set; }
 
-        /// <summary>
-        /// Get a Texture2D containing a single white pixel.
-        /// </summary>
-        /// <returns>A Texture2D pixel.</returns>
-        public static Texture2D GetPixel() { return pixel.Texture; }
-        /// <summary>
-        /// Get a Sprite containing a single white pixel.
-        /// </summary>
-        /// <returns>A Sprite pixel.</returns>
-        public static Sprite GetPixelSprite() { return pixel; }
+        public static Texture2D Pixel { get { return pixel.Texture; } }
+        public static Sprite PixelSprite { get { return pixel; } }
 
         /// <summary>
         /// Initialize the Renderer. Create a Camera, establish a consistent render scale, etc.
         /// </summary>
-        /// <param name="graphicsDevice">A GraphicsDevice, used to build the automatic pixel texture.</param>
+        /// <param name="graphicsDeviceManager">The window's GraphicsDeviceManager.</param>
         /// <param name="screenWidth">The width of the screen.</param>
         /// <param name="screenHeight">The height of the screen.</param>
         /// <param name="scale">The render scale.</param>
-        public static void Initialize(GraphicsDevice graphicsDevice, int screenWidth, int screenHeight, int scale)
+        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int scale)
         {
-            ScreenWidth = screenWidth;
-            ScreenHeight = screenHeight;
-            GraphicsDevice = graphicsDevice;
+            GraphicsDeviceManager = graphicsDeviceManager;
+            ScreenWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
+            ScreenHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
             Scale = scale;
 
-            //build pixel texture
-            Texture2D texturePixel = new Texture2D(graphicsDevice, 1, 1);
+            // build pixel texture
+            Texture2D texturePixel = new Texture2D(GraphicsDeviceManager.GraphicsDevice, 1, 1);
             Color[] data = new Color[1] { Color.White };
             texturePixel.SetData(data);
             pixel = texturePixel;
@@ -78,25 +75,31 @@ namespace Verdant
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="scene">The Scene to render.</param>
-        /// <param name="visualizeBodies">For debugging. Determine if Entities should be drawn with their colliders visible.</param>
-        /// <param name="visualizeUIBounds>For debugging. Determine if UIElements should be drawn with their bounds visible.</param>
-        public static void Render(SpriteBatch spriteBatch, Scene scene, bool visualizeBodies = false, bool visualizeUIBounds = false)
+        public static void Render(SpriteBatch spriteBatch, Scene scene)
         {
             renderPerformanceTimer.Start();
 
             // render entities
             IEnumerable<Entity> entities;
             if (SortEntities)
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height).OrderBy(n => n.ZIndex);
+            {
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position - scene.EntityManager.CellSize,
+                                                                   (int)scene.Camera.Width,
+                                                                   (int)scene.Camera.Height).OrderBy(n => n.ZIndex);
+            }
             else
-                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position, scene.Camera.Width, scene.Camera.Height);
+            {
+                entities = scene.EntityManager.GetEntitiesInBounds(scene.Camera.Position - scene.EntityManager.CellSize,
+                                                                   (int)scene.Camera.Width,
+                                                                   (int)scene.Camera.Height);
+            }
 
             foreach (Entity e in entities)
             {
                 e.Draw(spriteBatch);
             }
 
-            if (visualizeBodies)
+            if (VisualizeBodies)
             {
                 foreach (Entity e in entities)
                 {
@@ -117,7 +120,7 @@ namespace Verdant
                 if (e.Show) e.Draw(spriteBatch);
             }
 
-            if (visualizeUIBounds)
+            if (VisualizeUIBounds)
             {
                 foreach (UIElement e in scene.UIManager.GetElements())
                 {
@@ -129,8 +132,8 @@ namespace Verdant
             if (ShowCursor && Cursor != null)
             {
                 Cursor.Draw(spriteBatch,
-                            new Rectangle(InputHandler.MouseX - (Cursor.Width / 2) * Scale,
-                                InputHandler.MouseY - (Cursor.Height / 2 * Scale),
+                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * Scale,
+                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * Scale),
                                 Cursor.Width * Scale,
                                 Cursor.Height * Scale
                                 )
@@ -154,7 +157,7 @@ namespace Verdant
             Vec2 diff = end - start;
             float angle = (float)Math.Atan2(diff.Y, diff.X);
 
-            spriteBatch.Draw(GetPixel(),
+            spriteBatch.Draw(Pixel,
                 new Rectangle((int)start.X, (int)start.Y, (int)diff.Magnitude(), 1),
                 null,
                 color,
@@ -176,8 +179,8 @@ namespace Verdant
         public static void DrawLine(SpriteBatch spriteBatch, Camera camera, Vec2 start, Vec2 end, Color color)
         {
             DrawLine(spriteBatch,
-                camera.WorldToScreenPos(start),
-                camera.WorldToScreenPos(end),
+                camera.WorldToScreenPosition(start),
+                camera.WorldToScreenPosition(end),
                 color
                 );
         }
@@ -187,9 +190,9 @@ namespace Verdant
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="camera">The Camera to render through.</param>
-        /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
-        /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
-        /// <param name="color">The color of the Rectangle.</param>
+        /// <param name="topLeft">The coordinates of the top left corner of the rectangle.</param>
+        /// <param name="bottomRight">The coordinates of the bottom right corner of the rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
         public static void DrawRectangle(SpriteBatch spriteBatch, Camera camera, Vec2 topLeft, Vec2 bottomRight, Color color)
         {
             DrawLine(spriteBatch, camera, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
@@ -204,13 +207,27 @@ namespace Verdant
         /// <param name="spriteBatch">The SpriteBatch to render with.</param>
         /// <param name="topLeft">The coordinates of the top left corner of the Rectangle.</param>
         /// <param name="bottomRight">The coordinates of the bottom right corner of the Rectangle.</param>
-        /// <param name="color">The color of the Rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
         public static void DrawRectangle(SpriteBatch spriteBatch, Vec2 topLeft, Vec2 bottomRight, Color color)
         {
             DrawLine(spriteBatch, topLeft, new Vec2(bottomRight.X, topLeft.Y), color);
             DrawLine(spriteBatch, new Vec2(bottomRight.X, topLeft.Y), bottomRight, color);
             DrawLine(spriteBatch, bottomRight, new Vec2(topLeft.X, bottomRight.Y), color);
             DrawLine(spriteBatch, new Vec2(topLeft.X, bottomRight.Y), topLeft, color);
+        }
+
+        /// <summary>
+        /// Fill a rectangle (using the pixel texture) in screen space.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch to render with.</param>
+        /// <param name="position">The coordinates of the top left corner of the rectangle.</param>
+        /// <param name="width">The width of the rectangle.</param>
+        /// <param name="height">The height of the rectangle.</param>
+        /// <param name="color">The color of the rectangle.</param>
+        // TODO: add overloads
+        public static void FillRectangle(SpriteBatch spriteBatch, Vec2 position, float width, float height, Color color)
+        {
+            spriteBatch.Draw(Pixel, new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height), color);
         }
 
         /// <summary>
@@ -223,7 +240,7 @@ namespace Verdant
         {
             int diam = radius * 2;
 
-            Texture2D circleTex = new Texture2D(GraphicsDevice, diam+1, diam+1);
+            Texture2D circleTex = new Texture2D(GraphicsDeviceManager.GraphicsDevice, diam+1, diam+1);
             Color[] colorData = new Color[(diam+1) * (diam+1)];
 
             // Bresenham's

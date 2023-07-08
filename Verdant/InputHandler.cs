@@ -26,10 +26,6 @@ namespace Verdant
         // The MouseState on the previous frame.
         public static MouseState PreviousMouseState { get; private set; }
 
-        // The X coordinate of the mouse on the screen.
-        public static int MouseX { get; private set; }
-        // The Y coordinate of the mouse on the screen.
-        public static int MouseY { get; private set; }
         // The current position of the mouse on the screen.
         public static Vec2Int MousePosition { get; private set; } = new Vec2Int();
 
@@ -45,16 +41,14 @@ namespace Verdant
             MouseState = Mouse.GetState();
 
             //update mouse positions
-            MouseX = MouseState.X;
-            MouseY = MouseState.Y;
-            MousePosition.X = MouseX;
-            MousePosition.Y = MouseY;
+            MousePosition.X = MouseState.X;
+            MousePosition.Y = MouseState.Y;
         }
 
         /// <summary>
         /// Determine if a mouse button is pressed and was released on the previous frame.
         /// </summary>
-        /// <param name="mouseButton">The mouse button to check. Defaults to LEFT.</param>
+        /// <param name="mouseButton">The mouse button to check.</param>
         /// <returns>Returns true if the mouse button is pressed and was released on the previous frame. Returns false otherwise.</returns>
         public static bool IsMouseFirstPressed(MouseButton mouseButton = MouseButton.Left)
         {

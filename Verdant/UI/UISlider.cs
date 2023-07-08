@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts numeric input within a given range.
+    /// </summary>
     public class UISlider : UIElement
     {
 
@@ -44,6 +47,8 @@ namespace Verdant.UI
                     _value = MaxValue;
 
                 IndicatorPosition.X = ((_value-MinValue)/valueWidth) * (barWidth);
+
+                OnChanged();
             }
         }
 
@@ -66,14 +71,14 @@ namespace Verdant.UI
         /// <param name="minValue">The minimum value of the slider.</param>
         /// <param name="maxValue">The maximum value of the slider.</param>
         /// <param name="barWidth">The visual width of the slider bar.</param>
-        public UISlider(Vec2 position, int minValue, int maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
+        public UISlider(Vec2 position, float minValue, float maxValue, RenderObject indicatorSprite, RenderObject barSprite, int barWidth)
             : base(position, Math.Max(barWidth, indicatorSprite.Width), Math.Max(barSprite.Height, indicatorSprite.Height))
         {
-            IndicatorPosition = Vec2.Zero;
+            IndicatorPosition = new Vec2(0, 0);
             indicatorWidth = indicatorSprite.Width;
             indicatorHeight = indicatorSprite.Height;
 
-            IndicatorPosition.Y = -(indicatorHeight / 2);
+            IndicatorDrawOffsetY = -(indicatorHeight / 2);
 
             // visually this feels more right
             IndicatorDrawOffsetX = -indicatorWidth / 2;
@@ -92,10 +97,10 @@ namespace Verdant.UI
         public override void Update()
         {
             // check for hover
-            if (GameMath.CheckPointOnRectIntersection(
+            if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (IndicatorPosition.X + AbsolutePosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
-                (IndicatorPosition.Y + AbsolutePosition.Y + IndicatorDrawOffsetY) * Renderer.Scale,
+                (IndicatorPosition.X + InnerPosition.X + IndicatorDrawOffsetX) * Renderer.Scale,
+                (IndicatorPosition.Y + InnerPosition.Y) * Renderer.Scale,
                 indicatorWidth * Renderer.Scale,
                 indicatorHeight * Renderer.Scale
                 ))
@@ -131,12 +136,7 @@ namespace Verdant.UI
             if (Grabbed)
             {
                 IndicatorPosition.X = InputHandler.MousePosition.X + dragOffsetX;
-                if (IndicatorPosition.X < 0)
-                    IndicatorPosition.X = 0;
-                if (IndicatorPosition.X > barWidth)
-                    IndicatorPosition.X = barWidth;
-
-                _value = ((IndicatorPosition.X / barWidth) * (valueWidth)) + MinValue;
+                Value = ((IndicatorPosition.X / barWidth) * (valueWidth)) + MinValue;
             }
         }
 
@@ -164,20 +164,26 @@ namespace Verdant.UI
             Drop?.Invoke(this, EventArgs.Empty);
         }
 
+        public event EventHandler Change;
+        protected virtual void OnChanged()
+        {
+            Change?.Invoke(this, EventArgs.Empty);
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             BarSprite.Draw(spriteBatch,
                            new Rectangle(
-                               (int)(Position.X * Renderer.Scale),
-                               (int)(Position.Y * Renderer.Scale),
+                               (int)(InnerPosition.X * Renderer.Scale),
+                               (int)(InnerPosition.Y - IndicatorDrawOffsetY * Renderer.Scale),
                                barWidth * Renderer.Scale,
                                barHeight * Renderer.Scale)
                            );
 
             IndicatorSprite.Draw(spriteBatch,
                                  new Rectangle(
-                                    (int)((IndicatorPosition.X + Position.X + IndicatorDrawOffsetX) * Renderer.Scale),
-                                    (int)((IndicatorPosition.Y + Position.Y + IndicatorDrawOffsetY) * Renderer.Scale),
+                                    (int)((IndicatorPosition.X + InnerPosition.X + IndicatorDrawOffsetX) * Renderer.Scale),
+                                    (int)((IndicatorPosition.Y + InnerPosition.Y) * Renderer.Scale),
                                     indicatorWidth * Renderer.Scale,
                                     indicatorHeight * Renderer.Scale)
                                  );

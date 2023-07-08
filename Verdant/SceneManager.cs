@@ -73,5 +73,19 @@ namespace Verdant
             if (automaticallyMakeActive && (!HasActive || scenes.Count == 1))
                 ActiveID = s.ID;
         }
+
+        public void RemoveScene(Scene s)
+        {
+            s.Manager = null;
+            scenes.Remove(s.ID);
+        }
+
+        public void RemoveScene(String id)
+        {
+            if (scenes.ContainsKey(id))
+                scenes[id].Manager = null;
+
+            scenes.Remove(id);
+        }
     }
 }

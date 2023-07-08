@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that displays a sprite.
+    /// </summary>
     public class UISprite : UIElement
     {
         // The RenderObject to draw.
@@ -61,8 +64,20 @@ namespace Verdant.UI
         public UISprite(RenderObject sprite, Vec2 position)
             : base(position, sprite.Width, sprite.Height)
         {
-            Sprite = sprite;
+            if (sprite != RenderObject.None)
+            {
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
+                {
+                    Sprite = ((Animation)sprite).Copy();
+                }
+                else
+                {
+                    Sprite = sprite;
+                }
+            }
         }
+
         /// <summary>
         /// Initialize a new UISprite.
         /// </summary>
@@ -73,17 +88,28 @@ namespace Verdant.UI
         public UISprite(RenderObject sprite, Vec2 position, int width, int height)
             : base(position, width, height)
         {
-            Sprite = sprite;
+            if (sprite != RenderObject.None)
+            {
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
+                {
+                    Sprite = ((Animation)sprite).Copy();
+                }
+                else
+                {
+                    Sprite = sprite;
+                }
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             Sprite.DrawIndex(spriteBatch,
                              new Rectangle(
-                                 (int)(AbsolutePosition.X * Renderer.Scale),
-                                 (int)(AbsolutePosition.Y * Renderer.Scale),
-                                 (int)(Width * Renderer.Scale),
-                                 (int)(Height * Renderer.Scale)),
+                                 (int)((InnerPosition.X + Padding.Left) * Renderer.Scale),
+                                 (int)((InnerPosition.Y + Padding.Top) * Renderer.Scale),
+                                 (int)(AbsoluteWidth * Renderer.Scale),
+                                 (int)(AbsoluteHeight * Renderer.Scale)),
                              SpriteIndex);
         }
 

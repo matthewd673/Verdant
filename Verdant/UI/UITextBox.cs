@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.UI
 {
+    /// <summary>
+    /// A UIElement that accepts text input.
+    /// </summary>
     public class UITextBox : UIElement
     {
 
@@ -14,6 +17,7 @@ namespace Verdant.UI
         public bool Focused { get; private set; }
 
         private string _text;
+        private Vector2 _textMeasurements;
         // The string contents of the UITextBox.
         public string Text
         {
@@ -23,11 +27,13 @@ namespace Verdant.UI
                 if (MaxLength >= 0 && value.Length > MaxLength)
                     value = value[..MaxLength];
                 _text = value;
-                Width = Font.MeasureString(_text).X;
+                _textMeasurements = Font.MeasureString(_text);
+                AbsoluteWidth = (int)_textMeasurements.X;
+                OnChanged();
             }
         }
-        // The maximum number of characters allowed in the text string. Set to 0 or less for infinite length.
-        public int MaxLength { get; set; }
+        // The maximum number of characters allowed in the text string. Set to a negative number for infinite length.
+        public int MaxLength { get; set; } = -1;
 
         // The font used to draw the UITextBox.
         public SpriteFont Font { get; private set; }
@@ -35,25 +41,52 @@ namespace Verdant.UI
         public Color Color { get; set; } = Color.Black;
         // The color of the background box.
         public Color BackgroundColor { get; set; } = Color.White;
-        // The color of the focus outline (if DrawFocusOutline is enabled).
+        // The color of the focus outline (if enabled).
         public Color OutlineColor { get; set; } = Color.Black;
+        // The thickness of the focus outline (if enabled).
+        public int OutlineThickness { get; set; } = 1;
 
-        // The amount of padding on each side of the box.
-        public float Padding { get; set; } = 0f;
         // Determines if an outline should be drawn when the UITextBox is focused.
-        public bool DrawFocusOutline { get; set; } = true;
+        public bool ShowFocusOutline { get; set; } = true;
+        // Determines if a caret should be drawn when typing. 
+        public bool ShowCaret { get; set; } = true;
+        // Determines if the UITextBox should only accept numeric (int & real) input.
+        public bool Numeric { get; set; } = false;
+
+        private int caretPreWidth = 0;
+        private int _caretPosition;
+        // The position of the caret within the string.
+        public int CaretPosition
+        {
+            get { return _caretPosition; }
+            set
+            {
+                _caretPosition = value;
+                if (value > Text.Length)
+                    _caretPosition = Text.Length;
+                else if (value < 0)
+                    _caretPosition = 0;
+
+                caretPreWidth = (int)Font.MeasureString(Text.Substring(0, _caretPosition)).X;
+            }
+        }
+
+        private int initialHoldFrames = 35;
+        private int repeatHoldFrames = 2;
+        private int currentHoldFrames = 0;
+        private bool repeatingHold = false;
 
         private float _width;
         // The width of the UITextBox (may change when the text changes).
-        public new float Width
+        protected override float AbsoluteWidth
         {
             get { return (_width > MinWidth) ? _width : MinWidth; }
-            private set { _width = value; }
+            set { _width = value; }
         }
         // The minimum (pixel) width of the UITextBox.
         public float MinWidth { get; set; } = 64;
         // The height of the UITextBox (does not change when the text changes).
-        public new float Height { get { return Font.LineSpacing; } }
+        protected override float AbsoluteHeight { get { return Font.LineSpacing; } }
 
         /// <summary>
         /// Initialize a new UITextBox.
@@ -73,12 +106,12 @@ namespace Verdant.UI
             base.Update();
 
             // check for hover
-            if (GameMath.CheckPointOnRectIntersection(
+            if (GameMath.PointOnRectIntersection(
                 (Vec2)InputHandler.MousePosition,
-                (AbsolutePosition.X - Padding) * Renderer.Scale,
-                (AbsolutePosition.Y - Padding) * Renderer.Scale,
-                (int)(Width + 2 * Padding) * Renderer.Scale,
-                (int)(Height + 2 * Padding) * Renderer.Scale))
+                (InnerPosition.X) * Renderer.Scale,
+                (InnerPosition.Y) * Renderer.Scale,
+                (int)(InnerWidth) * Renderer.Scale,
+                (int)(InnerHeight) * Renderer.Scale))
             {
                 if (!Hovered)
                     OnHover();
@@ -107,22 +140,74 @@ namespace Verdant.UI
             // accept text input
             if (Focused)
             {
+                bool sawHeldKey = false;
                 foreach (Keys k in InputHandler.KeyboardState.GetPressedKeys())
                 {
-                    // skip held keys
                     if (!InputHandler.IsKeyFirstPressed(k))
-                        continue;
+                    {
+                        if (!sawHeldKey)
+                        {
+                            currentHoldFrames++;
+                        }
+
+                        sawHeldKey = true;
+
+                        // hold is repeating but hasn't hit threshhold
+                        if (repeatingHold && currentHoldFrames < repeatHoldFrames)
+                        {
+                            continue;
+                        }
+                        // hold is repeating and has hit threshhold
+                        // so, trigger input and reset counter
+                        else if (repeatingHold)
+                        {
+                            currentHoldFrames = 0;
+                        }
+
+                        // hold is not yet repeating but has hit the threshhold
+                        // so, trigger input and switch to repeating mode
+                        if (!repeatingHold && currentHoldFrames >= initialHoldFrames)
+                        {
+                            currentHoldFrames = 0;
+                            repeatingHold = true;
+                        }
+                        else if (!repeatingHold)
+                        {
+                            continue;
+                        }
+                    }
 
                     OnKeyPressed(k);
 
                     char keyChar = GetKeyChar(InputHandler.KeyboardState, k);
-                    if (keyChar != (char)0 && (MaxLength <= 0 || Text.Length < MaxLength))
-                        Text += keyChar;
+                    if (keyChar != (char)0 && (MaxLength <= 0 || Text.Length < MaxLength) &&
+                        (!Numeric || (Numeric && CharIsNumeric(keyChar))))
+                    {
+                        Text = Text.Insert(CaretPosition, keyChar.ToString());
+                        CaretPosition++;
+                    }
 
                     // backspace
-                    if (k == Keys.Back && Text.Length > 0)
+                    if (k == Keys.Back && Text.Length > 0 && CaretPosition > 0)
                     {
-                        Text = Text.Remove(Text.Length - 1, 1);
+                        Text = Text.Remove(CaretPosition - 1, 1);
+                        CaretPosition--;
+                    }
+
+                    // delete
+                    if (k == Keys.Delete && Text.Length > CaretPosition)
+                    {
+                        Text = Text.Remove(CaretPosition, 1);
+                    }
+
+                    // arrow keys
+                    if (k == Keys.Left)
+                    {
+                        CaretPosition--;
+                    }
+                    if (k == Keys.Right)
+                    {
+                        CaretPosition++;
                     }
 
                     // escape focus
@@ -138,37 +223,56 @@ namespace Verdant.UI
                         OnSubmit();
                     }
                 }
+
+                if (!sawHeldKey)
+                {
+                    currentHoldFrames = 0;
+                    repeatingHold = false;
+                }
             }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             // draw focus outline
-            if (DrawFocusOutline && Focused)
+            if (ShowFocusOutline && Focused)
             {
-                spriteBatch.Draw(Renderer.GetPixel(),
+                spriteBatch.Draw(Renderer.Pixel,
                     new Rectangle(
-                        (int)(Position.X - Padding - 2),
-                        (int)(Position.Y - Padding - 2),
-                        (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding + 4),
-                        (int)(Height + 2 * Padding + 4)
+                        (int)(InnerPosition.X - OutlineThickness),
+                        (int)(InnerPosition.Y - OutlineThickness),
+                        (int)((AbsoluteWidth >= MinWidth ? InnerWidth : MinWidth + Padding.Left + Padding.Right) + 2*OutlineThickness),
+                        (int)(InnerHeight + 2*OutlineThickness)
                         ),
                     OutlineColor
                     );
             }
             // draw background
-            spriteBatch.Draw(Renderer.GetPixel(),
+            spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
-                    (int)(Position.X - Padding),
-                    (int)(Position.Y - Padding),
-                    (int)((Width >= MinWidth ? Width : MinWidth) + 2 * Padding),
-                    (int)(Height + 2 * Padding)
+                    (int)(InnerPosition.X),
+                    (int)(InnerPosition.Y),
+                    (int)(AbsoluteWidth >= MinWidth ? InnerWidth: MinWidth + Padding.Left + Padding.Right),
+                    (int)(InnerHeight)
                 ),
                 BackgroundColor
                 );
 
             // draw string
-            spriteBatch.DrawString(Font, Text, (Vector2)Position, Color);
+            spriteBatch.DrawString(Font, Text, new Vector2(AbsolutePosition.X + Padding.Left, AbsolutePosition.Y + Padding.Top), Color);
+
+            // draw caret
+            if (ShowCaret && Focused)
+            {
+                spriteBatch.Draw(Renderer.Pixel,
+                    new Rectangle(
+                        (int)(InnerPosition.X + Padding.Left + caretPreWidth),
+                        (int)(InnerPosition.Y + Padding.Top),
+                        1,
+                        (int)(AbsoluteHeight)
+                        ),
+                    Color.Black);
+            }
         }
 
         public event EventHandler Hover;
@@ -205,6 +309,12 @@ namespace Verdant.UI
         protected virtual void OnKeyPressed(Keys key)
         {
             KeyPressed?.Invoke(this, new KeyPressedEventArgs(key));
+        }
+
+        public event EventHandler Changed;
+        protected virtual void OnChanged()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         private static char GetKeyChar(KeyboardState state, Keys k)
@@ -269,6 +379,11 @@ namespace Verdant.UI
                 case Keys.Space: return ' ';
             }
             return (char)0;
+        }
+
+        private static bool CharIsNumeric(char c)
+        {
+            return (c >= 48 && c <= 57) || c == '.' || c == '-';
         }
     }
 

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Verdant
 {
     /// <summary>
-    /// An object within the game world, to be extended for every type of object in the game.
+    /// An object within the game world, to be extended for every unique object in the game.
     /// </summary>
     public class Entity
     {
@@ -19,14 +19,14 @@ namespace Verdant
             {
                 _manager = value;
                 if (_manager != null)
-                    Key = _manager.GetKeyFromPos(Position); //set initial key if manager isn't null
+                    _manager.SetEntityKey(this); // set initial key if manager isn't null
             }
         }
 
         // The key of the Entity within the manager's hash table.
-        public string Key { get; private set; }
+        public Vec2Int Key { get; internal set; }
         // The key of the Entity at the end of the last update.
-        public string PreviousKey { get; private set; } = "";
+        public Vec2Int PreviousKey { get; private set; } = new();
 
         // The RenderObject used to draw this Entity.
         public RenderObject Sprite { get; set; }
@@ -34,9 +34,9 @@ namespace Verdant
         // The position (center) of the Entity.
         public virtual Vec2 Position { get; set; }
 
-        private int _width;
+        private float _width;
         // The draw width of the Entity.
-        public int Width
+        public float Width
         {
             get { return _width; }
             set
@@ -45,9 +45,9 @@ namespace Verdant
                 HalfWidth = value / 2;
             }
         }
-        private int _height;
+        private float _height;
         // The draw height of the Entity.
-        public int Height
+        public float Height
         {
             get { return _height; }
             set
@@ -56,14 +56,17 @@ namespace Verdant
                 HalfHeight = value / 2;
             }
         }
-        protected int HalfWidth { get; private set; }
-        protected int HalfHeight { get; private set; }
+        protected float HalfWidth { get; private set; }
+        protected float HalfHeight { get; private set; }
 
         // The method by which to update the ZIndex.
         public EntityManager.ZIndexMode ZIndexMode { get; set; } = EntityManager.ZIndexMode.ByIndex;
 
         // The z-index, used for sorting and depth-based rendering.
         public int ZIndex { get; set; } = 0;
+
+        // A TransformState that is automatically applied to the Entity when rendering.
+        public TransformState TransformState { get; set; }
 
         // Determines if the Entity should be removed at the end of the
         // next update loop.
@@ -76,13 +79,13 @@ namespace Verdant
         /// <param name="position">The position of the center of the Entity.</param>
         /// <param name="width">The width of the Entity. Defaults to the width of the RenderObject.</param>
         /// <param name="height">The height of the Entity. Defaults to the height of the RenderObject.</param>
-        public Entity(RenderObject sprite, Vec2 position, int width = -1, int height = -1) :
-            base()
+        public Entity(RenderObject sprite, Vec2 position, float width = -1, float height = -1)
         {
             if (sprite != RenderObject.None)
             {
                 // if the sprite is an animation, copy it automatically
-                if (sprite.GetType() == typeof(Animation) || sprite.GetType().IsSubclassOf(typeof(Animation)))
+                if (sprite.GetType() == typeof(Animation) ||
+                    sprite.GetType().IsSubclassOf(typeof(Animation)))
                 {
                     Sprite = ((Animation)sprite).Copy();
                 }
@@ -98,6 +101,19 @@ namespace Verdant
         }
 
         /// <summary>
+        /// Called when the Entity has been added to an EntityManager and is ready to use.
+        /// NOTE: This occurs immediately after the Entity has been processed through the add queue.
+        /// </summary>
+        public virtual void OnAdd() { }
+
+        /// <summary>
+        /// Called when the Entity has been removed from an EntityManager.
+        /// NOTE: This occurs immediately after the Entity has been processed through the remove queue.
+        /// This will not be called if the Entity is removed from an EntityManager that it wasn't managed by.
+        /// </summary>
+        public virtual void OnRemove() { }
+
+        /// <summary>
         /// Perform the Entity's basic update actions - a good place to look for input events. Called in the EntityManager update loop.
         /// </summary>
         public virtual void Update()
@@ -105,8 +121,9 @@ namespace Verdant
             // update key
             if (Manager != null) //only if a managed entity (not Particles, for example)
             {
-                PreviousKey = Key;
-                Key = Manager.GetKeyFromPos(Position);
+                PreviousKey.X = Key.X;
+                PreviousKey.Y = Key.Y;
+                Manager.SetEntityKey(this);
             }
 
             // update z index
@@ -117,19 +134,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Set the Entity's bounds and rotation to be equal to those of a given TransformState.
-        /// </summary>
-        /// <param name="state">The TransformState to mirror.</param>
-        public void ApplyTransformState(TransformState state)
-        {
-            Position.X = state.X;
-            Position.Y = state.Y;
-            Width = (int)state.Width;
-            Height = (int)state.Height;
-        }
-
-        /// <summary>
-        /// Perfom a basic render of the Entity.
+        /// Draw the Entity.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch to draw with.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -139,13 +144,64 @@ namespace Verdant
                 return;
             }
 
-            Sprite.Draw(spriteBatch,
+            if (TransformState == null)
+            {
+                Sprite.Draw(spriteBatch,
+                    Manager.Scene.Camera.GetRenderBounds(
+                        Position.X - HalfWidth,
+                        Position.Y - HalfHeight,
+                        (int)Width,
+                        (int)Height
+                        ));
+            }
+            else
+            {
+                if (TransformState.BlendMode == TransformStateBlendMode.Multiply)
+                {
+                    Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            Position.X - HalfWidth,
-                            Position.Y - HalfHeight,
-                            Width,
-                            Height
+                            (Position.X - (Width * TransformState.Width / 2)) * TransformState.Position.X,
+                            (Position.Y - (Height * TransformState.Height / 2)) * TransformState.Position.Y,
+                            Width * TransformState.Width,
+                            Height * TransformState.Height
+                            ),
+                        0, // Entities do not have angles, so it'll always multiply by 0
+                        new Vector2(
+                            Sprite.Width * TransformState.Width / 2,
+                            Sprite.Height * TransformState.Height / 2
                             ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Add)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (Position.X - ((Width + TransformState.Width) / 2)) + TransformState.Position.X,
+                            (Position.Y - ((Height + TransformState.Height) / 2)) + TransformState.Position.Y,
+                            Width + TransformState.Width,
+                            Height + TransformState.Height
+                            ),
+                        TransformState.Angle, // Entities don't have angles, so add 0
+                        new Vector2(
+                            (Sprite.Width + TransformState.Width) / 2,
+                            (Sprite.Height + TransformState.Height) / 2
+                        ));
+                }
+                else if (TransformState.BlendMode == TransformStateBlendMode.Override)
+                {
+                    Sprite.Draw(spriteBatch,
+                        Manager.Scene.Camera.GetRenderBounds(
+                            (TransformState.Width / 2f) + TransformState.Position.X,
+                            (TransformState.Height / 2f) + TransformState.Position.Y,
+                            TransformState.Width,
+                            TransformState.Height
+                            ),
+                        TransformState.Angle, // even though Entities don't have angles, this is an absolute change so it gets an angle
+                        new Vector2(
+                            TransformState.Width / 2,
+                            TransformState.Height / 2
+                            ));
+                }
+            }
         }
 
         /// <summary>

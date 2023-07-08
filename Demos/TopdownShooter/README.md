@@ -6,4 +6,6 @@ This a super simple (and super ugly) topdown shooter written in Verdant.
 - `Pathfinder`
 - `PhysicsEntity`
 - `SceneManager` & `Scene` switching
+- `Timer`
 - `Debugging.SimpleStats`
+- `Debugging.PerformanceMonitor`
