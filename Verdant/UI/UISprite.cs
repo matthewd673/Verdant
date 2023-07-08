@@ -11,6 +11,48 @@ namespace Verdant.UI
         // The index of the RenderObject to draw (only use if it is an Animation or SpriteSheet).
         public int SpriteIndex { get; set; } = 0;
 
+        private int _repeat = 1;
+        // The number of times the RenderObject should repeat.
+        public int Repeat
+        {
+            get { return _repeat; }
+            set
+            {
+                _repeat = value;
+                if (_repeatVertical)
+                {
+                    AbsoluteWidth = Sprite.Width;
+                    AbsoluteHeight = Sprite.Height * Repeat;
+                }
+                else
+                {
+                    AbsoluteWidth = Sprite.Width * Repeat;
+                    AbsoluteHeight = Sprite.Height * Repeat;
+                }
+            }
+        }
+
+        private bool _repeatVertical = false;
+        // Determines if the RenderObject repeats vertically or horizontally.
+        public bool RepeatVertical
+        {
+            get { return _repeatVertical; }
+            set
+            {
+                _repeatVertical = value;
+                if (_repeatVertical)
+                {
+                    AbsoluteWidth = Sprite.Width;
+                    AbsoluteHeight = Sprite.Height * Repeat;
+                }
+                else
+                {
+                    AbsoluteWidth = Sprite.Width * Repeat;
+                    AbsoluteHeight = Sprite.Height * Repeat;
+                }
+            }
+        }
+
         /// <summary>
         /// Initialize a new UISprite.
         /// </summary>

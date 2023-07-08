@@ -15,7 +15,7 @@ namespace Verdant.UI
 
         // The position of the UIElement relative to its parent.
         public virtual Vec2 Position { get; set; }
-        // The position of the UIElement on the screen.
+        // The position of the UIElement on the screen. Calculated by summing this element's Position and its parent's AbsolutePosition.
         public Vec2 AbsolutePosition
         {
             get
