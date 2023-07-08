@@ -48,7 +48,7 @@ namespace Verdant.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Renderer.Pixel, new Rectangle((int)AbsoluteElementPosition.X, (int)AbsoluteElementPosition.Y, (int)BoxModel.ElementWidth, (int)BoxModel.ElementHeight), BackgroundColor);
-            spriteBatch.DrawString(Font, Text, (Vector2)AbsoluteContentPosition * Renderer.Scale, Color);
+            spriteBatch.DrawString(Font, Text, (Vector2)AbsoluteContentPosition * Renderer.UIScale, Color);
         }
 
         public override void DrawBounds(SpriteBatch spriteBatch)

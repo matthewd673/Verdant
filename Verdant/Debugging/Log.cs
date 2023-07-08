@@ -82,8 +82,7 @@ namespace Verdant.Debugging
                 else
                     output.Append(objStr);
 
-                if (i < objects.Length - 1)
-                    output.Append(", ");
+                output.Append(' ');
             }
             return output.ToString();
         }

@@ -128,18 +128,18 @@ namespace Verdant.UI
         {
             BarSprite.Draw(spriteBatch,
                            new Rectangle(
-                               (int)(AbsoluteElementPosition.X * Renderer.Scale),
-                               (int)(AbsoluteElementPosition.Y - IndicatorDrawOffsetY * Renderer.Scale),
-                               barWidth * Renderer.Scale,
-                               barHeight * Renderer.Scale)
+                               (int)(AbsoluteElementPosition.X * Renderer.UIScale),
+                               (int)(AbsoluteElementPosition.Y - IndicatorDrawOffsetY * Renderer.UIScale),
+                               barWidth * Renderer.UIScale,
+                               barHeight * Renderer.UIScale)
                            );
 
             IndicatorSprite.Draw(spriteBatch,
                                  new Rectangle(
-                                    (int)((IndicatorPosition.X + AbsoluteElementPosition.X + IndicatorDrawOffsetX) * Renderer.Scale),
-                                    (int)((IndicatorPosition.Y + AbsoluteElementPosition.Y) * Renderer.Scale),
-                                    indicatorWidth * Renderer.Scale,
-                                    indicatorHeight * Renderer.Scale)
+                                    (int)((IndicatorPosition.X + AbsoluteElementPosition.X + IndicatorDrawOffsetX) * Renderer.UIScale),
+                                    (int)((IndicatorPosition.Y + AbsoluteElementPosition.Y) * Renderer.UIScale),
+                                    indicatorWidth * Renderer.UIScale,
+                                    indicatorHeight * Renderer.UIScale)
                                  );
         }
 

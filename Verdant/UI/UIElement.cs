@@ -21,7 +21,7 @@ namespace Verdant.UI
         // The absolute screen position of the UIElement.
         public Vec2 AbsolutePosition
         {
-            get { return Position + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
+            get { return Position + (Parent != null ? Parent.AbsoluteContentPosition : Vec2.Zero); }
         }
 
         // The position of the visible part of the UIElement (its position + margin).
@@ -36,7 +36,7 @@ namespace Verdant.UI
         // The absolute screen position of the visible part of the UIElement (its position + margin).
         public Vec2 AbsoluteElementPosition
         {
-            get { return ElementPosition + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
+            get { return ElementPosition + (Parent != null ? Parent.AbsoluteContentPosition : Vec2.Zero); }
         }
 
         // The position of the content of the UIElement (its position + margin + padding).
@@ -47,14 +47,14 @@ namespace Verdant.UI
                 return Position +
                     new Vec2(
                         BoxModel.Margin.Left + BoxModel.Padding.Left,
-                        BoxModel.Margin.Top + BoxModel.Margin.Left
+                        BoxModel.Margin.Top + BoxModel.Padding.Top
                         );
             }
         }
         // The absolute screen position of the content of the UIElement (its position + margin + padding).
         public Vec2 AbsoluteContentPosition
         {
-            get { return ContentPosition + (Parent != null ? Parent.AbsoluteElementPosition : Vec2.Zero); }
+            get { return ContentPosition + (Parent != null ? Parent.AbsoluteContentPosition : Vec2.Zero); }
         }
 
         // The UIElement's box model, including width, height, margin, and padding.
@@ -155,20 +155,22 @@ namespace Verdant.UI
         {
             // draw with margin
             Renderer.DrawRectangle(spriteBatch,
-                AbsolutePosition * Renderer.Scale,
-                (AbsolutePosition + new Vec2(BoxModel.TotalWidth, BoxModel.TotalHeight)) * Renderer.Scale,
+                AbsolutePosition,
+                AbsolutePosition + (new Vec2(BoxModel.TotalWidth, BoxModel.TotalHeight) * Renderer.UIScale),
                 Color.PaleGreen
                 );
+
             // draw padding
             Renderer.DrawRectangle(spriteBatch,
-                                   AbsoluteContentPosition * Renderer.Scale,
-                                   (AbsoluteContentPosition - new Vec2(BoxModel.Padding.Right, BoxModel.Padding.Bottom)) * Renderer.Scale,
+                                   AbsoluteContentPosition,
+                                   AbsoluteContentPosition + (new Vec2(BoxModel.Width, BoxModel.Height) * Renderer.UIScale),
                                    Color.Pink
                                    );
+
             // draw border
             Renderer.DrawRectangle(spriteBatch,
                 AbsoluteElementPosition,
-                (AbsoluteElementPosition + new Vec2(BoxModel.ElementWidth, BoxModel.ElementHeight)) * Renderer.Scale,
+                AbsoluteElementPosition + (new Vec2(BoxModel.ElementWidth, BoxModel.ElementHeight) * Renderer.UIScale),
                 Color.Black
                 );
         }

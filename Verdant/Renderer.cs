@@ -18,8 +18,10 @@ namespace Verdant
         public static int ScreenWidth { get; private set; }
         // The height of the game window.
         public static int ScreenHeight { get; private set; }
-        // The scale at which everything will be rendered.
-        public static int Scale { get; private set; }
+        // The scale at which the world will be rendered.
+        public static int WorldScale { get; private set; } = 1;
+        // The scale at which the UI will be rendered.
+        public static int UIScale { get; private set; } = 1;
 
         // Determines if PhysicsEntity component bodies should be drawn. Will likely impact render duration.
         public static bool VisualizeBodies { get; set; } = false;
@@ -56,12 +58,12 @@ namespace Verdant
         /// <param name="screenWidth">The width of the screen.</param>
         /// <param name="screenHeight">The height of the screen.</param>
         /// <param name="scale">The render scale.</param>
-        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int scale)
+        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int worldScale)
         {
             GraphicsDeviceManager = graphicsDeviceManager;
             ScreenWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
             ScreenHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
-            Scale = scale;
+            WorldScale = worldScale;
 
             // build pixel texture
             Texture2D texturePixel = new Texture2D(GraphicsDeviceManager.GraphicsDevice, 1, 1);
@@ -132,10 +134,10 @@ namespace Verdant
             if (ShowCursor && Cursor != null)
             {
                 Cursor.Draw(spriteBatch,
-                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * Scale,
-                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * Scale),
-                                Cursor.Width * Scale,
-                                Cursor.Height * Scale
+                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * WorldScale,
+                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * WorldScale),
+                                Cursor.Width * WorldScale,
+                                Cursor.Height * WorldScale
                                 )
                             );
             }

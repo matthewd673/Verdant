@@ -56,8 +56,8 @@ namespace Verdant
         /// <param name="point">The point to center on.</param>
         public void CenterOnPoint(Vec2 point)
         {
-            Position.X = point.X - Width / Renderer.Scale / 2;
-            Position.Y = point.Y - Height / Renderer.Scale / 2;
+            Position.X = point.X - Width / Renderer.WorldScale / 2;
+            Position.Y = point.Y - Height / Renderer.WorldScale / 2;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Verdant
         /// <returns>A Vec2 representing the position in the world.</returns>
         public Vec2 ScreenToWorldPosition(int x, int y)
         {
-            return new Vec2((x / Renderer.Scale) + Position.X, (y / Renderer.Scale) + Position.Y);
+            return new Vec2((x / Renderer.WorldScale) + Position.X, (y / Renderer.WorldScale) + Position.Y);
         }
         /// <summary>
         /// Given a position on the screen, return the corresponding position in the world.
@@ -89,7 +89,7 @@ namespace Verdant
         public Vec2 WorldToScreenPosition(float x, float y)
         {
             // TODO: doesn't take TransformState into account (is this a feature, not a bug?)
-            return new Vec2((x - Position.X) * Renderer.Scale, (y - Position.Y) * Renderer.Scale);
+            return new Vec2((x - Position.X) * Renderer.WorldScale, (y - Position.Y) * Renderer.WorldScale);
         }
         /// <summary>
         /// Given a position in the world, return the corresponding position on the screen. 
@@ -111,7 +111,7 @@ namespace Verdant
         /// <returns>A Rectangle representing the proper rendering bounds for the given coordinates.</returns>
         public Rectangle GetRenderBounds(float x, float y, float width, float height)
         {
-            return new Rectangle((int)((x - GetCameraRenderPosition().X) * Renderer.Scale), (int)((y - GetCameraRenderPosition().Y) * Renderer.Scale), (int)(width * Renderer.Scale), (int)(height * Renderer.Scale));
+            return new Rectangle((int)((x - GetCameraRenderPosition().X) * Renderer.WorldScale), (int)((y - GetCameraRenderPosition().Y) * Renderer.WorldScale), (int)(width * Renderer.WorldScale), (int)(height * Renderer.WorldScale));
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Verdant
         public Vec2Int GetRenderPosition(float x, float y)
         {
             // TODO: this definitely should take TransformState into account
-            return new Vec2Int((int)((x - GetCameraRenderPosition().X) * Renderer.Scale), (int)((y - GetCameraRenderPosition().Y) * Renderer.Scale));
+            return new Vec2Int((int)((x - GetCameraRenderPosition().X) * Renderer.WorldScale), (int)((y - GetCameraRenderPosition().Y) * Renderer.WorldScale));
         }
 
         /// <summary>

@@ -106,10 +106,10 @@ namespace Verdant.UI
         {
             Sprite.DrawIndex(spriteBatch,
                              new Rectangle(
-                                 (int)(AbsoluteContentPosition.X * Renderer.Scale),
-                                 (int)(AbsoluteContentPosition.Y * Renderer.Scale),
-                                 (int)(BoxModel.Width * Renderer.Scale),
-                                 (int)(BoxModel.Height * Renderer.Scale)),
+                                 (int)(AbsoluteContentPosition.X * Renderer.UIScale),
+                                 (int)(AbsoluteContentPosition.Y * Renderer.UIScale),
+                                 (int)(BoxModel.Width * Renderer.UIScale),
+                                 (int)(BoxModel.Height * Renderer.UIScale)),
                              SpriteIndex);
         }
 

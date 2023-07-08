@@ -15,7 +15,7 @@ namespace Verdant.UI
     public class UIStack : UIGroup
     {
         // Indicates if the UIStack is aligned vertically or horizontally
-        public bool Vertical { get; private set; }
+        public bool Vertical { get; private set; } = true;
         // The minimum margin between all elements in the stack.
         public float Gap { get; set; } = 0f;
 
@@ -37,18 +37,6 @@ namespace Verdant.UI
             Vertical = vertical;
         }
 
-        /// <summary>
-        /// Add an additional gap after the last element in the stack.
-        /// </summary>
-        /// <param name="gap">The size of the gap.</param>
-        public void AddGap(float gap)
-        {
-            if (Vertical)
-                BoxModel.Height += gap;
-            else
-                BoxModel.Width += gap;
-        }
-
         public override void Update()
         {
             base.Update();
@@ -62,22 +50,25 @@ namespace Verdant.UI
             {
                 if (Vertical)
                 {
-                    e.Position = new Vec2(BoxModel.Padding.Left, BoxModel.Padding.Top + total);
+                    e.Position = new Vec2(0, total);
                     total += e.BoxModel.TotalHeight;
                     total += Gap;
                 }
                 else
                 {
-                    e.Position = new Vec2(BoxModel.Padding.Left + total, BoxModel.Padding.Top);
+                    e.Position = new Vec2(total, 0);
                     total += e.BoxModel.TotalWidth;
                     total += Gap;
                 }
 
-                BoxModel.Width = Math.Max(e.Position.X + e.BoxModel.TotalWidth, BoxModel.ElementWidth);
-                BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.ElementHeight);
+                BoxModel.Width = Math.Max(e.Position.X + e.BoxModel.TotalWidth, BoxModel.Width);
+                BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.Height);
             }
 
+            Log.WriteLine(AbsoluteContentPosition);
+
             // reposition into alignment
+            // TODO: this is likely outdated and buggy
             if (Alignment != Alignment.Beginning)
             {
                 foreach (UIElement e in children)
@@ -105,9 +96,6 @@ namespace Verdant.UI
                     }
                 }
             }
-
-            BoxModel.Width -= BoxModel.Padding.Left;
-            BoxModel.Height -= BoxModel.Padding.Top;
         }
     }
 }
