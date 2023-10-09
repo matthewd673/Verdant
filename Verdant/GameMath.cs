@@ -27,9 +27,19 @@ namespace Verdant
         /// </summary>
         /// <param name="angle">The angle of the vector.</param>
         /// <returns>A Vec2 with a magnitude of 1, pointing in the direction of the angle.</returns>
-        public static Vec2 Vec2FromAngle(float angle)
+        public static Vec2 AngleToVec2(float angle)
         {
             return new Vec2((float)Math.Sin(angle), (float)Math.Cos(angle));
+        }
+
+        /// <summary>
+        /// Given a Vec2, calculate its angle from the origin.
+        /// </summary>
+        /// <param name="vec">The vector to calculate from.</param>
+        /// <returns>The angle from the origin to the given vector.</returns>
+        public static float Vec2ToAngle(Vec2 vec)
+        {
+            return AngleBetweenPoints(Vec2.Zero, vec);
         }
 
         /// <summary>
@@ -94,6 +104,39 @@ namespace Verdant
                 point.Y > y);
         }
 
+        public static bool LineIntersection(float x1, float y1, float x2, float y2,
+                                            float x3, float y3, float x4, float y4)
+        {
+            // https://www.jeffreythompson.org/collision-detection/line-line.php
+            float uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) /
+                       ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+            float uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) /
+                       ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+
+            return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
+        }
+
+        public static bool LineIntersection(Vec2 aStart, Vec2 aEnd,
+                                            Vec2 bStart, Vec2 bEnd)
+        {
+            return LineIntersection(aStart.X, aStart.Y, aEnd.X, aEnd.Y,
+                                    bStart.X, bStart.Y, bEnd.X, bEnd.Y);
+        }
+
+        public static bool LineOnRectIntersection(Vec2 start, Vec2 end,
+                                                  float x, float y, float w, float h)
+        {
+            // essentially testing one line against four others
+            return LineIntersection(start.X, start.Y, end.X, end.Y,
+                                    x, y, x + w, y) ||
+                   LineIntersection(start.X, start.Y, end.X, end.Y,
+                                    x, y, x, y + h) ||
+                   LineIntersection(start.X, start.Y, end.X, end.Y,
+                                    x + w, y, x + w, y + h) ||
+                   LineIntersection(start.X, start.Y, end.X, end.Y,
+                                    x, y + h, x + w, y + h);
+        }
+
         /// <summary>
         /// Generate a random float value between 0 and 1.
         /// </summary>
@@ -115,22 +158,6 @@ namespace Verdant
             double mantissa = Random.NextDouble() * 2.0 - 1.0;
             float final = (float)Math.Abs(mantissa) * (max - min) + min;
             return final;
-        }
-
-        /// <summary>
-        /// Generate a random integer value within the given bounds.
-        /// </summary>
-        /// <param name="min">The minimum value of the integer.</param>
-        /// <param name="max">The maximum value of the integer.</param>
-        /// <returns>A random integer value.</returns>
-        public static int RandomInt(int min, int max)
-        {
-            return Random.Next(max) - min;
-        }
-
-        public static int RandomInt(int max)
-        {
-            return Random.Next(max);
         }
 
     }

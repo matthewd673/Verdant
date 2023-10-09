@@ -204,6 +204,18 @@ namespace Verdant
             }
         }
 
+        public void DrawPosition(SpriteBatch spriteBatch)
+        {
+            Vec2Int renderPos = Manager?.Scene?.Camera?.GetRenderPosition(this);
+            if (renderPos == null)
+                return;
+
+            Renderer.DrawRectangle(spriteBatch,
+                (Vec2)renderPos - new Vec2(2, 2),
+                (Vec2)renderPos + new Vec2(2, 2), Color.White
+                );
+        }
+
         /// <summary>
         /// Check if this Entity is of a given type.
         /// </summary>

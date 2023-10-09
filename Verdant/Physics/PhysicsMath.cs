@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// PhysicsMath is an internal helper class for the Verdant.Physics namespace.
+    /// </summary>
     internal static class PhysicsMath
     {
         internal static ShapeProjection ProjectShapeOntoAxis(Vec2 axis, Shape shape)

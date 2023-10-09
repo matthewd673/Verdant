@@ -100,7 +100,7 @@ namespace Verdant.Physics
         /// </summary>
         public virtual void Move()
         {
-            Acceleration = Acceleration.Unit() * Speed;
+            Acceleration = Acceleration.Unit() * Speed; // TODO: this speed thing is weird
             Velocity += Acceleration;
             Velocity *= 1 - Friction;
 

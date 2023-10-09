@@ -188,15 +188,15 @@ namespace Verdant
         /// <param name="width">The width of the rectangle.</param>
         /// <param name="height">The height of the rectangle.</param>
         /// <returns>A list of all bounded Entities.</returns>
-        public List<TEntity> GetEntitiesInBounds<TEntity>(float x, float y, int width, int height) where TEntity : Entity
+        public List<TEntity> GetEntitiesInBounds<TEntity>(float x, float y, float width, float height) where TEntity : Entity
         {
             List<TEntity> boundedEntities = new List<TEntity>();
 
             // calculate cell bounds
-            int minCellX = (int)Math.Floor(x / (double)CellSize);
-            int minCellY = (int)Math.Floor(y / (double)CellSize);
-            int maxCellX = (int)Math.Ceiling((x + width) / (double)CellSize);
-            int maxCellY = (int)Math.Ceiling((y + height) / (double)CellSize);
+            int minCellX = (int)Math.Floor(x / CellSize);
+            int minCellY = (int)Math.Floor(y / CellSize);
+            int maxCellX = (int)Math.Ceiling((x + width) / CellSize);
+            int maxCellY = (int)Math.Ceiling((y + height) / CellSize);
 
             // loop through all cells in bounds
             for (int i = minCellX; i <= maxCellX; i++)
@@ -204,13 +204,16 @@ namespace Verdant
                 for (int j = minCellY; j <= maxCellY; j++)
                 {
                     EntityList cell;
-                    if (table.GetCell(i, j, out cell))
+                    // skip if cell doesn't exist
+                    if (!table.GetCell(i, j, out cell))
                     {
-                        foreach (Entity b in cell.GetEntities())
-                        {
-                            if (b.IsType(typeof(TEntity)))
-                                boundedEntities.Add((TEntity)b);
-                        }
+                        continue;
+                    }
+
+                    foreach (Entity b in cell.GetEntities())
+                    {
+                        if (b.IsType(typeof(TEntity)))
+                            boundedEntities.Add((TEntity)b);
                     }
                 }
             }
