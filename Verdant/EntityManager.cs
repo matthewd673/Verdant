@@ -107,8 +107,9 @@ namespace Verdant
         private void ApplyQueues()
         {
             // add marked
-            foreach (Entity e in addQueue)
+            while (addQueue.Count > 0)
             {
+                Entity e = addQueue[0];
                 e.Manager = this;
                 if (e.ZIndexMode == ZIndexMode.ByIndex)
                     e.ZIndex = EntityCount;
@@ -117,23 +118,23 @@ namespace Verdant
                 table.Insert(e.Key.X, e.Key.Y, e);
 
                 EntityCount++; // keep track
+                addQueue.RemoveAt(0);
                 e.OnAdd(); // trigger event
             }
 
             // remove marked
-            foreach (Entity e in removeQueue)
+            while (removeQueue.Count > 0)
             {
+                Entity e = removeQueue[0];
                 Vec2Int key = e.ForRemoval ? e.PreviousKey : e.Key;
                 if (table.Remove(key.X, key.Y, e))
                 {
                     e.Manager = null;
                     EntityCount--; // keep track
+                    removeQueue.RemoveAt(0);
                     e.OnRemove(); // trigger event
                 }
             }
-
-            addQueue.Clear();
-            removeQueue.Clear();
         }
 
         /// <summary>
@@ -457,8 +458,8 @@ namespace Verdant
         /// <param name="updateMode">The UpdateMode to use.</param>
         public void Update()
         {
-            updatePerformanceTimer.Start();
             Updating = true;
+            updatePerformanceTimer.Start();
             //update in rectangle near camera (with some padding to be safe)
             UpdateList(GetEntitiesInBounds(
                 Scene.Camera.Position.X - CellSize,
