@@ -9,12 +9,11 @@ namespace Verdant
     public class Camera : Entity
     {
         float shakeStrength;
-        int shakeDuration;
-        int shakeCountdown;
+        Timer shakeTimer;
         float offsetX;
         float offsetY;
 
-        public bool Shaking { get { return shakeDuration != 0; } }
+        public bool Shaking { get; private set; }
 
         /// <summary>
         /// Initialize a new Camera.
@@ -36,18 +35,12 @@ namespace Verdant
         /// </summary>
         public override void Update()
         {
-            if (shakeDuration == 0)
-                return;
-
-            shakeCountdown--;
-            if (shakeCountdown > 0)
-                ApplyShake();
-            else
+            if (shakeTimer == null || !shakeTimer.Running)
             {
-                offsetX = 0;
-                offsetY = 0;
-                shakeDuration = 0;
+                return;
             }
+
+            ApplyShake();
         }
 
         /// <summary>
@@ -183,11 +176,20 @@ namespace Verdant
         /// </summary>
         /// <param name="strength">The strength of the shake.</param>
         /// <param name="duration">The duration of the shake (number of frames).</param>
-        public void SetShake(float strength, int duration)
+        public void SetShake(float strength, float duration)
         {
             shakeStrength = strength;
-            shakeDuration = duration;
-            shakeCountdown = duration;
+
+            Shaking = true;
+            shakeTimer = new(duration, (t) =>
+            {
+                // clean up after shake is done
+                Shaking = false;
+                offsetX = 0;
+                offsetY = 0;
+            });
+            shakeTimer.Start();
+
             offsetX = 0;
             offsetY = 0;
         }

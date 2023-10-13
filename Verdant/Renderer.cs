@@ -55,15 +55,15 @@ namespace Verdant
         /// Initialize the Renderer. Create a Camera, establish a consistent render scale, etc.
         /// </summary>
         /// <param name="graphicsDeviceManager">The window's GraphicsDeviceManager.</param>
-        /// <param name="screenWidth">The width of the screen.</param>
-        /// <param name="screenHeight">The height of the screen.</param>
-        /// <param name="scale">The render scale.</param>
-        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int worldScale)
+        /// <param name="worldScale">The render scale for Entities.</param>
+        /// <param name="uiScale">The render scale for UIElements and the cursor.</param>
+        public static void Initialize(GraphicsDeviceManager graphicsDeviceManager, int worldScale = 1, int uiScale = 1)
         {
             GraphicsDeviceManager = graphicsDeviceManager;
             ScreenWidth = GraphicsDeviceManager.PreferredBackBufferWidth;
             ScreenHeight = GraphicsDeviceManager.PreferredBackBufferHeight;
             WorldScale = worldScale;
+            UIScale = uiScale;
 
             // build pixel texture
             Texture2D texturePixel = new Texture2D(GraphicsDeviceManager.GraphicsDevice, 1, 1);
@@ -134,10 +134,10 @@ namespace Verdant
             if (ShowCursor && Cursor != null)
             {
                 Cursor.Draw(spriteBatch,
-                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * WorldScale,
-                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * WorldScale),
-                                Cursor.Width * WorldScale,
-                                Cursor.Height * WorldScale
+                            new Rectangle(InputHandler.MousePosition.X - (Cursor.Width / 2) * UIScale,
+                                InputHandler.MousePosition.Y - (Cursor.Height / 2 * UIScale),
+                                Cursor.Width * UIScale,
+                                Cursor.Height * UIScale
                                 )
                             );
             }
