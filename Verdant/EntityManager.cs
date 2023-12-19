@@ -434,7 +434,7 @@ namespace Verdant
                 // move physicsentities
                 if (e.IsType(typeof(PhysicsEntity)))
                 {
-                    PhysicsEntity p = (PhysicsEntity) e;
+                    PhysicsEntity p = (PhysicsEntity)e;
                     p.Move();
                     physicsList.Add(p);
                     PhysicsEntityUpdateCount++; // count physics updates

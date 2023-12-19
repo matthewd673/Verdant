@@ -183,6 +183,11 @@ namespace Verdant
             Shaking = true;
             shakeTimer = new(duration, (t) =>
             {
+                // another shake has been started, keep it going
+                if (shakeTimer != t)
+                {
+                    return;
+                }
                 // clean up after shake is done
                 Shaking = false;
                 offsetX = 0;

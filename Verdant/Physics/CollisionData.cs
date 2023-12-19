@@ -49,7 +49,7 @@ namespace Verdant.Physics
             Vec2 colArm1 = cp - a.Components[0].Position;
             Vec2 rotVel1 = new Vec2(-a.AngleSpeed * colArm1.Y, a.AngleSpeed * colArm1.X);
             Vec2 closVel1 = a.Velocity + rotVel1;
-            
+
             Vec2 colArm2 = cp - b.Components[0].Position;
             Vec2 rotVel2 = new Vec2(-b.AngleSpeed * colArm2.Y, b.AngleSpeed * colArm2.X);
             Vec2 closVel2 = b.Velocity + rotVel2;

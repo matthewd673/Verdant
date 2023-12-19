@@ -242,8 +242,8 @@ namespace Verdant
         {
             int diam = radius * 2;
 
-            Texture2D circleTex = new Texture2D(GraphicsDeviceManager.GraphicsDevice, diam+1, diam+1);
-            Color[] colorData = new Color[(diam+1) * (diam+1)];
+            Texture2D circleTex = new Texture2D(GraphicsDeviceManager.GraphicsDevice, diam + 1, diam + 1);
+            Color[] colorData = new Color[(diam + 1) * (diam + 1)];
 
             // Bresenham's
             int x = 0;
@@ -274,14 +274,14 @@ namespace Verdant
 
         private static void DrawCircleSpritePoint(int x, int y, int rad, int diam, Color[] colorData, Color color)
         {
-            colorData[(rad+x) * (diam+1) + (rad+y)] = color;
-            colorData[(rad-x) * (diam+1) + (rad+y)] = color;
-            colorData[(rad+x) * (diam+1) + (rad-y)] = color;
-            colorData[(rad-x) * (diam+1) + (rad-y)] = color;
-            colorData[(rad+y) * (diam+1) + (rad+x)] = color;
-            colorData[(rad-y) * (diam+1) + (rad+x)] = color;
-            colorData[(rad+y) * (diam+1) + (rad-x)] = color;
-            colorData[(rad-y) * (diam+1) + (rad-x)] = color;
+            colorData[(rad + x) * (diam + 1) + (rad + y)] = color;
+            colorData[(rad - x) * (diam + 1) + (rad + y)] = color;
+            colorData[(rad + x) * (diam + 1) + (rad - y)] = color;
+            colorData[(rad - x) * (diam + 1) + (rad - y)] = color;
+            colorData[(rad + y) * (diam + 1) + (rad + x)] = color;
+            colorData[(rad - y) * (diam + 1) + (rad + x)] = color;
+            colorData[(rad + y) * (diam + 1) + (rad - x)] = color;
+            colorData[(rad - y) * (diam + 1) + (rad - x)] = color;
         }
 
     }

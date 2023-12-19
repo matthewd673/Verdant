@@ -20,9 +20,9 @@ namespace Verdant
 
         private float _width;
         public float Width
-        { 
+        {
             get { return _width; }
-            set 
+            set
             {
                 _width = value;
                 HalfWidth = value / 2;
@@ -30,7 +30,7 @@ namespace Verdant
         }
         private float _height;
         public float Height
-        { 
+        {
             get { return _height; }
             set
             {

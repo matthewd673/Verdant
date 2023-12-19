@@ -67,8 +67,8 @@ namespace Verdant.Physics
                 {
                     Sprite.Draw(spriteBatch,
                         Manager.Scene.Camera.GetRenderBounds(
-                            (Position.X - (drawDiam * TransformState.Width/2)) * TransformState.Position.X,
-                            (Position.Y - (drawDiam * TransformState.Height/2)) * TransformState.Position.Y,
+                            (Position.X - (drawDiam * TransformState.Width / 2)) * TransformState.Position.X,
+                            (Position.Y - (drawDiam * TransformState.Height / 2)) * TransformState.Position.Y,
                             drawDiam * TransformState.Width,
                             drawDiam * TransformState.Height
                             ));

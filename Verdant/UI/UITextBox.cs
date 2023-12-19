@@ -210,8 +210,8 @@ namespace Verdant.UI
                     new Rectangle(
                         (int)(AbsoluteElementPosition.X - OutlineThickness),
                         (int)(AbsoluteElementPosition.Y - OutlineThickness),
-                        (int)((BoxModel.ElementWidth >= MinWidth ? BoxModel.Width : MinWidth + BoxModel.Padding.Left + BoxModel.Padding.Right) + 2*OutlineThickness),
-                        (int)(BoxModel.ElementHeight + 2*OutlineThickness)
+                        (int)((BoxModel.ElementWidth >= MinWidth ? BoxModel.Width : MinWidth + BoxModel.Padding.Left + BoxModel.Padding.Right) + 2 * OutlineThickness),
+                        (int)(BoxModel.ElementHeight + 2 * OutlineThickness)
                         ),
                     OutlineColor
                     );

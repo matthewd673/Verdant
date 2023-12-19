@@ -35,7 +35,7 @@ namespace ParticleToy
                 1000
                 );
             particleSystem.DefaultTransformAnimation.FillForwards = true;
-            
+
             EntityManager.AddEntity(particleSystem);
 
             spawnTimer = new Timer(500, (Timer t) =>
@@ -252,6 +252,6 @@ namespace ParticleToy
                              );
 
             PerformanceMonitor.Draw(this, spriteBatch);
-        }       
+        }
     }
 }

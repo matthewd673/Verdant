@@ -38,13 +38,13 @@ namespace Verdant.UI
             set
             {
                 _value = value;
-                
+
                 if (_value < MinValue)
                     _value = MinValue;
                 if (_value > MaxValue)
                     _value = MaxValue;
 
-                IndicatorPosition.X = ((_value-MinValue)/valueWidth) * (barWidth);
+                IndicatorPosition.X = ((_value - MinValue) / valueWidth) * (barWidth);
 
                 OnChanged();
             }

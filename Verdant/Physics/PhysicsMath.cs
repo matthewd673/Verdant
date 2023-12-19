@@ -144,7 +144,7 @@ namespace Verdant.Physics
             {
                 proj1 = ProjectShapeOntoAxis(axes[i], a);
                 proj2 = ProjectShapeOntoAxis(axes[i], b);
-                
+
                 float overlap = Math.Min(proj1.Max, proj2.Max) -
                                 Math.Max(proj1.Min, proj2.Min);
                 if (overlap < 0)
@@ -223,10 +223,10 @@ namespace Verdant.Physics
         internal static Matrix CalculateRotMatrix(float angle)
         {
             Matrix matrix = new Matrix(2, 2);
-            matrix.Data[0, 0] = (float) Math.Cos(angle);
-            matrix.Data[0, 1] = (float) -Math.Sin(angle);
-            matrix.Data[1, 0] = (float) Math.Sin(angle);
-            matrix.Data[1, 1] = (float) Math.Cos(angle);
+            matrix.Data[0, 0] = (float)Math.Cos(angle);
+            matrix.Data[0, 1] = (float)-Math.Sin(angle);
+            matrix.Data[1, 0] = (float)Math.Sin(angle);
+            matrix.Data[1, 1] = (float)Math.Cos(angle);
             return matrix;
         }
 

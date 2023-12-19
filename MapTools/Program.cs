@@ -119,7 +119,7 @@ namespace MapTools
 
             colorDict.Clear();
             string[] lines = File.ReadAllLines(dictPath);
-            
+
             foreach (string l in lines)
             {
                 if (l.StartsWith("#"))

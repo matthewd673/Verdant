@@ -75,7 +75,7 @@ namespace Verdant
         /// <returns>The magnitude.</returns>
         public float Magnitude()
         {
-            return (float) Math.Sqrt(X*X + Y*Y);
+            return (float)Math.Sqrt(X * X + Y * Y);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Verdant
         /// <returns>The direction.</returns>
         public float Direction()
         {
-            return (float) Math.Atan2(Y, X);
+            return (float)Math.Atan2(Y, X);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Verdant
         /// <returns>The opposite direction.</returns>
         public float DirectionOpposite()
         {
-            return (float) Math.PI + Direction();
+            return (float)Math.PI + Direction();
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Verdant
 
         public static Vec2 operator +(Vec2 a) => a;
         public static Vec2 operator -(Vec2 a) => new(-a.X, -a.Y);
-        
+
         public static Vec2 operator +(Vec2 a, Vec2 b) => new(a.X + b.X, a.Y + b.Y);
         public static Vec2 operator -(Vec2 a, Vec2 b) => new(a.X - b.X, a.Y - b.Y);
         public static Vec2 operator *(Vec2 a, Vec2 b) => new(a.X * b.X, a.Y * b.Y);
@@ -154,6 +154,6 @@ namespace Verdant
 
         public static explicit operator Vector2(Vec2 vec2) => new(vec2.X, vec2.Y);
         public static explicit operator Vec2Int(Vec2 vec2) => new((int)vec2.X, (int)vec2.Y);
-    
+
     }
 }

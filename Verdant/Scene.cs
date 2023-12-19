@@ -54,7 +54,7 @@ namespace Verdant
         /// </summary>
         public virtual void Update(GameTime gameTime)
         {
-            DeltaTime = (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             InputHandler.Update(); // always update input
 
             EntityManager.Update();

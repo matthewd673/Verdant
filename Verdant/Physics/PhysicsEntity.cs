@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
-    
+
     /// <summary>
     /// An Entity with collider and additional physical properties, which can collide with other PhysicsEntities and be simulated by the EntityManager.
     /// </summary>
@@ -14,7 +14,7 @@ namespace Verdant.Physics
     {
         // The Shapes that make up the PhysicsEntity's collider.
         public Shape[] Components { get; set; } = new Shape[0];
-        
+
         // The position of the PhysicsEntity (the center of its first Shape component).
         public override Vec2 Position
         {

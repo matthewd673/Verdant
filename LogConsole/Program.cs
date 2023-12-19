@@ -46,7 +46,7 @@ namespace LogConsole
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
             byte[] data = new byte[1024];
             string message = null;
-            
+
             while (true)
             {
                 data = server.Receive(ref sender);

@@ -64,7 +64,7 @@ namespace Verdant.UI
             removeQueue.Add(e);
             if (!Updating) ApplyQueues();
         }
-        
+
         /// <summary>
         /// Get all elements managed by this UIManager.
         /// </summary>

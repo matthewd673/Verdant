@@ -16,7 +16,8 @@ namespace Verdant
         public bool HasActive { get; private set; } = false;
         private string _activeId;
         // The ID of the Scene currently active.
-        public string ActiveID {
+        public string ActiveID
+        {
             get { return _activeId; }
             set
             {
