@@ -14,18 +14,26 @@ namespace Verdant.Debugging
     /// </summary>
     public static class PerformanceMonitor
     {
-
         private static List<Metrics> history = new List<Metrics>();
-        private static int maxHistory = 120;
-        private static int avgCounter = 0;
-        private static int smoothing = 3;
 
-        private static int scale = 2;
+        public static int MaxHistory = 120;
+        public static int Smoothing { get; set; } = 3;
+        public static int Scale { get; set; } = 2;
+        public static float Ceiling { get; set; } = 16.67f;
+
+        private static int avgCounter = 0;
 
         private static float runningUpdate = 0;
         private static float runningPhysics = 0;
         private static float runningRender = 0;
         private static float runningUi = 0;
+
+        public static Color UpdateColor { get; set; } = Color.Blue;
+        public static Color PhysicsColor { get; set; } = Color.Green;
+        public static Color UIColor { get; set; } = Color.LightBlue;
+        public static Color RenderColor { get; set; } = Color.Red;
+
+        public static Color CeilingColor { get; set; } = Color.Black;
 
         // Determines if PerformanceMonitor should be rendered. Data will still be collected while it is hidden.
         public static bool Show { get; set; } = true;
@@ -41,7 +49,7 @@ namespace Verdant.Debugging
             Vec2Int position = new Vec2Int(Renderer.ScreenWidth - 32, Renderer.ScreenHeight - 32);
 
             avgCounter++;
-            if (avgCounter < smoothing)
+            if (avgCounter < Smoothing)
             {
                 runningUpdate += scene.EntityManager.UpdateDuration;
                 runningPhysics += scene.EntityManager.PhysicsDuration;
@@ -50,10 +58,10 @@ namespace Verdant.Debugging
             }
             else
             {
-                runningUpdate /= smoothing;
-                runningPhysics /= smoothing;
-                runningRender /= smoothing;
-                runningUi /= smoothing;
+                runningUpdate /= Smoothing;
+                runningPhysics /= Smoothing;
+                runningRender /= Smoothing;
+                runningUi /= Smoothing;
 
                 // update time
                 history.Add(new Metrics(
@@ -63,7 +71,7 @@ namespace Verdant.Debugging
                     runningUi
                     )
                     );
-                if (history.Count > maxHistory)
+                if (history.Count > MaxHistory)
                 {
                     history.RemoveAt(0);
                 }
@@ -81,35 +89,35 @@ namespace Verdant.Debugging
             {
                 int stackHeight = 0;
 
-                stackHeight += DrawOnStack(spriteBatch, m.UpdateDuration - m.PhysicsDuration, Color.Blue, position, stackHeight, i);
-                stackHeight += DrawOnStack(spriteBatch, m.PhysicsDuration, Color.Green, position, stackHeight, i);
-                stackHeight += DrawOnStack(spriteBatch, m.UIDuration, Color.LightBlue, position, stackHeight, i);
-                stackHeight += DrawOnStack(spriteBatch, m.RenderDuration, Color.Red, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.UpdateDuration - m.PhysicsDuration, UpdateColor, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.PhysicsDuration, PhysicsColor, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.UIDuration, UIColor, position, stackHeight, i);
+                stackHeight += DrawOnStack(spriteBatch, m.RenderDuration, RenderColor, position, stackHeight, i);
 
                 i++;
 
                 // frame took longer than 16ms
-                if (m.Total > 16.67)
+                if (m.Total > Ceiling)
                     totalOver += 1f;
             }
 
             // draw 16ms reference line
             spriteBatch.Draw(Renderer.Pixel,
                 new Rectangle(
-                    position.X - maxHistory - 4,
-                    position.Y - 16 * scale,
-                    maxHistory + 8,
+                    position.X - MaxHistory - 4,
+                    position.Y - (int)(Ceiling * Scale),
+                    MaxHistory + 8,
                     1),
-                Color.Black
+                CeilingColor
                 );
         }
 
         private static int DrawOnStack(SpriteBatch spriteBatch, float value, Color color, Vec2Int position, int stackHeight, int histIndex)
         {
-            int height = (int)(value * scale);
+            int height = (int)(value * Scale);
             spriteBatch.Draw(Renderer.Pixel,
                              new Rectangle(
-                                 position.X - (maxHistory - histIndex),
+                                 position.X - (MaxHistory - histIndex),
                                  position.Y - height - stackHeight,
                                  1,
                                  height),
