@@ -118,11 +118,11 @@ namespace Verdant.UI
             }
         }
 
-        protected virtual void OnGrabBegin() { }
+        public Action OnGrabBegin = () => { };
 
-        protected virtual void OnGrabEnd() { }
+        public Action OnGrabEnd = () => { };
 
-        protected virtual void OnChanged() { }
+        public Action OnChanged = () => { };
 
         public override void Draw(SpriteBatch spriteBatch)
         {

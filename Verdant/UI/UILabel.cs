@@ -9,7 +9,6 @@ namespace Verdant.UI
     /// </summary>
     public class UILabel : UIElement
     {
-
         private string _text;
         // The string displayed by the UILabel.
         public string Text
@@ -39,7 +38,10 @@ namespace Verdant.UI
         /// <param name="font">The SpriteFont to draw the text with.</param>
         /// <param name="text">The string to display.</param>
         public UILabel(Vec2 position, SpriteFont font, string text = "")
-            : base(position, font.MeasureString(text).X, font.MeasureString(text).Y)
+            : base(position,
+                   font.MeasureString(text).X,
+                   font.MeasureString(text).Y
+                   )
         {
             Font = font;
             Text = text;
@@ -54,13 +56,6 @@ namespace Verdant.UI
         public override void DrawBounds(SpriteBatch spriteBatch)
         {
             base.DrawBounds(spriteBatch);
-            // UILabel width/height don't scale
-            //Renderer.DrawRectangle(spriteBatch,
-            //                       AbsolutePosition * Renderer.Scale,
-            //                       (AbsolutePosition * Renderer.Scale) + new Vec2(Width, Height),
-            //                       Color.Pink
-            //                       );
         }
-
     }
 }
