@@ -24,14 +24,16 @@ Documentation for each class is available on [the wiki](https://github.com/matth
 
 ## Made with Verdant
 A small collection of games made with Verdant.
+- [Harvest](https://mattdaly.itch.io/harvest) (Verdant post-v0.1.1)
 - [Slime Scenario](https://mattdaly.itch.io/slime-scenario) (Verdant v0.1.1)
 - [Frog Stack](https://mattdaly.itch.io/frog-stack) (Verdant pre-release)
 
 ## Demos
 
-- **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple game that makes use of `Debugging.Log` and the LogConsole.
-- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations.
-- **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates all physics bodies.
+- **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple project that uses `Debugging.Log` and the LogConsole.
+- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations *(in development)*.
+- **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates the 2D physics system *(in development)*.
+- **[TransformDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/TransformDemo):** Test of the Transform system.
 - **[TopdownShooter](https://github.com/matthewd673/Verdant/tree/master/Demos/TopdownShooter):** A bare-bones topdown shooter demonstrating the `PhysicsEntity`, `Pathfinder`, and `Timer` APIs.
 
 
