@@ -32,7 +32,7 @@ namespace Verdant.Physics
             // only generate body sprite once, and only if Draw is actually called
             if (bodySprite == RenderObject.None)
             {
-                bodySprite = Renderer.GenerateCircleSprite((int)(Radius * Renderer.WorldScale), Color.White);
+                bodySprite = Renderer.GenerateCircleSprite((int)(Radius * Renderer.WorldScale), color);
             }
 
             bodySprite.Draw(spriteBatch,

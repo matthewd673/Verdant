@@ -5,7 +5,7 @@ using Verdant.Physics;
 
 namespace Verdant
 {
-    public class EntityList
+    internal class EntityList
     {
 
         // TODO: in the future, hash this further for lookup by type

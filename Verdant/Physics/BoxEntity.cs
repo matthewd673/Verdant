@@ -58,7 +58,7 @@ namespace Verdant.Physics
             if (up) Acceleration = dir * -Speed;
             if (down) Acceleration = dir * Speed;
             if (!up && !down) Acceleration = new Vec2(0, 0);
-
+            
             if (left) AngleSpeed -= 0.3f;
             if (right) AngleSpeed += 0.3f;
         }

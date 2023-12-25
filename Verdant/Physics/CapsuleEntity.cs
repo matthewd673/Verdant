@@ -19,7 +19,7 @@ namespace Verdant.Physics
         /// <param name="radius">The radius of the Capsule (half the width of the Rectangle component).</param>
         /// <param name="height">The height of the Rectangle component.</param>
         /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
-        public CapsuleEntity(RenderObject sprite, Vec2 position, int radius, int height, float mass)
+        public CapsuleEntity(RenderObject sprite, Vec2 position, float radius, float height, float mass)
             : base(sprite, position, radius * 2, height, mass)
         {
             float x1 = position.X;
