@@ -82,7 +82,7 @@ namespace Verdant.Physics
                 Debugging.Log.WriteLine(a.GetType(), a.AngleSpeed);
             if (b.AngleSpeed != 0)
                 Debugging.Log.WriteLine(b.GetType(), b.AngleSpeed);
-            
+
         }
 
     }

@@ -23,14 +23,19 @@ public class Game1 : Game
     {
         base.Initialize();
 
+        Renderer.Initialize(_graphics);
+
         sceneManager = new();
+
+        PlayScene playScene = new();
+        sceneManager.AddScene(playScene);
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // TODO: use this.Content to load your game content here
+        Resources.LoadResources(Content);
     }
 
     protected override void Update(GameTime gameTime)
@@ -38,7 +43,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        sceneManager.ActiveScene.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -47,7 +52,11 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+
+        sceneManager.ActiveScene.Draw(_spriteBatch);
+
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

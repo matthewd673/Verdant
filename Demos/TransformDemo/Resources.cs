@@ -1,13 +1,15 @@
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Verdant;
 
 namespace TransformDemo;
 
 public static class Resources
 {
-    public static Texture2D Box { get; private set; }
+    public static Sprite Crate { get; private set; }
 
-    public void LoadResources(ContentManager content)
+    public static void LoadResources(ContentManager content)
     {
-
+        Crate = content.Load<Texture2D>("crate");
     }
 }

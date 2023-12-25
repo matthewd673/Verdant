@@ -223,10 +223,10 @@ namespace Verdant.Physics
         internal static Matrix CalculateRotMatrix(float angle)
         {
             Matrix matrix = new(2, 2);
-            matrix.Data[0, 0] = (float) Math.Cos(angle);
-            matrix.Data[0, 1] = (float) -Math.Sin(angle);
-            matrix.Data[1, 0] = (float) Math.Sin(angle);
-            matrix.Data[1, 1] = (float) Math.Cos(angle);
+            matrix.Data[0, 0] = (float)Math.Cos(angle);
+            matrix.Data[0, 1] = (float)-Math.Sin(angle);
+            matrix.Data[1, 0] = (float)Math.Sin(angle);
+            matrix.Data[1, 1] = (float)Math.Cos(angle);
             return matrix;
         }
 
