@@ -39,6 +39,7 @@ namespace Verdant.Debugging
             WriteToScreen($"Entities: {scene.EntityManager.EntityCount}", spriteBatch, font);
             WriteToScreen($"Total updates (last tick): {scene.EntityManager.EntityUpdateCount}", spriteBatch, font);
             WriteToScreen($"Physics updates (last tick): {scene.EntityManager.PhysicsEntityUpdateCount}", spriteBatch, font);
+            WriteToScreen($"Camera position: {scene.Camera.Position}", spriteBatch, font);
 
             foreach (string f in customFields.Keys)
             {
