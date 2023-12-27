@@ -65,8 +65,6 @@ namespace Verdant.UI
                 BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.Height);
             }
 
-            Log.WriteLine(AbsoluteContentPosition);
-
             // reposition into alignment
             // TODO: this is likely outdated and buggy
             if (Alignment != Alignment.Beginning)

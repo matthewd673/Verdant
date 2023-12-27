@@ -44,6 +44,7 @@ public class PlayScene : Scene
     private UILabel transformPositionLabel;
     private UILabel transformScaleLabel;
     private UILabel transformAngleLabel;
+    private UILabel cameraLabel;
 
     public PlayScene() : base("play")
     {
@@ -67,6 +68,8 @@ public class PlayScene : Scene
         stack.AddElement(transformScaleLabel);
         transformAngleLabel = new(new Vec2(), Resources.DebugFont, "Transform Angle");
         stack.AddElement(transformAngleLabel);
+        cameraLabel = new(new Vec2(), Resources.DebugFont, "Camera Position");
+        stack.AddElement(cameraLabel);
 
         UIManager.AddElement(stack);
     }
@@ -121,6 +124,8 @@ public class PlayScene : Scene
     {
         positionLabel.Text = $"Position: {crate.Position}";
         scaleLabel.Text = $"Scale: ({crate.Width}, {crate.Height})";
+
+        cameraLabel.Text = $"Camera Position: ({Camera.Position.X}, {Camera.Position.Y})";
     }
 
     public void SetTransformInfo(float x, float y,
@@ -164,19 +169,18 @@ public class PlayScene : Scene
 
     public override void Draw(SpriteBatch spriteBatch)
     {
+        base.Draw(spriteBatch);
+
         // draw debug lines
         Renderer.DrawLine(spriteBatch,
                           new Vec2(0, crate.Position.Y),
                           new Vec2(crate.Position.X, crate.Position.Y),
-                          Color.Yellow
+                          Color.Magenta
                 );
         Renderer.DrawLine(spriteBatch,
                           new Vec2(crate.Position.X, 0),
                           new Vec2(crate.Position.Y, crate.Position.Y),
-                          Color.Yellow
+                          Color.Magenta
                 );
-
-        // regular drawing
-        base.Draw(spriteBatch);
     }
 }

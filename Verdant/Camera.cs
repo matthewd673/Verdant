@@ -47,12 +47,11 @@ namespace Verdant
         /// </summary>
         public override void Update()
         {
-            // apply camera shake
-            if (shakeTimer == null || !shakeTimer.Running)
+            // apply camera shake if currently shaking
+            if (shakeTimer != null && shakeTimer.Running)
             {
-                return;
+                ApplyShake();
             }
-            ApplyShake();
 
             // update render position
             RenderPosition.X = Position.X + offsetX;
