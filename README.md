@@ -5,7 +5,7 @@ designed to simplify the tedious parts of game development without restricting d
 
 Verdant is in early development. APIs may be incomplete, and are subject to (potentially drastic) change without warning.
 
-## Build Info
+## Build & Run
 
 Currently built on .NET 7.0 for compatibility with MonoGame 3.8.x.
 
@@ -37,11 +37,7 @@ A small collection of games made with Verdant.
 - **[TopdownShooter](https://github.com/matthewd673/Verdant/tree/master/Demos/TopdownShooter):** A bare-bones topdown shooter demonstrating the `PhysicsEntity`, `Pathfinder`, and `Timer` APIs.
 
 
-## Additional Tools
-### MapTools
-
-MapTools is an included tool for creating simple map files built from images, which Verdant can parse. MapTools and its map files can also be used entirely independently of Verdant. More info in the
-[MapTools README](https://github.com/matthewd673/Verdant/blob/master/MapTools/README.md).
+## Tools
 
 ### LogConsole
 
