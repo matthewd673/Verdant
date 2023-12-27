@@ -11,7 +11,6 @@ namespace Verdant
     /// </summary>
     public class Animation : SpriteSheet
     {
-
         public delegate void AnimationCallback(Animation sender);
 
         private FrameSet frameSet;
@@ -44,7 +43,7 @@ namespace Verdant
             }
         }
 
-        // The number of frames in the Animation
+        // The number of frames in the Animation's FrameSet
         public int Count
         {
             get { return frameSet.endFrame - frameSet.startFrame; }
@@ -98,14 +97,12 @@ namespace Verdant
             hasLooped = false;
         }
 
-        /// <summary>
-        /// Perform the next step of the Animation and return the current frame.
-        /// </summary>
-        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
+        private void PerformAnimationStep()
         {
             if (settled) // skip other steps if settled
-                DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
+            {
+                return;
+            }
 
             // tick towards next frame
             frameTimeCounter--;
@@ -135,13 +132,34 @@ namespace Verdant
                 }
 
             }
-
-            DrawIndex(spriteBatch, bounds, angle, origin, frameIndex, frameSet.row);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds)
+        public override void Draw(SpriteBatch spriteBatch, TransformState transform)
         {
-            Draw(spriteBatch, bounds, 0f, new Vector2(0, 0)); // TODO: clean up
+            PerformAnimationStep();
+
+            DrawIndex(spriteBatch,
+                      transform,
+                      frameIndex,
+                      frameSet.row
+                      );
+        }
+
+        /// <summary>
+        /// Perform the next step of the Animation and return the current frame.
+        /// </summary>
+        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
+        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
+        {
+            PerformAnimationStep();
+
+            DrawIndex(spriteBatch,
+                      bounds,
+                      angle,
+                      origin,
+                      frameIndex,
+                      frameSet.row
+                      );
         }
 
         /// <summary>
@@ -150,7 +168,10 @@ namespace Verdant
         /// <returns>A new Animation instance.</returns>
         public Animation Copy()
         {
-            return new Animation(texture, spriteWidth, frameSet, frameDelay, Looping) { Loops = 0, };
+            return new(texture, spriteWidth, frameSet, frameDelay, Looping)
+            {
+                Loops = 0,
+            };
         }
 
         public struct FrameSet

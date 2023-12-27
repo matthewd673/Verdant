@@ -15,7 +15,7 @@ namespace Verdant
 
         public bool Shaking { get; private set; }
 
-        public Vec2 RenderPosition { get; private set; } = new();
+        internal Vec2 RenderPosition { get; private set; } = new();
 
         /// <summary>
         /// Initialize a new Camera.

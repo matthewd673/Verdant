@@ -7,7 +7,6 @@ namespace Verdant;
 
 internal class EntityList
 {
-
     // TODO: in the future, hash this further for lookup by type
     private List<Entity> entities;
     private List<PhysicsEntity> physicsEntities;

@@ -37,6 +37,20 @@ namespace Verdant
             height = crop.Height;
         }
 
+        public override void Draw(SpriteBatch spriteBatch, TransformState transform)
+        {
+            spriteBatch.Draw(
+                    texture,
+                    transform.GetRenderRectangle(),
+                    crop,
+                    Color.White,
+                    transform.Angle,
+                    new Vector2(transform.HalfWidth, transform.HalfHeight),
+                    SpriteEffects.None,
+                    0
+                    );
+        }
+
         /// <summary>
         /// Draw the Sprite's texture at the given screen bounds.
         /// </summary>
@@ -59,6 +73,11 @@ namespace Verdant
                 SpriteEffects.None,
                 0
                 );
+        }
+
+        public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
+        {
+            Draw(spriteBatch, transform);
         }
 
         /// <summary>

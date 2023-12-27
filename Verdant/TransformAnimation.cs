@@ -30,7 +30,7 @@ namespace Verdant
         private TransformState current;
 
         /// <summary>
-        /// Initialize a new TransformAnimation.
+        /// Initialize a new two-state TransformAnimation with a simple beginning and end.
         /// </summary>
         /// <param name="from">The beginning TransformState.</param>
         /// <param name="to">The ending TransformState.</param>

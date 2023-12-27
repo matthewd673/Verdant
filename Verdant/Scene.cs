@@ -73,6 +73,5 @@ namespace Verdant
         {
             Renderer.Render(spriteBatch, this);
         }
-
     }
 }

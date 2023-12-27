@@ -24,6 +24,8 @@ namespace Verdant
         // The draw height of the RenderObject.
         public virtual int Height { get { return height; } }
 
+        // TODO: remove or update old Draw APIs
+        public abstract void Draw(SpriteBatch spriteBatch, TransformState transform);
 
         /// <summary>
         /// Draw the RenderObject.
@@ -33,6 +35,8 @@ namespace Verdant
         public abstract void Draw(SpriteBatch spriteBatch, Rectangle bounds);
 
         public abstract void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin);
+
+        public abstract void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0);
 
         /// <summary>
         /// Draw a cropped portion of the RenderObject.

@@ -120,7 +120,7 @@ namespace Verdant.Physics
 
             foreach (PhysicsEntity p in Colliding)
             {
-                if (!p.IsType(typeof(TPhysicsEntity)))
+                if (!p.IsType<TPhysicsEntity>())
                     continue;
 
                 if (includeTriggers && p.Trigger)

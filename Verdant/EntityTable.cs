@@ -50,6 +50,18 @@ internal class EntityTable
         return table.ContainsKey(Hash(x, y));
     }
 
+    public IEnumerable<EntityList> GetCells()
+    {
+        foreach (ulong k in table.Keys)
+        {
+            EntityList cell;
+            if (table.TryGetValue(k, out cell))
+            {
+                yield return cell;
+            }
+        }
+    }
+
     public IEnumerable<EntityList> GetCellRange(int x1,
                                                 int y1,
                                                 int x2,
@@ -62,11 +74,10 @@ internal class EntityTable
             for (int j = y1; j <= y2; j++)
             {
                 EntityList l;
-                if (!GetCell(i, j, out l))
+                if (GetCell(i, j, out l))
                 {
-                    continue;
+                    yield return l;
                 }
-                yield return l;
             }
         }
     }
