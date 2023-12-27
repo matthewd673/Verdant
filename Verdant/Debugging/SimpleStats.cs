@@ -8,6 +8,7 @@ namespace Verdant.Debugging
 {
     /// <summary>
     /// Display metrics about the current Scene and custom state information.
+    /// SimpleStats is not a UIElement, it renders independently.
     /// </summary>
     public static class SimpleStats
     {
@@ -23,6 +24,9 @@ namespace Verdant.Debugging
         // Determines if SimpleStats should be rendered.
         public static bool Show { get; set; } = true;
 
+        // The top-left position of the output.
+        public static Vec2Int Position { get; set; } = new();
+
         /// <summary>
         /// Draw the SimpleStats output.
         /// </summary>
@@ -36,10 +40,11 @@ namespace Verdant.Debugging
             stackHeight = 0;
             WriteToScreen($"FPS: {1000 / scene.DeltaTime} ({scene.DeltaTime}ms)", spriteBatch, font);
             WriteToScreen($"Frame Duration: {scene.EntityManager.UpdateDuration + Renderer.RenderDuration}ms (U={scene.EntityManager.UpdateDuration} + R={Renderer.RenderDuration})", spriteBatch, font);
-            WriteToScreen($"Entities: {scene.EntityManager.EntityCount}", spriteBatch, font);
-            WriteToScreen($"Total updates (last tick): {scene.EntityManager.EntityUpdateCount}", spriteBatch, font);
-            WriteToScreen($"Physics updates (last tick): {scene.EntityManager.PhysicsEntityUpdateCount}", spriteBatch, font);
-            WriteToScreen($"Camera position: {scene.Camera.Position}", spriteBatch, font);
+            WriteToScreen($"Scene Entities: {scene.EntityManager.EntityCount}", spriteBatch, font);
+            WriteToScreen($"Entity Updates: {scene.EntityManager.EntityUpdateCount}", spriteBatch, font);
+            WriteToScreen($"PhysicsEntity Updates: {scene.EntityManager.PhysicsEntityUpdateCount}", spriteBatch, font);
+            WriteToScreen($"Entity Draw Calls: {Renderer.EntityDrawCalls}", spriteBatch, font);
+            WriteToScreen($"Camera Position: {scene.Camera.Position}", spriteBatch, font);
 
             foreach (string f in customFields.Keys)
             {
@@ -50,8 +55,24 @@ namespace Verdant.Debugging
         private static void WriteToScreen(string text, SpriteBatch spriteBatch, SpriteFont font)
         {
             Vector2 stringDim = font.MeasureString(text);
-            spriteBatch.Draw(Renderer.Pixel, new Rectangle(10, 10 + stackHeight, (int)stringDim.X, (int)stringDim.Y), BackgroundColor);
-            spriteBatch.DrawString(font, text, new Vector2(10, 10 + stackHeight), TextColor);
+
+            // draw the background
+            spriteBatch.Draw(Renderer.Pixel,
+                             new Rectangle(Position.X,
+                                           Position.Y + stackHeight,
+                                           (int)stringDim.X,
+                                           (int)stringDim.Y),
+                             BackgroundColor
+                             );
+            // draw the text
+            spriteBatch.DrawString(font,
+                                   text,
+                                   new Vector2(Position.X,
+                                               Position.Y + stackHeight
+                                              ),
+                                   TextColor
+                                   );
+
             stackHeight += (int)stringDim.Y;
         }
 
