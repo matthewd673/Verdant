@@ -8,8 +8,12 @@ public static class Resources
 {
     public static Sprite Crate { get; private set; }
 
+    public static SpriteFont DebugFont { get; private set; }
+
     public static void LoadResources(ContentManager content)
     {
         Crate = content.Load<Texture2D>("crate");
+
+        DebugFont = content.Load<SpriteFont>("debugfont");
     }
 }

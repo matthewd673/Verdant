@@ -25,3 +25,10 @@
 /processorParam:TextureFormat=Color
 /build:crate.png
 
+#begin debugfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:debugfont.spritefont
+
