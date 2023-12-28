@@ -20,8 +20,8 @@ public class CapsuleEntity : PhysicsEntity
     /// <param name="radius">The radius of the Capsule (half the width of the Rectangle component).</param>
     /// <param name="height">The height of the Rectangle component.</param>
     /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
-    public CapsuleEntity(RenderObject sprite, Vec2 position, float radius, float height, float mass)
-        : base(sprite, position, radius * 2, height, mass)
+    public CapsuleEntity(Vec2 position, RenderObject sprite, float radius, float height, float mass)
+        : base(position, sprite, radius * 2, height, mass)
     {
         baseTransformHeight = height + 2 * radius;
 

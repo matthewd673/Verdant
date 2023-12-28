@@ -8,7 +8,6 @@ namespace PhysicsDemo
 {
     internal class PlayScene : Scene
     {
-
         public PlayScene(string id) : base(id)
         {
             // Empty
@@ -33,7 +32,7 @@ namespace PhysicsDemo
             WallEntity wall = new(new Vec2(50, 300), new Vec2(450, 250));
             EntityManager.AddEntity(wall);
 
-            CapsuleEntity capsule = new(Sprites.CapsuleEntity, new Vec2(600, 200), 20, 120, 5)
+            CapsuleEntity capsule = new(new Vec2(600, 200), Sprites.CapsuleEntity, 20, 120, 5)
             {
                 AngleFriction = 0f,
             };
@@ -42,7 +41,7 @@ namespace PhysicsDemo
             //CapsuleController capsule = new(new Vec2(600, 200), 20, 120, 5);
             //EntityManager.AddEntity(capsule);
 
-            BoxEntity box = new(Sprites.BoxEntity, new Vec2(200, 50), 40, 120, 0);
+            BoxEntity box = new(new Vec2(200, 50), Sprites.BoxEntity, 40, 120, 0);
             box.AngleFriction = 0.5f;
             EntityManager.AddEntity(box);
         }

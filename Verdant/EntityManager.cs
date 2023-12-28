@@ -520,17 +520,5 @@ public class EntityManager
         UpdateDuration = updatePerformanceTimer.ElapsedMilliseconds;
         updatePerformanceTimer.Reset();
     }
-
-    /// <summary>
-    /// Given a position in the world, build an appropriate Entity key.
-    /// </summary>
-    /// <param name="pos">The position.</param>
-    /// <returns>An Entity key.</returns>
-    public void SetEntityKey(Entity e)
-    {
-        e.Key = new((int)e.Position.X / CellSize,
-                    (int)e.Position.Y / CellSize);
-    }
-
 }
 

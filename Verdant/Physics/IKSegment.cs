@@ -27,7 +27,8 @@ namespace Verdant.Physics
         /// <param name="position">The position of the IKSegment's head.</param>
         /// <param name="length">The length of the IKSegment</param>
         /// <param name="angle">The initial angle of the IKSegment.</param>
-        public IKSegment(Vec2 position, float length, float angle = 0f) : base(null, position)
+        public IKSegment(Vec2 position, float length, float angle = 0f)
+            : base(position, RenderObject.None)
         {
             Head = position;
             Length = length;
@@ -40,7 +41,8 @@ namespace Verdant.Physics
         /// <param name="parent">The IKSegment to follow (the new IKSegment's head will be the parent's tail).</param>
         /// <param name="length">The length of the IKSegment.</param>
         /// <param name="angle">The initial angle of the IKSegment.</param>
-        public IKSegment(IKSegment parent, float length, float angle = 0f) : base(null, parent.Tail)
+        public IKSegment(IKSegment parent, float length, float angle = 0f)
+            : base(parent.Tail, RenderObject.None)
         {
             Head = parent.Tail.Copy();
             Length = length;

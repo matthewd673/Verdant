@@ -18,8 +18,8 @@ public class BoxEntity : PhysicsEntity
     /// <param name="width">The width of the Box.</param>
     /// <param name="height">The height of the Box.</param>
     /// <param name="mass">The mass of the Entity's Body. 0 = infinite mass.</param>
-    public BoxEntity(RenderObject sprite, Vec2 position, int width, int height, float mass)
-        : base(sprite, position, width, height, mass)
+    public BoxEntity(Vec2 position, RenderObject sprite, int width, int height, float mass)
+        : base(position, sprite, width, height, mass)
     {
         float x1 = position.X;
         float y1 = position.Y;

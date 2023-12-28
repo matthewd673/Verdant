@@ -89,8 +89,8 @@ namespace Verdant.Physics
         /// Initialize a new PhysicsEntity. By default, it will have a mass but no Components.
         /// In most cases, it is more appropriate to use an extension like a BallEntity or BoxEntity.
         /// </summary>
-        public PhysicsEntity(RenderObject sprite, Vec2 position, float width, float height, float mass)
-                : base(sprite, position, (int)width, (int)height)
+        public PhysicsEntity(Vec2 position, RenderObject sprite, float width, float height, float mass)
+            : base(position, sprite, (int)width, (int)height)
         {
             Mass = mass;
         }

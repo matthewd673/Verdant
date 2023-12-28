@@ -18,15 +18,12 @@ public class Entity
         set
         {
             _manager = value;
-            if (_manager != null)
-            {
-                _manager.SetEntityKey(this); // set initial key if manager isn't null
-            }
+            UpdateKey();
         }
     }
 
     // The key of the Entity within the manager's hash table.
-    public Vec2Int Key { get; internal set; }
+    public Vec2Int Key { get; internal set; } = new();
     // The key of the Entity at the end of the last update.
     public Vec2Int PreviousKey { get; private set; } = new();
 
@@ -77,12 +74,20 @@ public class Entity
     // next update loop.
     public bool ForRemoval { get; set; } = false;
 
+    public Entity(Vec2 position)
+    {
+        Position = position;
+        Sprite = RenderObject.None;
+        Width = 0;
+        Height = 0;
+    }
+
     /// <summary>
     /// Initialize a new Entity.
     /// </summary>
     /// <param name="sprite">The Entity's sprite.</param>
     /// <param name="position">The Entity's position.</param>
-    public Entity(RenderObject sprite, Vec2 position)
+    public Entity(Vec2 position, RenderObject sprite)
     {
         if (sprite != RenderObject.None)
         {
@@ -110,7 +115,7 @@ public class Entity
     /// <param name="position">The Entity's position.</param>
     /// <param name="width">The width of the Entity.</param>
     /// <param name="height">The height of the Entity.</param>
-    public Entity(RenderObject sprite, Vec2 position, float width, float height)
+    public Entity(Vec2 position, RenderObject sprite, float width, float height)
     {
         if (sprite != RenderObject.None)
         {
@@ -150,18 +155,27 @@ public class Entity
         // Empty
     }
 
+    private void UpdateKey()
+    {
+        if (Manager == null)
+        {
+            return;
+        }
+
+        PreviousKey.X = Key.X;
+        PreviousKey.Y = Key.Y;
+
+        Key.X = (int)(Position.X / Manager.CellSize);
+        Key.Y = (int)(Position.Y / Manager.CellSize);
+    }
+
     /// <summary>
     /// Perform the Entity's basic update actions - a good place to look for input events. Called in the EntityManager update loop.
     /// </summary>
     public virtual void Update()
     {
         // update key
-        if (Manager != null) //only if a managed entity (not Particles, for example)
-        {
-            PreviousKey.X = Key.X;
-            PreviousKey.Y = Key.Y;
-            Manager.SetEntityKey(this);
-        }
+        UpdateKey();
 
         // update z index
         if (ZIndexMode == ZIndexMode.Bottom)

@@ -23,7 +23,7 @@ namespace Verdant
         /// <param name="width">The width of the screen.</param>
         /// <param name="height">The height of the screen.</param>
         public Camera(int width, int height)
-            : base(RenderObject.None, new Vec2(), width, height)
+            : base(new Vec2(), RenderObject.None, width, height)
         {
             RenderPosition.X = Position.X;
             RenderPosition.Y = Position.Y;
@@ -36,7 +36,7 @@ namespace Verdant
         /// <param name="width">The width of the screen.</param>
         /// <param name="height">The height of the screen.</param>
         public Camera(Vec2 position, int width, int height)
-            : base(RenderObject.None, position, width, height)
+            : base(position, RenderObject.None, width, height)
         {
             RenderPosition.X = Position.X;
             RenderPosition.Y = Position.Y;

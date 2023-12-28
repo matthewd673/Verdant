@@ -9,8 +9,8 @@ namespace PhysicsDemo
     internal class BallController : BallEntity
     {
 
-        public BallController(Vec2 pos, float radius, float mass)
-            : base(Renderer.GenerateCircleSprite((int)radius, Color.Salmon), pos, radius, mass)
+        public BallController(Vec2 position, float radius, float mass)
+            : base(position, Renderer.GenerateCircleSprite((int)radius, Color.Salmon), radius, mass)
         {
             // Empty
         }

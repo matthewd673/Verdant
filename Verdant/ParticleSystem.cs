@@ -82,7 +82,10 @@ namespace Verdant
         /// Initialize a new ParticleSystem.
         /// </summary>
         /// <param name="pos">The position of the system.</param>
-        public ParticleSystem(Vec2 pos) : base(Renderer.PixelSprite, pos, 0, 0) { }
+        public ParticleSystem(Vec2 pos) : base(pos, Renderer.PixelSprite, 0, 0)
+        {
+            // Empty
+        }
 
         /// <summary>
         /// Spawn a Particle within the system, according to the system's properties.
