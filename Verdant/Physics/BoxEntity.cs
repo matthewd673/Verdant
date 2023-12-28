@@ -71,5 +71,14 @@ public class BoxEntity : PhysicsEntity
         ((Rectangle)Components[0]).Angle += AngleSpeed;
         ((Rectangle)Components[0]).CalculateVertices();
     }
+
+    protected internal override void UpdateBaseTransform()
+    {
+        BaseTransform.Position.X = Position.X;
+        BaseTransform.Position.Y = Position.Y;
+        BaseTransform.Width = Width;
+        BaseTransform.Height = Height;
+        BaseTransform.Angle = ((Rectangle)Components[0]).Angle;
+    }
 }
 

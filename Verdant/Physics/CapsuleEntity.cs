@@ -10,6 +10,7 @@ namespace Verdant.Physics;
 /// </summary>
 public class CapsuleEntity : PhysicsEntity
 {
+    private float baseTransformHeight;
 
     /// <summary>
     /// Initialize a new CapsuleEntity.
@@ -22,6 +23,8 @@ public class CapsuleEntity : PhysicsEntity
     public CapsuleEntity(RenderObject sprite, Vec2 position, float radius, float height, float mass)
         : base(sprite, position, radius * 2, height, mass)
     {
+        baseTransformHeight = height + 2 * radius;
+
         float x1 = position.X;
         float y1 = position.Y;
         float x2 = x1;
@@ -73,6 +76,15 @@ public class CapsuleEntity : PhysicsEntity
         float length = ((Rectangle)Components[0]).Length;
         Components[1].Position = Components[0].Position + Components[0].Dir * -length / 2;
         Components[2].Position = Components[0].Position + Components[0].Dir * length / 2;
+    }
+
+    protected internal override void UpdateBaseTransform()
+    {
+        BaseTransform.Position.X = Position.X;
+        BaseTransform.Position.Y = Position.Y;
+        BaseTransform.Width = Width;
+        BaseTransform.Height = baseTransformHeight;
+        BaseTransform.Angle = ((Rectangle)Components[0]).Angle;
     }
 }
 
