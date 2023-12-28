@@ -74,11 +74,6 @@ public class SpriteSheet : RenderObject
         DrawIndex(spriteBatch, bounds, 0, 0);
     }
 
-    public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
-    {
-        DrawIndex(spriteBatch, bounds, angle, origin, 0);
-    }
-
     public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
     {
         Rectangle crop = new(x * spriteWidth,
@@ -93,7 +88,7 @@ public class SpriteSheet : RenderObject
                 crop,
                 Color.White,
                 transform.Angle,
-                new Vector2(transform.HalfWidth, transform.HalfHeight),
+                new Vector2(spriteWidth / 2, spriteHeight / 2),
                 SpriteEffects.None,
                 0
                 );
@@ -118,19 +113,6 @@ public class SpriteSheet : RenderObject
                          bounds,
                          crop,
                          Color.White
-                         );
-    }
-
-    public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin, int x, int y = 0)
-    {
-        spriteBatch.Draw(texture,
-                         bounds,
-                         new Rectangle(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight),
-                         Color.White,
-                         angle,
-                         origin,
-                         SpriteEffects.None,
-                         0
                          );
     }
 }

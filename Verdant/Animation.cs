@@ -146,23 +146,6 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Perform the next step of the Animation and return the current frame.
-        /// </summary>
-        /// <returns>The current Texture2D frame in the Animation sequence.</returns>
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
-        {
-            PerformAnimationStep();
-
-            DrawIndex(spriteBatch,
-                      bounds,
-                      angle,
-                      origin,
-                      frameIndex,
-                      frameSet.row
-                      );
-        }
-
-        /// <summary>
         /// Copy the settings of the current animation to a new instance.
         /// </summary>
         /// <returns>A new Animation instance.</returns>

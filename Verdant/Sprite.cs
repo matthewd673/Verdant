@@ -45,7 +45,7 @@ namespace Verdant
                     crop,
                     Color.White,
                     transform.Angle,
-                    new Vector2(transform.HalfWidth, transform.HalfHeight),
+                    new Vector2(Width / 2, Height / 2),
                     SpriteEffects.None,
                     0
                     );
@@ -61,20 +61,6 @@ namespace Verdant
             spriteBatch.Draw(texture, bounds, crop, Color.White);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin)
-        {
-            spriteBatch.Draw(
-                texture,
-                bounds,
-                crop,
-                Color.White,
-                angle,
-                origin,
-                SpriteEffects.None,
-                0
-                );
-        }
-
         public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
         {
             Draw(spriteBatch, transform);
@@ -86,11 +72,6 @@ namespace Verdant
         public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, int x, int y = 0)
         {
             Draw(spriteBatch, bounds);
-        }
-
-        public override void DrawIndex(SpriteBatch spriteBatch, Rectangle bounds, float angle, Vector2 origin, int x, int y = 0)
-        {
-            Draw(spriteBatch, bounds, angle, origin);
         }
 
         public static implicit operator Sprite(Texture2D texture2d) => new Sprite(texture2d);
