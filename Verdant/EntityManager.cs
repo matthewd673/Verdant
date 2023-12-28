@@ -20,6 +20,7 @@ public class EntityManager
 
     private List<Entity> addQueue = new List<Entity>();
     private List<Entity> removeQueue = new List<Entity>();
+    private List<Entity> moveQueue = new List<Entity>();
 
     // The number of Entities currently managed by the EntityManager.
     public int EntityCount { get; protected set; }
@@ -381,15 +382,24 @@ public class EntityManager
         return CheckRectCollisions<PhysicsEntity>(x, y, width, height, includeTriggers, includeSolids, ignoreList);
     }
 
+    private void MarkEntityMoved(Entity e)
+    {
+        if (e.Key.Equals(e.PreviousKey))
+        {
+            moveQueue.Add(e);
+        }
+    }
+
     /// <summary>
     /// Move an Entity from one cell in the table to another. The Entity will be moved from its PreviousKey to its Key. Called by Update if it detects that an Entity's key has changed.
     /// </summary>
     /// <param name="e">The Entity to move.</param>
-    protected void MoveEntityCell(Entity e)
+    private void MoveEntityCell(Entity e)
     {
-        if (e.Key.X == e.PreviousKey.X &&
-            e.Key.Y == e.PreviousKey.Y)
+        if (e.Key.Equals(e.PreviousKey))
+        {
             return;
+        }
 
         EntityList currentCellList;
         if (table.GetCell(e.PreviousKey.X, e.PreviousKey.Y, out currentCellList))
@@ -398,6 +408,15 @@ public class EntityManager
                 return; // if it couldn't be removed for some reason, assume it has already been moved and stop to avoid dupllicates
 
             table.Insert(e.Key.X, e.Key.Y, e);
+        }
+    }
+
+    private void ApplyEntityMoves()
+    {
+        while (moveQueue.Count > 0)
+        {
+            MoveEntityCell(moveQueue[0]);
+            moveQueue.RemoveAt(0);
         }
     }
 
@@ -464,7 +483,7 @@ public class EntityManager
         PhysicsEntityUpdateCount = 0;
         List<PhysicsEntity> physicsList = new();
 
-        // update all
+        // update all entities in the collection
         foreach (Entity e in collection)
         {
             e.Update();
@@ -487,15 +506,19 @@ public class EntityManager
                 PhysicsEntityUpdateCount++; // count physics updates
             }
 
-            MoveEntityCell(e);
+            // no need to check if it actually has moved -- this is handled
+            // within the MarkEntityMoved function
+            MarkEntityMoved(e);
         }
 
+        // run physics loop
         physicsPerformanceTimer.Start();
         PhysicsLoop(physicsList);
         physicsPerformanceTimer.Stop();
         PhysicsDuration = physicsPerformanceTimer.ElapsedMilliseconds;
         physicsPerformanceTimer.Reset();
 
+        ApplyEntityMoves();
         ApplyQueues();
     }
 
