@@ -12,29 +12,29 @@ public class PlayScene : Scene
 {
     private Crate crate;
 
-    private TransformState addPosition = new(TransformStateBlendMode.Add)
+    private Transform addPosition = new(TransformBlendMode.Add)
     {
         Position = new(10, 10),
     };
-    private TransformState addScale = new(TransformStateBlendMode.Add)
+    private Transform addScale = new(TransformBlendMode.Add)
     {
         Width = 10,
         Height = 10,
     };
-    private TransformState addAngle = new(TransformStateBlendMode.Add)
+    private Transform addAngle = new(TransformBlendMode.Add)
     {
         Angle = 1f,
     };
-    private TransformState mulPosition = new(TransformStateBlendMode.Multiply)
+    private Transform mulPosition = new(TransformBlendMode.Multiply)
     {
         Position = new(2, 2),
     };
-    private TransformState mulScale = new(TransformStateBlendMode.Multiply)
+    private Transform mulScale = new(TransformBlendMode.Multiply)
     {
         Width = 2,
         Height = 2,
     };
-    private TransformState mulAngle = new(TransformStateBlendMode.Multiply)
+    private Transform mulAngle = new(TransformBlendMode.Multiply)
     {
         Angle = 0.5f,
     };
@@ -84,7 +84,7 @@ public class PlayScene : Scene
         InitializeUI();
     }
 
-    private void ToggleTransform(TransformState transform)
+    private void ToggleTransform(Transform transform)
     {
         if (!crate.RemoveTransform(transform))
         {

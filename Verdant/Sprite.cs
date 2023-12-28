@@ -37,7 +37,7 @@ namespace Verdant
             height = crop.Height;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, TransformState transform)
+        public override void Draw(SpriteBatch spriteBatch, Transform transform)
         {
             spriteBatch.Draw(
                     texture,
@@ -61,7 +61,7 @@ namespace Verdant
             spriteBatch.Draw(texture, bounds, crop, Color.White);
         }
 
-        public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
+        public override void DrawIndex(SpriteBatch spriteBatch, Transform transform, int x, int y = 0)
         {
             Draw(spriteBatch, transform);
         }

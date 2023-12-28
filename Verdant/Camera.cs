@@ -161,7 +161,7 @@ namespace Verdant
         /// </summary>
         /// <param name="transformState">The TransformState.</param>
         /// <returns>A Rectangle representing the proper rendering bounds for the given TransformState.</returns>
-        public Rectangle GetRenderBounds(TransformState transformState)
+        public Rectangle GetRenderBounds(Transform transformState)
         {
             return GetRenderBounds(transformState.Position,
                                    (int)transformState.Width,
@@ -206,7 +206,7 @@ namespace Verdant
         /// Blend the operand TransformState with the Camera's transform.
         /// </summary>
         /// <param name="operand">The TransformState to blend onto in-place. The Camera blend uses both additive and multiplicative blends.</param>
-        public void BlendOnto(TransformState operand)
+        public void BlendOnto(Transform operand)
         {
             // update manually to avoid allocating new Vec2s
             operand.Position.X -= RenderPosition.X;

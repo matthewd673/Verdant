@@ -99,7 +99,7 @@ public class Particle
             return;
         }
 
-        TransformState animState = TransformAnimation.GetFrame();
+        Transform animState = TransformAnimation.GetFrame();
         Sprite.Draw(spriteBatch, animState);
     }
 }

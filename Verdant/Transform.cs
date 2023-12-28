@@ -7,10 +7,10 @@ namespace Verdant;
 /// Modifies the way an Entity, Particle, etc. is rendered to the screen.
 /// Effect can be either multiplicative (a.k.a "relative", Multiply=true) or absolute (Multiply=false).
 /// </summary>
-public class TransformState
+public class Transform
 {
     // Determines the way the TransformState's effects are applied.
-    public TransformStateBlendMode BlendMode { get; set; }
+    public TransformBlendMode BlendMode { get; set; }
 
     // The position of the TransformState.
     public Vec2 Position { get; set; }
@@ -47,12 +47,12 @@ public class TransformState
     /// By default, its properties will be initialized to not have any effect.
     /// </summary>
     /// <param name="blendMode">Determines the TransformState's blend mode.</param>
-    public TransformState(TransformStateBlendMode blendMode)
+    public Transform(TransformBlendMode blendMode)
     {
         BlendMode = blendMode;
 
         // defaults to 1 if multiplicative
-        if (BlendMode == TransformStateBlendMode.Multiply)
+        if (BlendMode == TransformBlendMode.Multiply)
         {
             Position = new Vec2(1, 1);
             Width = 1;
@@ -73,7 +73,7 @@ public class TransformState
     /// <param name="height">The height of the TransformState.</param>
     /// <param name="angle">The rotation angle of the TransformState.</param>
     /// <param name="blendMode">Determiens the TransformState's blend mode.</param>
-    public TransformState(Vec2 position, float width, float height, float angle, TransformStateBlendMode blendMode)
+    public Transform(Vec2 position, float width, float height, float angle, TransformBlendMode blendMode)
     {
         Position = position;
         Width = width;
@@ -86,9 +86,9 @@ public class TransformState
     /// Create a new TransformState with the same properties as this one.
     /// </summary>
     /// <returns>A new TransformState.</returns>
-    public TransformState Copy()
+    public Transform Copy()
     {
-        TransformState newState = new(BlendMode)
+        Transform newState = new(BlendMode)
         {
             Position = Position.Copy(),
             Width = Width,
@@ -102,25 +102,25 @@ public class TransformState
     /// Blend another TransformState onto this one in-place.
     /// </summary>
     /// <param name="operand">The TransformState to blend with. The two will be blended according to the operand's BlendMode and the operand will not be modified.</param>
-    public void Blend(TransformState operand)
+    public void Blend(Transform operand)
     {
         switch (operand.BlendMode)
         {
-            case TransformStateBlendMode.Add:
+            case TransformBlendMode.Add:
                 Position.X += operand.Position.X;
                 Position.Y += operand.Position.Y;
                 Width += operand.Width;
                 Height += operand.Height;
                 Angle += operand.Angle;
                 break;
-            case TransformStateBlendMode.Multiply:
+            case TransformBlendMode.Multiply:
                 Position.X *= operand.Position.X;
                 Position.Y *= operand.Position.Y;
                 Width *= operand.Width;
                 Height *= operand.Height;
                 Angle *= operand.Angle;
                 break;
-            case TransformStateBlendMode.Override:
+            case TransformBlendMode.Override:
                 Position.X = operand.Position.X;
                 Position.Y = operand.Position.Y;
                 Width = operand.Width;
@@ -139,7 +139,7 @@ public class TransformState
                    );
     }
 
-    public static TransformState operator +(TransformState a, TransformState b)
+    public static Transform operator +(Transform a, Transform b)
     {
         return new(a.Position + b.Position,
                    a.Width + b.Width,
@@ -149,7 +149,7 @@ public class TransformState
                    );
     }
 
-    public static TransformState operator -(TransformState a, TransformState b)
+    public static Transform operator -(Transform a, Transform b)
     {
         return new(a.Position - b.Position,
                    a.Width - b.Width,
@@ -158,7 +158,7 @@ public class TransformState
                    a.BlendMode
                    );
     }
-    public static TransformState operator *(TransformState a, TransformState b)
+    public static Transform operator *(Transform a, Transform b)
     {
         return new(a.Position * b.Position,
                    a.Width * b.Width,
@@ -167,7 +167,7 @@ public class TransformState
                    a.BlendMode
                    );
     }
-    public static TransformState operator /(TransformState a, TransformState b)
+    public static Transform operator /(Transform a, Transform b)
     {
         return new(a.Position / b.Position,
                    a.Width / b.Width,

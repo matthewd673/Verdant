@@ -30,12 +30,12 @@ namespace ParticleToy
             particleSystem.SelfRemove = false;
 
             particleSystem.DefaultTransformAnimation = new TransformAnimation(
-                new TransformState(TransformStateBlendMode.Multiply)
+                new Transform(TransformBlendMode.Multiply)
                 {
                     Height = 1f,
                     Width = 1f,
                 },
-                new TransformState(TransformStateBlendMode.Multiply)
+                new Transform(TransformBlendMode.Multiply)
                 {
                     Height = 0f,
                     Width = 0f,

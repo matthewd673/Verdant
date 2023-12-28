@@ -11,12 +11,12 @@ public class Crate : Entity
         // Empty
     }
 
-    public void AddTransform(TransformState transform)
+    public void AddTransform(Transform transform)
     {
         TransformStates.Add(transform);
     }
 
-    public bool RemoveTransform(TransformState transform)
+    public bool RemoveTransform(Transform transform)
     {
         return TransformStates.Remove(transform);
     }

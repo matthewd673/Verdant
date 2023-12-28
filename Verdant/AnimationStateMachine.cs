@@ -55,7 +55,7 @@ public class AnimationStateMachine : RenderObject
         queue.Clear();
     }
 
-    public override void Draw(SpriteBatch spriteBatch, TransformState transform)
+    public override void Draw(SpriteBatch spriteBatch, Transform transform)
     {
         CurrentAnimation?.Draw(spriteBatch, transform);
 
@@ -75,7 +75,7 @@ public class AnimationStateMachine : RenderObject
             queue.RemoveAt(0);
     }
 
-    public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
+    public override void DrawIndex(SpriteBatch spriteBatch, Transform transform, int x, int y = 0)
     {
         CurrentAnimation?.DrawIndex(spriteBatch, transform, x, y);
     }

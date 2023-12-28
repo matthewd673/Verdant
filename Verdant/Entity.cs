@@ -67,11 +67,11 @@ public class Entity
     // The z-index, used for sorting and depth-based rendering.
     public int ZIndex { get; set; } = 0;
 
-    protected TransformState BaseTransform { get; private set; } = new(TransformStateBlendMode.Override);
+    protected Transform BaseTransform { get; private set; } = new(TransformBlendMode.Override);
     // A sequence of TransformStates that will be applied when rendering.
     // TransformStates are applied from first to last in the array with
     // no other order of operations.
-    protected List<TransformState> TransformStates { get; private set; } = new();
+    protected List<Transform> TransformStates { get; private set; } = new();
 
     // Determines if the Entity should be removed at the end of the
     // next update loop.
@@ -199,7 +199,7 @@ public class Entity
         UpdateBaseTransform();
 
         // apply all TransformStates onto the base state
-        foreach (TransformState t in TransformStates)
+        foreach (Transform t in TransformStates)
         {
             BaseTransform.Blend(t);
         }

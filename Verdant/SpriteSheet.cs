@@ -58,7 +58,7 @@ public class SpriteSheet : RenderObject
         return new Sprite(texture, new Rectangle(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight));
     }
 
-    public override void Draw(SpriteBatch spriteBatch, TransformState transform)
+    public override void Draw(SpriteBatch spriteBatch, Transform transform)
     {
         DrawIndex(spriteBatch, transform, 0, 0);
     }
@@ -74,7 +74,7 @@ public class SpriteSheet : RenderObject
         DrawIndex(spriteBatch, bounds, 0, 0);
     }
 
-    public override void DrawIndex(SpriteBatch spriteBatch, TransformState transform, int x, int y = 0)
+    public override void DrawIndex(SpriteBatch spriteBatch, Transform transform, int x, int y = 0)
     {
         Rectangle crop = new(x * spriteWidth,
                              y * spriteHeight,

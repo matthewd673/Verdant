@@ -1,7 +1,9 @@
+namespace Verdant;
+
 /// <summary>
 /// Determines how TransformStates should be blended.
 /// </summary>
-public enum TransformStateBlendMode
+public enum TransformBlendMode
 {
     // Add the two TransformStates together.
     Add,

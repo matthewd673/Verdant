@@ -134,7 +134,7 @@ namespace Verdant
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch, TransformState transform)
+        public override void Draw(SpriteBatch spriteBatch, Transform transform)
         {
             PerformAnimationStep();
 
