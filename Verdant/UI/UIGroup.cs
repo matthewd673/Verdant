@@ -118,11 +118,7 @@ namespace Verdant.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // sort children
-            IEnumerable<UIElement> renderList;
-            if (Renderer.SortUIElements)
-                renderList = children.OrderBy(n => n.ZIndex);
-            else
-                renderList = children;
+            IEnumerable<UIElement> renderList = children.OrderBy(n => n.ZIndex);
 
             // draw background
             spriteBatch.Draw(Renderer.Pixel,

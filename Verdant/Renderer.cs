@@ -33,12 +33,6 @@ public static class Renderer
     // Determines if the custom cursor Sprite should be rendered.
     public static bool ShowCursor { get; set; } = true;
 
-    // Determines if Entities should be sorted according to z-index before rendering.
-    public static bool SortEntities { get; set; } = true;
-
-    // Determines if UIElements should be sorted according to z-index before rendering.
-    public static bool SortUIElements { get; set; } = true;
-
     // The window's GraphicsDeviceManager.
     public static GraphicsDeviceManager GraphicsDeviceManager { get; private set; }
 
@@ -83,17 +77,12 @@ public static class Renderer
         renderPerformanceTimer.Start();
 
         // render entities
-        IEnumerable<Entity> entities = scene.EntityManager.GetEntitiesInBounds(
+        IOrderedEnumerable<Entity> entities = scene.EntityManager.GetEntitiesInBounds(
                 scene.Camera.Position.X - scene.EntityManager.CellSize,
                 scene.Camera.Position.Y - scene.EntityManager.CellSize,
                 (int)(scene.Camera.Width + scene.EntityManager.CellSize),
                 (int)(scene.Camera.Height + scene.EntityManager.CellSize)
-                );
-
-        if (SortEntities)
-        {
-            entities.OrderBy(n => n.ZIndex);
-        }
+                ).OrderBy(n => n.ZIndex);
 
         EntityDrawCalls = 0;
         foreach (Entity e in entities)
@@ -112,11 +101,7 @@ public static class Renderer
         }
 
         // render ui elements
-        IEnumerable<UIElement> uiElements;
-        if (SortUIElements)
-            uiElements = scene.UIManager.GetElements().OrderBy(n => n.ZIndex);
-        else
-            uiElements = scene.UIManager.GetElements();
+        IOrderedEnumerable<UIElement> uiElements = scene.UIManager.GetElements().OrderBy(n => n.ZIndex);
 
         foreach (UIElement e in scene.UIManager.GetElements())
         {

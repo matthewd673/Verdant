@@ -16,20 +16,10 @@ public class ZIndexTestScene : Scene
     {
         base.Initialize();
 
-        List<int> offsets = new();
         for (int i = 0; i < 150; i++)
         {
-            offsets.Add(i);
-        }
-
-        while (offsets.Count > 0)
-        {
-            int i = GameMath.Random.Next(offsets.Count);
-
-            Crate c = new(new Vec2(30, 30 + i * 3));
+            Crate c = new(new Vec2(30 + GameMath.Random.Next(3), 475 - i * 3));
             EntityManager.AddEntity(c);
-
-            offsets.RemoveAt(i);
         }
     }
 }

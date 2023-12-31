@@ -180,11 +180,11 @@ public class Entity
         // update z index
         if (ZIndexMode == ZIndexMode.Bottom)
         {
-            ZIndex = (int)(Position.Y + Height);
+            ZIndex = (int)(Position.Y + HalfHeight);
         }
         else if (ZIndexMode == ZIndexMode.Top)
         {
-            ZIndex = (int)(Position.Y);
+            ZIndex = (int)(Position.Y - HalfHeight);
         }
     }
 
