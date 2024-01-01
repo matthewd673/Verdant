@@ -42,11 +42,18 @@ namespace Verdant
             RenderPosition.Y = Position.Y;
         }
 
+        public override void OnAdd()
+        {
+            Verdant.Debugging.Log.WriteLine("Camera added");
+        }
+
         /// <summary>
         /// Update the Camera, performing any animated effects (such as screen shake).
         /// </summary>
         public override void Update()
         {
+            Verdant.Debugging.Log.WriteLine("Camera update");
+
             // apply camera shake if currently shaking
             if (shakeTimer != null && shakeTimer.Running)
             {
@@ -54,8 +61,8 @@ namespace Verdant
             }
 
             // update render position
-            RenderPosition.X = Position.X + offsetX;
-            RenderPosition.Y = Position.Y + offsetY;
+            RenderPosition.X = Position.X - HalfWidth/Renderer.WorldScale + offsetX;
+            RenderPosition.Y = Position.Y - HalfHeight/Renderer.WorldScale + offsetY;
         }
 
         /// <summary>
@@ -64,8 +71,8 @@ namespace Verdant
         /// <param name="point">The point to center on.</param>
         public void CenterOnPoint(Vec2 point)
         {
-            Position.X = point.X - Width / Renderer.WorldScale / 2;
-            Position.Y = point.Y - Height / Renderer.WorldScale / 2;
+            Position.X = point.X;
+            Position.Y = point.Y;
         }
 
         /// <summary>

@@ -31,8 +31,8 @@ public class Game1 : Game
         MenuScene menuScene = new();
         sceneManager.AddScene(menuScene);
 
-        ZIndexTestScene zIndexTestScene = new();
-        sceneManager.AddScene(zIndexTestScene);
+        sceneManager.AddScene(new ZIndexTestScene());
+        sceneManager.AddScene(new CameraCenterTestScene());
     }
 
     protected override void LoadContent()

@@ -98,7 +98,10 @@ public class EntityManager
         while (addQueue.Count > 0)
         {
             Entity e = addQueue[0];
+
             e.Manager = this;
+            e.UpdateKey();
+
             if (e.ZIndexMode == ZIndexMode.ByIndex)
                 e.ZIndex = EntityCount;
 
@@ -384,10 +387,7 @@ public class EntityManager
 
     private void MarkEntityMoved(Entity e)
     {
-        if (e.Key.Equals(e.PreviousKey))
-        {
-            moveQueue.Add(e);
-        }
+        moveQueue.Add(e);
     }
 
     /// <summary>
@@ -396,16 +396,11 @@ public class EntityManager
     /// <param name="e">The Entity to move.</param>
     private void MoveEntityCell(Entity e)
     {
-        if (e.Key.Equals(e.PreviousKey))
-        {
-            return;
-        }
-
         EntityList currentCellList;
         if (table.GetCell(e.PreviousKey.X, e.PreviousKey.Y, out currentCellList))
         {
             if (!currentCellList.Remove(e)) // attempt to remove
-                return; // if it couldn't be removed for some reason, assume it has already been moved and stop to avoid dupllicates
+                return; // if it couldn't be removed for some reason, assume it has already been moved and stop to avoid duplicates
 
             table.Insert(e.Key.X, e.Key.Y, e);
         }
@@ -413,11 +408,11 @@ public class EntityManager
 
     private void ApplyEntityMoves()
     {
-        while (moveQueue.Count > 0)
+        foreach (Entity e in moveQueue)
         {
-            MoveEntityCell(moveQueue[0]);
-            moveQueue.RemoveAt(0);
+            MoveEntityCell(e);
         }
+        moveQueue.Clear();
     }
 
     private void PhysicsLoop(List<PhysicsEntity> updateList)
@@ -506,9 +501,11 @@ public class EntityManager
                 PhysicsEntityUpdateCount++; // count physics updates
             }
 
-            // no need to check if it actually has moved -- this is handled
-            // within the MarkEntityMoved function
-            MarkEntityMoved(e);
+            // update key and queue table move if necessary
+            if (e.UpdateKey())
+            {
+                MarkEntityMoved(e);
+            }
         }
 
         // run physics loop
@@ -532,10 +529,10 @@ public class EntityManager
         updatePerformanceTimer.Start();
         // update in rectangle near camera (with some padding to be safe)
         UpdateCollection(GetEntitiesInBounds(
-                Scene.Camera.Position.X - CellSize,
-                Scene.Camera.Position.Y - CellSize,
-                Scene.Camera.Width + (CellSize * 2), // TODO: why *2?
-                Scene.Camera.Height + (CellSize * 2)
+                Scene.Camera.Position.X - Scene.Camera.HalfWidth - CellSize,
+                Scene.Camera.Position.Y - Scene.Camera.HalfHeight - CellSize,
+                Scene.Camera.Position.X + Scene.Camera.HalfWidth + (CellSize * 2), // TODO: why *2?
+                Scene.Camera.Position.Y + Scene.Camera.HalfHeight + (CellSize * 2)
                 )
             );
 

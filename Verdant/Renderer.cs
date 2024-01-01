@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Verdant.UI;
@@ -78,11 +79,11 @@ public static class Renderer
 
         // render entities
         IOrderedEnumerable<Entity> entities = scene.EntityManager.GetEntitiesInBounds(
-                scene.Camera.Position.X - scene.EntityManager.CellSize,
-                scene.Camera.Position.Y - scene.EntityManager.CellSize,
-                (int)(scene.Camera.Width + scene.EntityManager.CellSize),
-                (int)(scene.Camera.Height + scene.EntityManager.CellSize)
-                ).OrderBy(n => n.ZIndex);
+                scene.Camera.Position.X - scene.Camera.HalfWidth - scene.EntityManager.CellSize,
+                scene.Camera.Position.Y - scene.Camera.HalfHeight - scene.EntityManager.CellSize,
+                (int)(scene.Camera.Width + scene.Camera.HalfWidth + scene.EntityManager.CellSize),
+                (int)(scene.Camera.Height + scene.Camera.HalfHeight + scene.EntityManager.CellSize)
+            ).OrderBy(n => n.ZIndex);
 
         EntityDrawCalls = 0;
         foreach (Entity e in entities)

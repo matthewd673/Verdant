@@ -10,17 +10,8 @@ namespace Verdant;
 /// </summary>
 public class Entity
 {
-    EntityManager _manager;
     // The EntityManager that manages this Entity.
-    public EntityManager Manager
-    {
-        get { return _manager; }
-        set
-        {
-            _manager = value;
-            UpdateKey();
-        }
-    }
+    public EntityManager Manager { get; set; }
 
     // The key of the Entity within the manager's hash table.
     public Vec2Int Key { get; internal set; } = new();
@@ -55,8 +46,8 @@ public class Entity
             HalfHeight = value / 2;
         }
     }
-    protected float HalfWidth { get; private set; }
-    protected float HalfHeight { get; private set; }
+    internal float HalfWidth { get; private set; }
+    internal float HalfHeight { get; private set; }
 
     // The method by which to update the ZIndex.
     public ZIndexMode ZIndexMode { get; set; } = ZIndexMode.ByIndex;
@@ -155,11 +146,15 @@ public class Entity
         // Empty
     }
 
-    private void UpdateKey()
+    /// <summary>
+    /// Update the Entity's Key (and PreviousKey).
+    /// </summary>
+    /// <returns>True if the Entity's new key is different, false otherwise.</returns>
+    internal bool UpdateKey()
     {
         if (Manager == null)
         {
-            return;
+            return false;
         }
 
         PreviousKey.X = Key.X;
@@ -167,6 +162,8 @@ public class Entity
 
         Key.X = (int)(Position.X / Manager.CellSize);
         Key.Y = (int)(Position.Y / Manager.CellSize);
+
+        return PreviousKey.X != Key.X || PreviousKey.Y != Key.Y;
     }
 
     /// <summary>
@@ -174,9 +171,6 @@ public class Entity
     /// </summary>
     public virtual void Update()
     {
-        // update key
-        UpdateKey();
-
         // update z index
         if (ZIndexMode == ZIndexMode.Bottom)
         {

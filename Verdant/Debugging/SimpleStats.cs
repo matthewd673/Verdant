@@ -45,6 +45,7 @@ namespace Verdant.Debugging
             WriteToScreen($"PhysicsEntity Updates: {scene.EntityManager.PhysicsEntityUpdateCount}", spriteBatch, font);
             WriteToScreen($"Entity Draw Calls: {Renderer.EntityDrawCalls}", spriteBatch, font);
             WriteToScreen($"Camera Position: {scene.Camera.Position}", spriteBatch, font);
+            WriteToScreen($"Camera Cell: {scene.Camera.Key}", spriteBatch, font);
 
             foreach (string f in customFields.Keys)
             {

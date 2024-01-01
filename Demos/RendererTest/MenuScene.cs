@@ -22,8 +22,10 @@ public class MenuScene : Scene
             Gap = 4,
         };
 
-        UILabel label1 = new(new Vec2(), Resources.Font, "[1]: ZIndex test");
-        optionsUIStack.AddElement(label1);
+        optionsUIStack.AddElement(new UILabel(
+            new Vec2(), Resources.Font, "[1]: ZIndex sorting test"));
+        optionsUIStack.AddElement(new UILabel(
+            new Vec2(), Resources.Font, "[2]: Camera center position test"));
 
         UIManager.AddElement(optionsUIStack);
     }
@@ -35,6 +37,10 @@ public class MenuScene : Scene
         if (InputHandler.IsKeyFirstPressed(Keys.D1))
         {
             Manager.ActiveID = "zindex_test";
+        }
+        if (InputHandler.IsKeyFirstPressed(Keys.D2))
+        {
+            Manager.ActiveID = "camera_center_test";
         }
     }
 }
