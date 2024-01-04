@@ -8,7 +8,7 @@ namespace LoggingDemo
     public class Player : Entity
     {
 
-        public Player() : base(Sprites.player, new Vec2(100, 100), 11, 10)
+        public Player() : base(new Vec2(100, 100), Sprites.player, 11, 10)
         {
             Log.WriteLine("Player created");
         }

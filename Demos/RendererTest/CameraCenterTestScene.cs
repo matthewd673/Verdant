@@ -29,6 +29,7 @@ public class CameraCenterTestScene : Scene
 
         cellLabel = new(
             new Vec2(), Resources.Font, "Camera Cell");
+        stack.AddElement(cellLabel);
 
         UIManager.AddElement(stack);
     }

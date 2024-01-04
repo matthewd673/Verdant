@@ -14,6 +14,8 @@ namespace LoggingDemo
 
             Player player = new Player();
             EntityManager.AddEntity(player);
+
+            Camera.CenterOnPoint(player.Position);
         }
 
     }

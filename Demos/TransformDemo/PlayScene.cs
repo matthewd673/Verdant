@@ -81,6 +81,8 @@ public class PlayScene : Scene
         crate = new(new Vec2(200, 200));
         EntityManager.AddEntity(crate);
 
+        Camera.CenterOnPoint(crate.Position);
+
         InitializeUI();
     }
 
@@ -172,15 +174,15 @@ public class PlayScene : Scene
         base.Draw(spriteBatch);
 
         // draw debug lines
-        Renderer.DrawLine(spriteBatch,
-                          new Vec2(0, crate.Position.Y),
-                          new Vec2(crate.Position.X, crate.Position.Y),
-                          Color.Magenta
-                );
-        Renderer.DrawLine(spriteBatch,
-                          new Vec2(crate.Position.X, 0),
-                          new Vec2(crate.Position.Y, crate.Position.Y),
-                          Color.Magenta
-                );
+        //Renderer.DrawLine(spriteBatch,
+        //                  new Vec2(0, crate.Position.Y),
+        //                  new Vec2(crate.Position.X, crate.Position.Y),
+        //                  Color.Magenta
+        //        );
+        //Renderer.DrawLine(spriteBatch,
+        //                  new Vec2(crate.Position.X, 0),
+        //                  new Vec2(crate.Position.Y, crate.Position.Y),
+        //                  Color.Magenta
+        //        );
     }
 }

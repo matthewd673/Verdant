@@ -22,7 +22,7 @@ namespace PhysicsDemo
             SimpleInput();
             base.Update();
 
-            SimpleStats.UpdateField("ball colliding", GetColliding().Count);
+            SimpleStats.UpdateField("ball colliding", GetColliding().ToList().Count);
         }
 
     }

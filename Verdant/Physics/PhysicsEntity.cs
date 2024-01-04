@@ -114,31 +114,29 @@ namespace Verdant.Physics
         /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
         /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
         /// <returns>A list of all PhyiscsEntities currently colliding with this one.</returns>
-        public List<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
+        public IEnumerable<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
         {
-            List<TPhysicsEntity> colliding = new List<TPhysicsEntity>();
-
             foreach (PhysicsEntity p in Colliding)
             {
                 if (!p.IsType<TPhysicsEntity>())
+                {
                     continue;
+                }
 
                 if (includeTriggers && p.Trigger)
                 {
-                    colliding.Add((TPhysicsEntity)p);
+                    yield return (TPhysicsEntity) p;
                     continue;
                 }
 
                 if (includeSolids && !p.Trigger)
                 {
-                    colliding.Add((TPhysicsEntity)p);
+                    yield return (TPhysicsEntity) p;
                     continue;
                 }
 
-                colliding.Add((TPhysicsEntity)p);
+                // yield return (TPhysicsEntity) p;
             }
-
-            return colliding;
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ namespace Verdant.Physics
         /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
         /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
         /// <returns>A list of all PhysicsEntities currently colliding with this one.</returns>
-        public List<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
+        public IEnumerable<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
         {
             return GetColliding<PhysicsEntity>(includeTriggers, includeSolids);
         }
