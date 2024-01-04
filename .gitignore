@@ -4,6 +4,10 @@ BUILDWIKI.bat
 # Ignore .DS_Store
 .DS_Store
 
+# Ignore vim buffers
+*.swp
+*.swo
+
 # Ignore .vscode
 .vscode
 

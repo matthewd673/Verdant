@@ -14,7 +14,7 @@ namespace ParticleToy
 
         public ControlTextBox(Vec2 position) : base(position, Resources.Font, "")
         {
-            Padding = new BoxDimensions(2);
+            BoxModel.Padding = new BoxDimensions(2);
         }
 
     }

@@ -41,10 +41,10 @@ namespace TopdownShooter
             if (InputHandler.MouseState.LeftButton == ButtonState.Pressed && readyToShoot)
             {
                 Vec2 mouseWorldPos = Manager.Scene.Camera.ScreenToWorldPos(InputHandler.MousePosition);
-                
+
                 SimpleStats.UpdateField("mouse pos", InputHandler.MousePosition);
                 SimpleStats.UpdateField("mouse world pos", mouseWorldPos);
-                
+
                 float shootAngle = GameMath.AngleBetweenPoints(Position, mouseWorldPos);
                 Projectile p = new Projectile(Position.Copy(), shootAngle);
                 Manager.AddEntity(p);
@@ -59,7 +59,7 @@ namespace TopdownShooter
             SimpleStats.UpdateField("player col", GetColliding().Count);
         }
 
-        
+
 
     }
 }

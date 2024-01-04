@@ -65,8 +65,6 @@ namespace Verdant.UI
                 BoxModel.Height = Math.Max(e.Position.Y + e.BoxModel.TotalHeight, BoxModel.Height);
             }
 
-            Log.WriteLine(AbsoluteContentPosition);
-
             // reposition into alignment
             // TODO: this is likely outdated and buggy
             if (Alignment != Alignment.Beginning)
@@ -79,12 +77,12 @@ namespace Verdant.UI
                             if (Vertical)
                             {
                                 float center = BoxModel.Width / 2;
-                                e.Position.X = center - (e.BoxModel.ElementWidth / 2) + BoxModel.Padding.Left/2;
+                                e.Position.X = center - (e.BoxModel.ElementWidth / 2) + BoxModel.Padding.Left / 2;
                             }
                             else
                             {
                                 float center = BoxModel.Height / 2;
-                                e.Position.Y = center - (e.BoxModel.ElementHeight / 2) + BoxModel.Padding.Top/2;
+                                e.Position.Y = center - (e.BoxModel.ElementHeight / 2) + BoxModel.Padding.Top / 2;
                             }
                             break;
                         case Alignment.End:

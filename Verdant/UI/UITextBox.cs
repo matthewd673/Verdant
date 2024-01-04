@@ -45,7 +45,7 @@ namespace Verdant.UI
 
         // Determines if an outline should be drawn when the UITextBox is focused.
         public bool ShowFocusOutline { get; set; } = true;
-        // Determines if a caret should be drawn when typing. 
+        // Determines if a caret should be drawn when typing.
         public bool ShowCaret { get; set; } = true;
         // Determines if the UITextBox should only accept numeric (int & real) input.
         public bool Numeric { get; set; } = false;
@@ -210,8 +210,8 @@ namespace Verdant.UI
                     new Rectangle(
                         (int)(AbsoluteElementPosition.X - OutlineThickness),
                         (int)(AbsoluteElementPosition.Y - OutlineThickness),
-                        (int)((BoxModel.ElementWidth >= MinWidth ? BoxModel.Width : MinWidth + BoxModel.Padding.Left + BoxModel.Padding.Right) + 2*OutlineThickness),
-                        (int)(BoxModel.ElementHeight + 2*OutlineThickness)
+                        (int)((BoxModel.ElementWidth >= MinWidth ? BoxModel.Width : MinWidth + BoxModel.Padding.Left + BoxModel.Padding.Right) + 2 * OutlineThickness),
+                        (int)(BoxModel.ElementHeight + 2 * OutlineThickness)
                         ),
                     OutlineColor
                     );
@@ -244,15 +244,15 @@ namespace Verdant.UI
             }
         }
 
-        protected virtual void OnFocus() { }
+        public Action OnFocus = () => { };
 
-        protected virtual void OnFocusLost() { }
+        public Action OnFocusLost = () => { };
 
-        protected virtual void OnSubmit() { }
+        public Action OnSubmit = () => { };
 
-        protected virtual void OnKeyPressed(Keys key) { }
+        public Action<Keys> OnKeyPressed = (Keys key) => { };
 
-        protected virtual void OnChanged() { }
+        public Action OnChanged = () => { };
 
         private static char GetKeyChar(KeyboardState state, Keys k)
         {
@@ -346,16 +346,6 @@ namespace Verdant.UI
             : base()
         {
             this.parent = parent;
-        }
-    }
-
-    public class KeyPressedEventArgs : EventArgs
-    {
-        public Keys Key { get; set; }
-
-        public KeyPressedEventArgs(Keys key)
-        {
-            Key = key;
         }
     }
 }

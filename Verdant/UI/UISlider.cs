@@ -38,13 +38,13 @@ namespace Verdant.UI
             set
             {
                 _value = value;
-                
+
                 if (_value < MinValue)
                     _value = MinValue;
                 if (_value > MaxValue)
                     _value = MaxValue;
 
-                IndicatorPosition.X = ((_value-MinValue)/valueWidth) * (barWidth);
+                IndicatorPosition.X = ((_value - MinValue) / valueWidth) * (barWidth);
 
                 OnChanged();
             }
@@ -118,11 +118,11 @@ namespace Verdant.UI
             }
         }
 
-        protected virtual void OnGrabBegin() { }
+        public Action OnGrabBegin = () => { };
 
-        protected virtual void OnGrabEnd() { }
+        public Action OnGrabEnd = () => { };
 
-        protected virtual void OnChanged() { }
+        public Action OnChanged = () => { };
 
         public override void Draw(SpriteBatch spriteBatch)
         {

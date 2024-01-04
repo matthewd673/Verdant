@@ -8,20 +8,26 @@ namespace Verdant
     /// </summary>
     public class Camera : Entity
     {
-        float shakeStrength;
-        int shakeDuration;
-        int shakeCountdown;
-        float offsetX;
-        float offsetY;
+        private float shakeStrength;
+        private Timer shakeTimer;
+        private float offsetX;
+        private float offsetY;
 
-        public bool Shaking { get { return shakeDuration != 0; } }
+        public bool Shaking { get; private set; }
+
+        internal Vec2 RenderPosition { get; private set; } = new();
 
         /// <summary>
         /// Initialize a new Camera.
         /// </summary>
         /// <param name="width">The width of the screen.</param>
         /// <param name="height">The height of the screen.</param>
-        public Camera(int width, int height) : base(RenderObject.None, new Vec2(), width, height) { }
+        public Camera(int width, int height)
+            : base(new Vec2(), RenderObject.None, width, height)
+        {
+            RenderPosition.X = Position.X;
+            RenderPosition.Y = Position.Y;
+        }
 
         /// <summary>
         /// Initialize a new Camera.
@@ -29,25 +35,34 @@ namespace Verdant
         /// <param name="position">The initial position of the Camera.</param>
         /// <param name="width">The width of the screen.</param>
         /// <param name="height">The height of the screen.</param>
-        public Camera(Vec2 position, int width, int height) : base(RenderObject.None, position, width, height) { }
+        public Camera(Vec2 position, int width, int height)
+            : base(position, RenderObject.None, width, height)
+        {
+            RenderPosition.X = Position.X;
+            RenderPosition.Y = Position.Y;
+        }
+
+        public override void OnAdd()
+        {
+            Verdant.Debugging.Log.WriteLine("Camera added");
+        }
 
         /// <summary>
         /// Update the Camera, performing any animated effects (such as screen shake).
         /// </summary>
         public override void Update()
         {
-            if (shakeDuration == 0)
-                return;
+            Verdant.Debugging.Log.WriteLine("Camera update");
 
-            shakeCountdown--;
-            if (shakeCountdown > 0)
-                ApplyShake();
-            else
+            // apply camera shake if currently shaking
+            if (shakeTimer != null && shakeTimer.Running)
             {
-                offsetX = 0;
-                offsetY = 0;
-                shakeDuration = 0;
+                ApplyShake();
             }
+
+            // update render position
+            RenderPosition.X = Position.X - HalfWidth/Renderer.WorldScale + offsetX;
+            RenderPosition.Y = Position.Y - HalfHeight/Renderer.WorldScale + offsetY;
         }
 
         /// <summary>
@@ -56,8 +71,8 @@ namespace Verdant
         /// <param name="point">The point to center on.</param>
         public void CenterOnPoint(Vec2 point)
         {
-            Position.X = point.X - Width / Renderer.WorldScale / 2;
-            Position.Y = point.Y - Height / Renderer.WorldScale / 2;
+            Position.X = point.X;
+            Position.Y = point.Y;
         }
 
         /// <summary>
@@ -68,7 +83,9 @@ namespace Verdant
         /// <returns>A Vec2 representing the position in the world.</returns>
         public Vec2 ScreenToWorldPosition(int x, int y)
         {
-            return new Vec2((x / Renderer.WorldScale) + Position.X, (y / Renderer.WorldScale) + Position.Y);
+            return new((x / Renderer.WorldScale) + Position.X,
+                       (y / Renderer.WorldScale) + Position.Y
+                       );
         }
         /// <summary>
         /// Given a position on the screen, return the corresponding position in the world.
@@ -81,7 +98,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Given a position in the world, return the corresponding position on the screen. 
+        /// Given a position in the world, return the corresponding position on the screen.
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
@@ -89,10 +106,12 @@ namespace Verdant
         public Vec2 WorldToScreenPosition(float x, float y)
         {
             // TODO: doesn't take TransformState into account (is this a feature, not a bug?)
-            return new Vec2((x - Position.X) * Renderer.WorldScale, (y - Position.Y) * Renderer.WorldScale);
+            return new((x - Position.X) * Renderer.WorldScale,
+                       (y - Position.Y) * Renderer.WorldScale
+                       );
         }
         /// <summary>
-        /// Given a position in the world, return the corresponding position on the screen. 
+        /// Given a position in the world, return the corresponding position on the screen.
         /// </summary>
         /// <param name="worldPos">The position in the world.</param>
         /// <returns>A Vec2 representing the position in the world.</returns>
@@ -111,7 +130,11 @@ namespace Verdant
         /// <returns>A Rectangle representing the proper rendering bounds for the given coordinates.</returns>
         public Rectangle GetRenderBounds(float x, float y, float width, float height)
         {
-            return new Rectangle((int)((x - GetCameraRenderPosition().X) * Renderer.WorldScale), (int)((y - GetCameraRenderPosition().Y) * Renderer.WorldScale), (int)(width * Renderer.WorldScale), (int)(height * Renderer.WorldScale));
+            return new((int)((x - RenderPosition.X) * Renderer.WorldScale),
+                       (int)((y - RenderPosition.Y) * Renderer.WorldScale),
+                       (int)(width * Renderer.WorldScale),
+                       (int)(height * Renderer.WorldScale)
+                       );
         }
 
         /// <summary>
@@ -133,7 +156,11 @@ namespace Verdant
         /// <returns>A Rectangle representing the proper rendering bounds for the given Entity. The Entity's rotation will not be considered.</returns>
         public Rectangle GetRenderBounds(Entity e)
         {
-            return GetRenderBounds(e.Position.X, e.Position.Y, e.Width, e.Height);
+            return GetRenderBounds(e.Position.X,
+                                   e.Position.Y,
+                                   e.Width,
+                                   e.Height
+                                   );
         }
 
         /// <summary>
@@ -141,9 +168,12 @@ namespace Verdant
         /// </summary>
         /// <param name="transformState">The TransformState.</param>
         /// <returns>A Rectangle representing the proper rendering bounds for the given TransformState.</returns>
-        public Rectangle GetRenderBounds(TransformState transformState)
+        public Rectangle GetRenderBounds(Transform transformState)
         {
-            return GetRenderBounds(transformState.Position, (int)transformState.Width, (int)transformState.Height);
+            return GetRenderBounds(transformState.Position,
+                                   (int)transformState.Width,
+                                   (int)transformState.Height
+                                   );
         }
 
         /// <summary>
@@ -154,8 +184,9 @@ namespace Verdant
         /// <returns>A Vec2Int representing the screen render position.</returns>
         public Vec2Int GetRenderPosition(float x, float y)
         {
-            // TODO: this definitely should take TransformState into account
-            return new Vec2Int((int)((x - GetCameraRenderPosition().X) * Renderer.WorldScale), (int)((y - GetCameraRenderPosition().Y) * Renderer.WorldScale));
+            return new((int)((x - RenderPosition.X) * Renderer.WorldScale),
+                       (int)((y - RenderPosition.Y) * Renderer.WorldScale)
+                       );
         }
 
         /// <summary>
@@ -179,15 +210,46 @@ namespace Verdant
         }
 
         /// <summary>
+        /// Blend the operand TransformState with the Camera's transform.
+        /// </summary>
+        /// <param name="operand">The TransformState to blend onto in-place. The Camera blend uses both additive and multiplicative blends.</param>
+        public void BlendOnto(Transform operand)
+        {
+            // update manually to avoid allocating new Vec2s
+            operand.Position.X -= RenderPosition.X;
+            operand.Position.X *= Renderer.WorldScale;
+            operand.Position.Y -= RenderPosition.Y;
+            operand.Position.Y *= Renderer.WorldScale;
+
+            operand.Width *= Renderer.WorldScale;
+            operand.Height *= Renderer.WorldScale;
+            // NOTE: angle is not affected by the camera
+        }
+
+        /// <summary>
         /// Add a shake effect to the Camera.
         /// </summary>
         /// <param name="strength">The strength of the shake.</param>
         /// <param name="duration">The duration of the shake (number of frames).</param>
-        public void SetShake(float strength, int duration)
+        public void SetShake(float strength, float duration)
         {
             shakeStrength = strength;
-            shakeDuration = duration;
-            shakeCountdown = duration;
+
+            Shaking = true;
+            shakeTimer = new(duration, (t) =>
+            {
+                // another shake has been started, keep it going
+                if (shakeTimer != t)
+                {
+                    return;
+                }
+                // clean up after shake is done
+                Shaking = false;
+                offsetX = 0;
+                offsetY = 0;
+            });
+            shakeTimer.Start();
+
             offsetX = 0;
             offsetY = 0;
         }
@@ -195,20 +257,10 @@ namespace Verdant
         /// <summary>
         /// Apply the current shake of the Camera.
         /// </summary>
-        void ApplyShake()
+        private void ApplyShake()
         {
             offsetX = shakeStrength * GameMath.RandomFloat();
             offsetY = shakeStrength * GameMath.RandomFloat();
         }
-
-        /// <summary>
-        /// Get the position of the Camera with any offsets (shake effect, etc.) applied.
-        /// </summary>
-        /// <returns>A Vec2 representing the render position of the Camera.</returns>
-        public Vec2 GetCameraRenderPosition()
-        {
-            return new Vec2(Position.X + offsetX, Position.Y + offsetY);
-        }
-
     }
 }

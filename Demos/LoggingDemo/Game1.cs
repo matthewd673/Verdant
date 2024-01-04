@@ -25,7 +25,7 @@ namespace LoggingDemo
 
             Verdant.Debugging.Log.WriteLine("Initialize()");
 
-            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 2);
+            Renderer.Initialize(_graphics, worldScale: 2);
 
             sceneManager = new SceneManager();
 

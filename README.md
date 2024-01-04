@@ -5,7 +5,7 @@ designed to simplify the tedious parts of game development without restricting d
 
 Verdant is in early development. APIs may be incomplete, and are subject to (potentially drastic) change without warning.
 
-## Build Info
+## Build & Run
 
 Currently built on .NET 7.0 for compatibility with MonoGame 3.8.x.
 
@@ -24,22 +24,20 @@ Documentation for each class is available on [the wiki](https://github.com/matth
 
 ## Made with Verdant
 A small collection of games made with Verdant.
+- [Harvest](https://mattdaly.itch.io/harvest) (Verdant post-v0.1.1)
 - [Slime Scenario](https://mattdaly.itch.io/slime-scenario) (Verdant v0.1.1)
 - [Frog Stack](https://mattdaly.itch.io/frog-stack) (Verdant pre-release)
 
 ## Demos
 
-- **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple game that makes use of `Debugging.Log` and the LogConsole.
-- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations.
-- **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates all physics bodies.
+- **[LoggingDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/LoggingDemo):** A simple project that uses `Debugging.Log` and the LogConsole.
+- **[ParticleToy](https://github.com/matthewd673/Verdant/tree/master/Demos/ParticleToy):** Tool to visualize `ParticleSystem` configurations *(in development)*.
+- **[PhysicsDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/PhysicsDemo):** Demonstrates the 2D physics system *(in development)*.
+- **[TransformDemo](https://github.com/matthewd673/Verdant/tree/master/Demos/TransformDemo):** Test of the Transform system.
 - **[TopdownShooter](https://github.com/matthewd673/Verdant/tree/master/Demos/TopdownShooter):** A bare-bones topdown shooter demonstrating the `PhysicsEntity`, `Pathfinder`, and `Timer` APIs.
 
 
-## Additional Tools
-### MapTools
-
-MapTools is an included tool for creating simple map files built from images, which Verdant can parse. MapTools and its map files can also be used entirely independently of Verdant. More info in the
-[MapTools README](https://github.com/matthewd673/Verdant/blob/master/MapTools/README.md).
+## Tools
 
 ### LogConsole
 

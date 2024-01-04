@@ -23,7 +23,7 @@ namespace ParticleToy
         {
             base.Initialize();
 
-            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
+            Renderer.Initialize(_graphics);
 
             sceneManager = new SceneManager();
 

@@ -165,8 +165,8 @@ namespace Verdant.Physics
             while (current != null)
             {
                 finalPath.Insert(0,
-                    new Vec2(current.X * cellWidth + cellWidth/2 + origin.X,
-                             current.Y * cellHeight + cellHeight/2 + origin.Y)
+                    new Vec2(current.X * cellWidth + cellWidth / 2 + origin.X,
+                             current.Y * cellHeight + cellHeight / 2 + origin.Y)
                     ); // add center of cell as new point
                 current = current.Parent;
             }
@@ -294,10 +294,10 @@ namespace Verdant.Physics
             }
             else
             {
-                minX = (int) topLeft.X;
-                maxX = (int) bottomRight.X;
-                minY = (int) topLeft.Y;
-                maxY = (int) bottomRight.Y;
+                minX = (int)topLeft.X;
+                maxX = (int)bottomRight.X;
+                minY = (int)topLeft.Y;
+                maxY = (int)bottomRight.Y;
             }
 
             origin = new Vec2Int(minX, minY);

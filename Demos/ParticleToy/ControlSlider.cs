@@ -14,7 +14,7 @@ namespace ParticleToy
         public ControlSlider(Vec2 position, float minValue, float maxValue, int barWidth)
             : base(position, minValue, maxValue, Resources.SliderIndicator, Resources.SliderBar, barWidth)
         {
-            Margin = new BoxDimensions(4, Resources.SliderIndicator.Width / 2);
+            BoxModel.Margin = new BoxDimensions(4, Resources.SliderIndicator.Width / 2);
         }
     }
 }

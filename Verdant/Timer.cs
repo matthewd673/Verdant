@@ -60,6 +60,7 @@ namespace Verdant
 
         /// <summary>
         /// Start the Timer.
+        /// If the Timer is already running this does nothing.
         /// </summary>
         public void Start()
         {
@@ -81,7 +82,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// If the Timer has reached its duration, reset the time and trigger the callback.
+        /// If the Timer has reached its duration then reset the time and trigger the callback.
         /// </summary>
         public void Consume()
         {
@@ -94,7 +95,7 @@ namespace Verdant
         }
 
         /// <summary>
-        /// Stop the Timer and reset its current time.
+        /// Stop the Timer and reset its elapsed time.
         /// </summary>
         public void Reset()
         {

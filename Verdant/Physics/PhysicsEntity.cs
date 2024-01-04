@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Verdant.Physics
 {
-    
+
     /// <summary>
     /// An Entity with collider and additional physical properties, which can collide with other PhysicsEntities and be simulated by the EntityManager.
     /// </summary>
@@ -14,7 +14,7 @@ namespace Verdant.Physics
     {
         // The Shapes that make up the PhysicsEntity's collider.
         public Shape[] Components { get; set; } = new Shape[0];
-        
+
         // The position of the PhysicsEntity (the center of its first Shape component).
         public override Vec2 Position
         {
@@ -89,8 +89,8 @@ namespace Verdant.Physics
         /// Initialize a new PhysicsEntity. By default, it will have a mass but no Components.
         /// In most cases, it is more appropriate to use an extension like a BallEntity or BoxEntity.
         /// </summary>
-        public PhysicsEntity(RenderObject sprite, Vec2 position, float width, float height, float mass)
-                : base(sprite, position, (int)width, (int)height)
+        public PhysicsEntity(Vec2 position, RenderObject sprite, float width, float height, float mass)
+            : base(position, sprite, (int)width, (int)height)
         {
             Mass = mass;
         }
@@ -100,7 +100,7 @@ namespace Verdant.Physics
         /// </summary>
         public virtual void Move()
         {
-            Acceleration = Acceleration.Unit() * Speed;
+            Acceleration = Acceleration.Unit() * Speed; // TODO: this speed thing is weird
             Velocity += Acceleration;
             Velocity *= 1 - Friction;
 
@@ -114,31 +114,29 @@ namespace Verdant.Physics
         /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
         /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
         /// <returns>A list of all PhyiscsEntities currently colliding with this one.</returns>
-        public List<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
+        public IEnumerable<TPhysicsEntity> GetColliding<TPhysicsEntity>(bool includeTriggers = true, bool includeSolids = true) where TPhysicsEntity : PhysicsEntity // largely copied from GetAllColliding
         {
-            List<TPhysicsEntity> colliding = new List<TPhysicsEntity>();
-
             foreach (PhysicsEntity p in Colliding)
             {
-                if (!p.IsType(typeof(TPhysicsEntity)))
+                if (!p.IsType<TPhysicsEntity>())
+                {
                     continue;
+                }
 
                 if (includeTriggers && p.Trigger)
                 {
-                    colliding.Add((TPhysicsEntity)p);
+                    yield return (TPhysicsEntity) p;
                     continue;
                 }
 
                 if (includeSolids && !p.Trigger)
                 {
-                    colliding.Add((TPhysicsEntity)p);
+                    yield return (TPhysicsEntity) p;
                     continue;
                 }
 
-                colliding.Add((TPhysicsEntity)p);
+                // yield return (TPhysicsEntity) p;
             }
-
-            return colliding;
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ namespace Verdant.Physics
         /// <param name="includeTriggers">Include PhysicsEntities that are triggers.</param>
         /// <param name="includeSolids">Include PhysicsEntities that are not triggers.</param>
         /// <returns>A list of all PhysicsEntities currently colliding with this one.</returns>
-        public List<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
+        public IEnumerable<PhysicsEntity> GetColliding(bool includeTriggers = true, bool includeSolids = true)
         {
             return GetColliding<PhysicsEntity>(includeTriggers, includeSolids);
         }

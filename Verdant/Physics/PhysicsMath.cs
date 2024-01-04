@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Verdant.Physics
 {
+    /// <summary>
+    /// PhysicsMath is an internal helper class for the Verdant.Physics namespace.
+    /// </summary>
     internal static class PhysicsMath
     {
         internal static ShapeProjection ProjectShapeOntoAxis(Vec2 axis, Shape shape)
@@ -45,7 +48,7 @@ namespace Verdant.Physics
         internal static int GetShapeAxes(Shape shape)
         {
             if (shape.GetType() == typeof(Circle) || shape.GetType() == typeof(Line)) return 1;
-            return 2; //rectangle
+            return 2; // rectangle
         }
 
         internal static void SetCircleVerticesAlongAxis(Vec2 axis, Shape shape)
@@ -141,7 +144,7 @@ namespace Verdant.Physics
             {
                 proj1 = ProjectShapeOntoAxis(axes[i], a);
                 proj2 = ProjectShapeOntoAxis(axes[i], b);
-                
+
                 float overlap = Math.Min(proj1.Max, proj2.Max) -
                                 Math.Max(proj1.Min, proj2.Min);
                 if (overlap < 0)
@@ -219,11 +222,11 @@ namespace Verdant.Physics
 
         internal static Matrix CalculateRotMatrix(float angle)
         {
-            Matrix matrix = new Matrix(2, 2);
-            matrix.Data[0, 0] = (float) Math.Cos(angle);
-            matrix.Data[0, 1] = (float) -Math.Sin(angle);
-            matrix.Data[1, 0] = (float) Math.Sin(angle);
-            matrix.Data[1, 1] = (float) Math.Cos(angle);
+            Matrix matrix = new(2, 2);
+            matrix.Data[0, 0] = (float)Math.Cos(angle);
+            matrix.Data[0, 1] = (float)-Math.Sin(angle);
+            matrix.Data[1, 0] = (float)Math.Sin(angle);
+            matrix.Data[1, 1] = (float)Math.Cos(angle);
             return matrix;
         }
 

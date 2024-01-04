@@ -23,7 +23,8 @@ namespace PhysicsDemo
         protected override void Initialize()
         {
             base.Initialize();
-            Renderer.Initialize(GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, 1);
+            Renderer.Initialize(_graphics);
+            Renderer.VisualizeBodies = true;
 
             sceneManager = new SceneManager();
 

@@ -9,12 +9,6 @@ namespace Verdant.Debugging
     /// </summary>
     public static class Log
     {
-
-        /*
-         * TODO
-         * - add option to warn when connecting (so a game doesn't accidentally ship with the logger still going)
-         */
-
         private static UdpClient client;
         // If the logger fails to establish a WebSockets connection, it will stop attempting to send messages and this value will be true.
         public static bool ConnectionFailed { get; private set; } = false;
@@ -61,7 +55,7 @@ namespace Verdant.Debugging
             {
                 client.Send(messageBytes, messageBytes.Length);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ConnectionFailed = true;
             }

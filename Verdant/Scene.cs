@@ -46,6 +46,7 @@ namespace Verdant
             UIManager = new UIManager();
 
             Camera = new Camera(Renderer.ScreenWidth, Renderer.ScreenHeight);
+            EntityManager.AddEntity(Camera);
         }
 
         /// <summary>
@@ -54,15 +55,15 @@ namespace Verdant
         /// </summary>
         public virtual void Update(GameTime gameTime)
         {
-            DeltaTime = (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             InputHandler.Update(); // always update input
+
+            Timer.TickAll(DeltaTime);
 
             EntityManager.Update();
             UIManager.Update();
 
-            Timer.TickAll(DeltaTime);
-
-            Camera.Update();
+            //Camera.Update();
         }
 
         /// <summary>
@@ -73,6 +74,5 @@ namespace Verdant
         {
             Renderer.Render(spriteBatch, this);
         }
-
     }
 }

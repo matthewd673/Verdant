@@ -12,7 +12,6 @@ namespace Verdant.UI
     /// </summary>
     public class UIGroup : UIElement
     {
-
         protected List<UIElement> children = new List<UIElement>();
 
         private List<UIElement> addQueue = new List<UIElement>();
@@ -119,11 +118,7 @@ namespace Verdant.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // sort children
-            IEnumerable<UIElement> renderList;
-            if (Renderer.SortUIElements)
-                renderList = children.OrderBy(n => n.ZIndex);
-            else
-                renderList = children;
+            IEnumerable<UIElement> renderList = children.OrderBy(n => n.ZIndex);
 
             // draw background
             spriteBatch.Draw(Renderer.Pixel,

@@ -9,7 +9,11 @@ namespace PhysicsDemo
     internal class BallController : BallEntity
     {
 
-        public BallController(Vec2 pos, float radius, float mass) : base(Renderer.GenerateCircleSprite((int)radius, Color.Salmon), pos, radius, mass) { }
+        public BallController(Vec2 position, float radius, float mass)
+            : base(position, Renderer.GenerateCircleSprite((int)radius, Color.Salmon), radius, mass)
+        {
+            // Empty
+        }
 
         public override void Update()
         {
@@ -18,7 +22,7 @@ namespace PhysicsDemo
             SimpleInput();
             base.Update();
 
-            SimpleStats.UpdateField("ball colliding", GetColliding().Count);
+            SimpleStats.UpdateField("ball colliding", GetColliding().ToList().Count);
         }
 
     }

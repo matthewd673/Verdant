@@ -11,7 +11,7 @@ namespace Verdant
     {
 
         List<Particle> particles = new List<Particle>();
-        
+
         // Determines if the system should remove itself from its EntityManager when every Particle is dead.
         public bool SelfRemove { get; set; } = true;
 
@@ -21,7 +21,7 @@ namespace Verdant
         private bool overrideLifetime = false;
         private float _defaultLifetime;
         public float DefaultLifetime
-        { 
+        {
             get { return _defaultLifetime; }
             set
             {
@@ -82,7 +82,10 @@ namespace Verdant
         /// Initialize a new ParticleSystem.
         /// </summary>
         /// <param name="pos">The position of the system.</param>
-        public ParticleSystem(Vec2 pos) : base(Renderer.PixelSprite, pos, 0, 0) { }
+        public ParticleSystem(Vec2 pos) : base(pos, Renderer.PixelSprite, 0, 0)
+        {
+            // Empty
+        }
 
         /// <summary>
         /// Spawn a Particle within the system, according to the system's properties.
@@ -91,7 +94,7 @@ namespace Verdant
         public void SpawnParticle(Particle particle)
         {
             particle.Position = GenerateParticlePos();
-            
+
             if (overrideLifetime)
                 particle.LifeTimer.Duration = DefaultLifetime;
             if (overrideAcceleration)
