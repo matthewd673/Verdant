@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformDemo", "Demos\Tran
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RendererTest", "Demos\RendererTest\RendererTest.csproj", "{207C6388-BB5E-415C-997C-3D2E6BECE072}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITest", "Demos\UITest\UITest.csproj", "{7BC853CE-D0DB-48AE-9262-93ECCB52E19D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{207C6388-BB5E-415C-997C-3D2E6BECE072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{207C6388-BB5E-415C-997C-3D2E6BECE072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{207C6388-BB5E-415C-997C-3D2E6BECE072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC853CE-D0DB-48AE-9262-93ECCB52E19D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC853CE-D0DB-48AE-9262-93ECCB52E19D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC853CE-D0DB-48AE-9262-93ECCB52E19D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC853CE-D0DB-48AE-9262-93ECCB52E19D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{450D1BEF-4875-4F8F-8FB8-54553FB847C8} = {08794129-62AC-4308-8F61-2F24541A7B8E}
 		{9A24FC1C-EE5E-4974-920E-D31276C04A90} = {08794129-62AC-4308-8F61-2F24541A7B8E}
 		{207C6388-BB5E-415C-997C-3D2E6BECE072} = {08794129-62AC-4308-8F61-2F24541A7B8E}
+		{7BC853CE-D0DB-48AE-9262-93ECCB52E19D} = {08794129-62AC-4308-8F61-2F24541A7B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CE681C19-A937-4850-B479-5A8BC0B86A8F}
